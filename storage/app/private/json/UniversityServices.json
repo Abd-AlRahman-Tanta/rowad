@@ -1,0 +1,104 @@
+{
+    "en": {
+        "heroTitle": "University Services",
+        "heroDescription": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, provident animi accusantium laboriosam similique mollitia non beatae pariatur ad officiis, debitis odio ratione dignissimos qui illum repellendus itaque numquam! Illum.",
+        "heroBackground": "/storage/images/about.webp",
+        "services": [
+            {
+                "title": "Structural Engineering",
+                "description": "Expert structural analysis and design for buildings, bridges, and infrastructure projects ensuring safety, durability, and cost-effectiveness.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "Architectural Design",
+                "description": "Creative and functional architectural design services for residential, commercial, and industrial projects tailored to client needs.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "Project Management",
+                "description": "Comprehensive construction project management from planning to completion, ensuring timelines, budgets, and quality standards are met.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "Sustainable Building",
+                "description": "Eco-friendly and energy-efficient building solutions using sustainable materials and green construction practices.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "Construction Supervision",
+                "description": "On-site supervision and quality control services to ensure compliance with engineering standards and safety regulations.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "BIM Modeling",
+                "description": "Building Information Modeling services for improved collaboration, visualization, and project coordination throughout the construction lifecycle.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "Urban Planning",
+                "description": "Strategic urban planning and land-use consulting for sustainable community development and infrastructure optimization.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "Feasibility Studies",
+                "description": "Detailed technical and economic feasibility studies to assess project viability and minimize investment risks.",
+                "image": "/storage/images/struct.webp"
+            }
+        ],
+        "discoverButton": {
+            "link": "https://wa.me/+905352880084",
+            "text": "Click for Details And Prices"
+        }
+    },
+    "ar": {
+        "heroTitle": "الخدمات الجامعية",
+        "heroDescription": "لوريم إيبسوم دولار سيت أميت، كونسيكتيتور أديبيسيسينغ إيليت. نام، بروفيدينت أنيمي أتاكوسيون لابوريوسام سيميليك موليتيا نون بيتاي بارياتور أد أوفيسيس، دبيتيس أوديو راشيوني ديجنيسيموس كوي إيلوم ريبيليندوس إيتاكي نومكيوام! إيلوم.",
+        "heroBackground": "/storage/images/about.webp",
+        "services": [
+            {
+                "title": "الهندسة الإنشائية",
+                "description": "تحليل وتصميم إنشائي خبير للمباني والجسور ومشاريع البنية التحتية لضمان السلامة والمتانة والفعالية من حيث التكلفة.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "التصميم المعماري",
+                "description": "خدمات تصميم معماري إبداعي ووظيفي للمشاريع السكنية والتجارية والصناعية مصممة خصيصاً لتلبية احتياجات العملاء.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "إدارة المشاريع",
+                "description": "إدارة شاملة لمشاريع البناء من التخطيط حتى الإنجاز، لضمان الالتزام بالجداول الزمنية والميزانيات ومعايير الجودة.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "المباني المستدامة",
+                "description": "حلول بناء صديقة للبيئة وموفرة للطاقة باستخدام مواد مستدامة وممارسات بناء خضراء.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "الإشراف على البناء",
+                "description": "خدمات إشراف ميداني ومراقبة الجودة لضمان الامتثال للمعايير الهندسية ولوائح السلامة.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "نمذجة معلومات البناء (BIM)",
+                "description": "خدمات نمذجة معلومات البناء لتحسين التعاون والتصور والتنسيق بين المشاريع طوال دورة حياة البناء.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "التخطيط الحضري",
+                "description": "استشارات استراتيجية في التخطيط الحضري واستخدام الأراضي من أجل تنمية مجتمعية مستدامة وتحسين البنية التحتية.",
+                "image": "/storage/images/struct.webp"
+            },
+            {
+                "title": "دراسات الجدوى",
+                "description": "دراسات جدوى فنية واقتصادية مفصلة لتقييم جدوى المشاريع وتقليل مخاطر الاستثمار.",
+                "image": "/storage/images/struct.webp"
+            }
+        ],
+        "discoverButton": {
+            "link": "https://wa.me/+905352880084",
+            "text": "انقر للحصول على التفاصيل والأسعار"
+        }
+    }
+}

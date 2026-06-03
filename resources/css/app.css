@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+/* Custom variant (if using PostCSS plugin that supports it) */
+@custom-variant hover (&:hover);
+
+
+/* Base styles */
+html:has(.dashboard-page) {
+  scrollbar-gutter: stable;
+}
+
+html {
+  scroll-behavior: smooth !important;
+  overflow-x: clip;
+}
+
+#pageLayout,
+.whatsappWidgetContainer {
+  max-width: 1920px;
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+}
+
+input:-webkit-autofill.removeBack,
+input:-webkit-autofill:hover.removeBack,
+input:-webkit-autofill:focus.removeBack,
+input:-webkit-autofill:active.removeBack {
+  transition: background-color 9999s ease-in-out 0s;
+  -webkit-text-fill-color: white !important;
+}
+
+/* ──────────────────────────────────────────── */
+/* ✅ DEFINE STATIC (non-responsive) theme tokens using @theme */
+/* These are global defaults (usually mobile-first) */
+@import "tailwindcss";
+
+@theme {
+  /* --- Colors --- */
+  /* Extracted from the primary color palette */
+  --color-arch-accent: #B09B71;
+  /* Gold/Tan accent for buttons and highlights */
+  --color-arch-charcoal: #36454F;
+  /* Primary dark text and deep backgrounds */
+  --color-arch-gray: #808080;
+  /* Secondary text and borders */
+  --color-arch-light: #F5F5F5;
+  /* "Cultured" off-white for main backgrounds */
+  --color-arch-card: #FFFFFF;
+  /* Clean white for elevated card components */
+  --color-arch-dark: #1A1A1A;
+  /* Deepest black for high contrast elements */
+
+  /* --- Typography --- */
+  /* Assuming Montserrat or a similar clean geometric sans-serif */
+
+  /* Typographic Scale (Converted from px to rem) */
+  --text-xs: 0.75rem;
+  /* 12px - Small captions */
+  --text-sm: 0.875rem;
+  /* 14px - Secondary text */
+  --text-base: 1rem;
+  /* 16px - Standard body text */
+  --text-lg: 1.25rem;
+  /* 20px - Subheadings */
+  --text-xl: 1.5rem;
+  /* 24px - Small headings */
+  --text-2xl: 2rem;
+  /* 32px - Medium headings */
+  --text-3xl: 2.5rem;
+  /* 40px - Large headings */
+  --text-4xl: 3rem;
+  /* 48px - Standard Hero text */
+  --text-5xl: 4.5rem;
+  /* 72px - Oversized Hero display text */
+
+  /* Line heights (numeric for easier use) */
+  --leading-1: 1.1;
+  --leading-2: 1.25;
+  --leading-3: 1.5;
+  --leading-4: 1.65;
+  --leading-5: 1.8;
+
+  /* --- Spacing System --- */
+  --spacing-largeSaveSpace: 7vw;
+  --spacing-mobSaveSpace: 20px;
+  /* Maps exactly to the 4pt/8pt grid shown in the design system */
+  --spacing-1: 0.25rem;
+  /* 4px */
+  --spacing-2: 0.5rem;
+  /* 8px */
+  --spacing-4: 1rem;
+  /* 16px */
+  --spacing-6: 1.5rem;
+  /* 24px */
+  --spacing-8: 2rem;
+  /* 32px */
+  --spacing-12: 3rem;
+  /* 48px */
+  --spacing-16: 4rem;
+  /* 64px */
+  --spacing-24: 6rem;
+  /* 96px - For large section gaps */
+
+  /* --- Border Radius --- */
+  /* Subtle rounding typical in modern architectural UI */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  /* breakpoints */
+  --breakpoint-desc: 992px;
+  --breakpoint-tab: 768px;
+  --breakpoint-mob: 576px;
+  --breakpoint-sm: 400px;
+  /* shadows */
+  --shadow-review: 0 10px 40px rgba(0, 0, 0, 0.05);
+  --shadow-reviewHover: 0 20px 60px rgba(0, 0, 0, 0.08);
+  /* fonts */
+  --font-family-main: "Cairo";
+}
+
+/* Mobile typography overrides (smaller than --breakpoint-mob) */
+@media screen and (max-width: 992px) {
+  :root {
+    --text-xs: 0.75rem;
+    /* 12px */
+    --text-sm: 0.8125rem;
+    /* 13px */
+    --text-base: 0.9375rem;
+    /* 15px */
+    --text-lg: 1.125rem;
+    /* 18px */
+    --text-xl: 1.25rem;
+    /* 20px */
+    --text-2xl: 1.5rem;
+    /* 24px */
+    --text-3xl: 1.875rem;
+    /* 30px */
+    --text-4xl: 2.25rem;
+    /* 36px */
+    --text-5xl: 3rem;
+    /* 48px */
+
+    /* Slightly roomier on small screens for readability */
+    --leading-1: 1.15;
+    --leading-2: 1.3;
+    --leading-3: 1.55;
+    --leading-4: 1.7;
+    --leading-5: 1.85;
+  }
+}
+
+
+/* Optional: Base layer styling to apply the architectural feel globally */
+@layer base {
+  body {
+    background-color: var(--color-arch-light);
+    color: var(--color-arch-charcoal);
+  }
+}
+
+
+/* ──────────────────────────────────────────── */
+/* Rest of your CSS (unchanged) */
+
+.scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  overflow-y: overlay;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-container:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+
+@font-face {
+  font-family: "Cairo";
+  font-display: swap;
+  src: url("/fonts/Cairo-VariableFont_slnt,wght-subset.woff2");
+}
+
+
+
+.removeScroll {
+  scrollbar-width: none;
+}
+
+
+.viewStartEffect {
+  opacity: 0;
+  transform: translateY(-2.5rem);
+}
+
+.viewEndEffect {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@layer base {
+
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    /* Remove the yellow background */
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+
+    /* Set text color to whatever you applied via your class */
+    -webkit-text-fill-color: inherit !important;
+    color: inherit !important;
+
+    /* ⚠️ REMOVE THESE LINES — they cause the issue */
+    /* background-clip: text; */
+    /* -webkit-background-clip: text; */
+
+    /* Optional: prevent background flicker */
+    transition: background-color 9999s ease-in-out 0s;
+  }
+}
+
+/* Override CKEditor dialog z-index to be higher than your modal's z-[200000] */
+.ck.ck-balloon-panel {
+  z-index: 20000000000000000 !important;
+  /* Slightly higher than 200000 */
+}
+
+.ck.ck-modal {
+  z-index: 20000000000000000 !important;
+}
+
+.ck.ck-modal .ck-modal__overlay {
+  z-index: 20000000000000000 !important;
+}
+
+/* If the link form specifically is the issue, target it more precisely */
+.ck-link-form {
+  z-index: 20000000000000000 !important;
+}
+
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.35s ease;
+}
+
+.button {
+  cursor: pointer;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+
+/* thumbnail default */
+.swiper-thumb {
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+/* active thumbnail */
+.swiper-slide-thumb-active .swiper-thumb {
+  border-color: #c6a16e;
+  /* gold */
+  opacity: 1;
+  transform: scale(1.05);
+}

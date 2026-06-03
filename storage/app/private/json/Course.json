@@ -1,0 +1,42 @@
+{
+    "en": {
+        "learningPointsTitle": "Course Learning Points:",
+        "CourseTopicsTitle": "Course Topics:",
+        "priceTitle": "Price:",
+        "newCourseTitle": "New Course",
+        "enrollButton": {
+            "text": "Enroll Now",
+            "link": "https://wa.me/+963997548562"
+        },
+        "title": "Course Projects",
+        "label": "Course Gallery",
+        "nextLabel": "Next",
+        "prevLabel": "Previouse",
+        "showMoreLabel": "Courses",
+        "showMoreTitle": "See More Courses",
+        "viewCourseButton": {
+            "text": "View Course Details",
+            "link": "/course/"
+        }
+    },
+    "ar": {
+        "learningPointsTitle": "نقاط تعلم الدورة:",
+        "CourseTopicsTitle": "موضوعات الدورة:",
+        "priceTitle": "السعر:",
+        "newCourseTitle": "كورس جديد",
+        "enrollButton": {
+            "text": "سجل الان",
+            "link": "https://wa.me/+963997548562"
+        },
+        "title": "معرض أعمال الكورس",
+        "label": "معرض صور الكورس",
+        "nextLabel": "التالي",
+        "prevLabel": "السابق",
+        "showMoreLabel": "الكورسات",
+        "showMoreTitle": "شاهد المزيد من الكورسات",
+        "viewCourseButton": {
+            "text": "عرض تفاصيل الدورة",
+            "link": "/course/"
+        }
+    }
+}

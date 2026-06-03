@@ -1,0 +1,7 @@
+{
+    "Modules": true,
+    "Shared": true,
+    "Pages": true,
+    "Projects": true,
+    "Dashboard": true
+}

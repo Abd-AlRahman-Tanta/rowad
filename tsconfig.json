@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "paths": {
+            "@shared/*" : ["./Modules/Shared/resources/assets/js/*"],
+            "@pages/*" : ["./Modules/Pages/resources/assets/js/*"],
+            "@projects/*" : ["./Modules/Projects/resources/assets/js/*"],
+            "@dashboard/*" : ["./Modules/Dashboard/resources/assets/js/*"],
+        },
+        "target": "ESNext",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ESNext"
+        ],
+        "allowJs": true,
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "types": [
+            "vite/client"
+        ],
+    },
+    "include": [
+        "resources/js/**/*",
+        "Modules/**/resources/assets/js/**/*"
+        ]
+}

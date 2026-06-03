@@ -1,0 +1,413 @@
+{
+    "ar": {
+        "heroTitle": "تقديم مهندس معماري ومعلم",
+        "heroDescription": "لوريم إيبسوم، دولور سيت أميت كونسيكتيتور أديبيسينغ إيليت. نام، بروفيدينت أنيمي أتشانتيوس لابوريوسام سيميليك موليتيا نون بيتاي بارياتور أد أوفيسيس، ديبيتيس أوديو راشيوني ديجنيسيموس كوي إيلوم ريبيليندوس إيتاكي نومكوام! إيلوم.",
+        "heroBackground": "/storage/images/hero.webp",
+        "heroProfileImage": "/storage/images/me.webp",
+        "heroCoursesButton": {
+            "id": "#courses",
+            "text": "عرض الدورات"
+        },
+        "heroProjectsButton": {
+            "id": "#projects",
+            "text": "عرض المشاريع"
+        },
+        "aboutTitle": "عن المعلم",
+        "aboutDescription": "لوريم إيبسوم، دولور سيت أميت كونسيكتيتور أديبيسينغ إيليت. نام، بروفيدينت أنيمي أتشانتيوس لابوريوسام سيميليك موليتيا نون بيتاي بارياتور أد أوفيسيس، ديبيتيس أوديو راشيوني ديجنيسيموس كوي إيلوم ريبيليندوس إيتاكي نومكوام! إيلوم.",
+        "aboutImages": {
+            "image1": "/storage/images/about.webp",
+            "image2": "/storage/images/struct.webp"
+        },
+        "aboutButton": {
+            "text": "عرض الإنجازات",
+            "id": "#achivements"
+        },
+        "aboutLabel": "حول",
+        "servicesLabel": "الخدمات",
+        "servicesTitle": "ما أقدمه",
+        "services": [
+            {
+                "title": "الدورات التدريبية",
+                "description": "أقدم دورات تدريبية شاملة في هندسة العمارة تغطي مجموعة واسعة من المواضيع، بما في ذلك التصميم المعماري، وتقنيات البناء، وممارسات البناء المستدام، والتخطيط الحضري. صُممت دوراتي لتزويد الطلاب بالمهارات العملية والمعرفة النظرية للتفوق في مجال العمارة.",
+                "icon": "/storage/images/courses.svg",
+                "link": "#courses"
+            },
+            {
+                "title": "الاستشارات الهندسية",
+                "description": "أقدم خدمات استشارية هندسية للعملاء في صناعة العمارة. تشمل خبراتي التحليل الإنشائي، ونمذجة معلومات البناء (BIM)، وإدارة مشاريع البناء. أعمل بشكل وثيق مع المهندسين المعماريين والمقاولين والمطورين لضمان تنفيذ المشاريع بكفاءة وتلبية أعلى معايير الجودة والسلامة.",
+                "icon": "/storage/images/services.svg",
+                "link": "/engineering-services"
+            },
+            {
+                "title": "استكمال التعليم الجامعي",
+                "description": "ألتزم بدعم الطلاب في رحلتهم الأكاديمية من خلال تقديم التوجيه والإرشاد لاستكمال دراستهم الجامعية. أساعد الطلاب في اختيار برامج العمارة المناسبة، والتحضير لامتحانات القبول، وتقديم المشورة بشأن المسارات الوظيفية في هندسة العمارة. هدفي هو مساعدة الطلاب على تحقيق تطلعاتهم التعليمية والمهنية في مجال العمارة.",
+                "icon": "/storage/images/follow.svg",
+                "link": "/university"
+            }
+        ],
+        "viewCardButtonText": "اضغط للعرض",
+        "projectsLabel": "معرض الأعمال",
+        "projectsTitle": "مشاريعي",
+        "projectsDescription": "إليك بعض مشاريعي التي عملت عليها، والتي تعرض مهاراتي وخبراتي في هندسة العمارة. يمثل كل مشروع تحدياً فريداً ويظهر قدرتي على تقديم حلول مبتكرة تلبي احتياجات عملائي.",
+        "coursesLabel": "الدورات",
+        "coursesTitle": "الدورات الحالية",
+        "viewCourseButton": {
+            "text": "عرض تفاصيل الدورة",
+            "link": "/course/"
+        },
+        "achivementsTitle": "المسيرة المهنية والإنجازات",
+        "achivementsLabel": "المسيرة المهنية",
+        "achivements": [
+            {
+                "title": "بكالوريوس في الهندسة المعمارية",
+                "description": "تخرج بمرتبة الشرف في الهندسة المعمارية من جامعة القاهرة، مصر (2010–2014)، مع تركيز قوي على التخطيط الحضري، التصميم السكني، وأساليب البناء المستدامة."
+            },
+            {
+                "title": "ماجستير في العمارة المستدامة",
+                "description": "أكمل درجة الماجستير في جامعة كاليفورنيا - بيركلي، الولايات المتحدة الأمريكية (2015–2017)، متخصصًا في أنظمة البناء الصديقة للبيئة، التصميم الموفر للطاقة، وتطوير المدن الذكية."
+            },
+            {
+                "title": "جائزة التصميم الدولية",
+                "description": "حصل على جائزة التميز الدولية للمباني الخضراء عام 2018 لتصميمه مجمعًا سكنيًا مبتكرًا منخفض استهلاك الطاقة يدمج حلول الطاقة المتجددة."
+            },
+            {
+                "title": "شهادة LEED الاحترافية",
+                "description": "حصل على اعتماد LEED AP الذي يعكس خبرة متقدمة في ممارسات البناء المستدام، معايير التصميم البيئي، وإدارة المشاريع الخضراء."
+            },
+            {
+                "title": "مساهمات بحثية منشورة",
+                "description": "نشر العديد من الأبحاث حول العمارة الحضرية المستدامة واستراتيجيات البناء المتجاوبة مع المناخ في مجلات معمارية عالمية معروفة."
+            },
+            {
+                "title": "مؤتمرات معمارية عالمية",
+                "description": "شارك كمتحدث رئيسي ومدرب ورش عمل في عدة مؤتمرات دولية متخصصة في العمارة والمدن الذكية في أوروبا والشرق الأوسط وأمريكا الشمالية."
+            },
+            {
+                "title": "أكثر من 10 سنوات خبرة",
+                "description": "يمتلك خبرة تزيد عن عشر سنوات في مجالات العمارة، التصميم الداخلي، ومشاريع التطوير الحضري المستدام."
+            },
+            {
+                "title": "أكثر من 120 مشروعًا مكتملًا",
+                "description": "نجح في تنفيذ مشاريع سكنية وتجارية ومتعددة الاستخدامات في عدة دول حول العالم."
+            },
+            {
+                "title": "تصاميم حائزة على جوائز",
+                "description": "تم تكريمه على مفاهيمه المعمارية المبتكرة والصديقة للبيئة في مسابقات دولية."
+            },
+            {
+                "title": "مهندس معماري معتمد في LEED",
+                "description": "متخصص في معايير البناء الأخضر، التخطيط الموفر للطاقة، وحلول البناء المستدام."
+            },
+            {
+                "title": "تعاون مع عملاء عالميين",
+                "description": "عمل مع عملاء أفراد، شركات تطوير عقاري، وفرق هندسية دولية في مختلف أنحاء العالم."
+            },
+            {
+                "title": "عمارة ذكية وعصرية",
+                "description": "يركز على تصميم مساحات معمارية عملية، حديثة، ومتكاملة مع التكنولوجيا الحديثة."
+            }
+        ],
+        "achivementsImage": "/storage/images/achivements.webp",
+        "reviewsLabel": "التقييمات",
+        "reviewsTitle": "آراء الطلاب",
+
+        "reviews": [
+            {
+                "userName": "سارة جونسون",
+                "userImage": "/storage/images/student1.webp",
+                "userJob": "مطورة واجهات أمامية",
+                "description": "<p>ساعدتني هذه الدورة على الانتقال من مستوى المبتدئ إلى بناء مشاريع حقيقية متكاملة بثقة وبأساليب تصميم حديثة.</p>",
+                "stars": "5"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "عمل مع عملاء خاصين، وشركات تطوير عقاري، وفرق هندسية دولية حول العالم.",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "عمل مع عملاء خاصين، وشركات تطوير عقاري، وفرق هندسية دولية حول العالم.",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "عمل مع عملاء خاصين، وشركات تطوير عقاري، وفرق هندسية دولية حول العالم.",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "<p>كانت الشروحات واضحة جدًا والمشاريع عملية للغاية. أحببت بشكل خاص أقسام التصميم المتجاوب وتنظيم المشاريع.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "مايكل براون",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "مصمم واجهات وتجربة مستخدم",
+                "description": "عمل مع عملاء خاصين، وشركات تطوير عقاري، وفرق هندسية دولية حول العالم.",
+                "stars": "2"
+            }
+        ]
+    },
+    "en": {
+        "heroTitle": "Introducing Architechture Engineer Teacher",
+        "heroDescription": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam, provident animi accusantium laboriosam similique mollitia non beatae pariatur ad officiis, debitis odio ratione dignissimos qui illum repellendus itaque numquam! Illum.",
+        "heroBackground": "/storage/images/hero.webp",
+        "heroProfileImage": "/storage/images/me.webp",
+        "heroCoursesButton": {
+            "id": "#courses",
+            "text": "View Courses"
+        },
+        "heroProjectsButton": {
+            "id": "#projects",
+            "text": "View Projects"
+        },
+        "aboutTitle": "About The Teacher",
+        "aboutDescription": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam, provident animi accusantium laboriosam similique mollitia non beatae pariatur ad officiis, debitis odio ratione dignissimos qui illum repellendus itaque numquam! Illum.",
+        "aboutImages": {
+            "image1": "/storage/images/about.webp",
+            "image2": "/storage/images/struct.webp"
+        },
+        "aboutButton": {
+            "text": "View Achivements",
+            "id": "#achivements"
+        },
+        "aboutLabel": "About",
+        "servicesLabel": "Services",
+        "servicesTitle": "What I Offer",
+        "services": [
+            {
+                "title": "Courses",
+                "description": "I offer comprehensive courses in architecture engineering that cover a wide range of topics, including architectural design, construction techniques, sustainable building practices, and urban planning. My courses are designed to provide students with practical skills and theoretical knowledge to excel in the field of architecture.",
+                "icon": "/storage/images/courses.svg",
+                "link": "#courses"
+            },
+            {
+                "title": "Engineering Services",
+                "description": "I provide engineering consultancy services to clients in the architecture industry. My expertise includes structural analysis, building information modeling (BIM), and construction project management. I work closely with architects, contractors, and developers to ensure that projects are executed efficiently and meet the highest standards of quality and safety.",
+                "icon": "/storage/images/services.svg",
+                "link": "/engineering-services"
+            },
+            {
+                "title": "University Continuation",
+                "description": "I am committed to supporting students in their academic journey by offering guidance and mentorship for university continuation. I assist students in selecting the right architecture programs, preparing for entrance exams, and providing advice on career paths in architecture engineering. My goal is to help students achieve their educational and professional aspirations in the field of architecture.",
+                "icon": "/storage/images/follow.svg",
+                "link": "/university"
+            }
+        ],
+        "viewCardButtonText": "Click to Preview",
+        "projectsLabel": "Portfolio",
+        "projectsTitle": "My Projects",
+        "projectsDescription": "Here are some of my projects that I have worked on, showcasing my skills and expertise in architecture engineering. Each project represents a unique challenge and demonstrates my ability to deliver innovative solutions that meet the needs of my clients.",
+        "coursesLabel": "Courses",
+        "coursesTitle": "Current Courses",
+        "viewCourseButton": {
+            "text": "View Course Details",
+            "link": "/course/"
+        },
+        "achivementsTitle": "Career & Achivements",
+        "achivementsLabel": "Career",
+        "achivements": [
+            {
+                "title": "Bachelor's Degree in Architecture",
+                "description": "Graduated with honors in Architecture Engineering from Cairo University, Egypt (2010–2014), with a strong focus on urban planning, residential design, and sustainable construction methods."
+            },
+            {
+                "title": "Master's Degree in Sustainable Architecture",
+                "description": "Completed a Master's degree at the University of California, Berkeley, USA (2015–2017), specializing in eco-friendly building systems, energy-efficient design, and smart city development."
+            },
+            {
+                "title": "International Design Award",
+                "description": "Received the International Green Building Excellence Award in 2018 for designing an innovative low-energy residential complex integrating renewable energy solutions."
+            },
+            {
+                "title": "Certified LEED Professional",
+                "description": "Earned LEED AP certification, demonstrating advanced expertise in sustainable building practices, environmental design standards, and green construction management."
+            },
+            {
+                "title": "Published Research Contributions",
+                "description": "Published multiple research papers on sustainable urban architecture and climate-responsive building strategies in internationally recognized architectural journals."
+            },
+            {
+                "title": "Global Architecture Conferences",
+                "description": "Participated as a keynote speaker and workshop mentor at several international architecture and smart city conferences across Europe, the Middle East, and North America."
+            },
+            {
+                "title": "10+ Years Experience",
+                "description": "Over a decade of experience in architecture, interior design, and sustainable urban development projects."
+            },
+            {
+                "title": "120+ Completed Projects",
+                "description": "Successfully delivered residential, commercial, and mixed-use projects across multiple countries."
+            },
+            {
+                "title": "Award-Winning Designs",
+                "description": "Recognized for innovative and environmentally conscious architectural concepts in international competitions."
+            },
+            {
+                "title": "LEED Certified Architect",
+                "description": "Specialized in green building standards, energy-efficient planning, and sustainable construction solutions."
+            },
+            {
+                "title": "Global Client Collaboration",
+                "description": "Worked with private clients, real estate developers, and international engineering teams worldwide."
+            },
+            {
+                "title": "Smart & Modern Architecture",
+                "description": "Focused on creating functional, modern, and technology-integrated architectural spaces."
+            }
+        ],
+        "achivementsImage": "/storage/images/achivements.webp",
+        "reviewsLabel": "Reviews",
+        "reviewsTitle": "Friends Reviews",
+        "reviews": [
+            {
+                "userName": "Sarah Johnson",
+                "userImage": "/storage/images/student1.webp",
+                "userJob": "Frontend Developer",
+                "description": "<p>This course helped me move from beginner level to building complete real-world projects with confidence and modern design practices.</p>",
+                "stars": "5"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "Worked with private clients, real estate developers, and international engineering teams worldwide.",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "Worked with private clients, real estate developers, and international engineering teams worldwide.",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "Worked with private clients, real estate developers, and international engineering teams worldwide.",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/about.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "<p>The explanations were very clear and the projects were practical. I especially loved the responsive design and project structure sections.</p>",
+                "stars": "2"
+            },
+            {
+                "userName": "Michael Brown",
+                "userImage": "/storage/images/achivements.webp",
+                "userJob": "UI/UX Designer",
+                "description": "Worked with private clients, real estate developers, and international engineering teams worldwide.",
+                "stars": "2"
+            }
+        ]
+    }
+}

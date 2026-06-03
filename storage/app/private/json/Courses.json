@@ -1,0 +1,663 @@
+[
+    {
+        "name": {
+            "ar": "دورة تصميم واجهات المستخدم الحديثة",
+            "en": "Modern UI Design Course"
+        },
+        "description": {
+            "ar": "تعلم تصميم واجهات مستخدم احترافية وعصرية باستخدام Figma ومبادئ UX/UI مع تطبيقات عملية ومشاريع حقيقية.",
+            "en": "Learn to design modern and professional user interfaces using Figma and UX/UI principles through practical real-world projects."
+        },
+        "image": "/storage/images/image1p1.webp",
+        "heroImage": "/storage/images/image1p1.webp",
+        "price": "299",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "HTML Fundamentals",
+                    "ar": "أساسيات HTML"
+                }
+            },
+            {
+                "title": {
+                    "en": "CSS and Responsive Design",
+                    "ar": "CSS والتصميم المتجاوب"
+                }
+            },
+            {
+                "title": {
+                    "en": "JavaScript Essentials",
+                    "ar": "أساسيات JavaScript"
+                }
+            },
+            {
+                "title": {
+                    "en": "React.js Development",
+                    "ar": "تطوير التطبيقات باستخدام React.js"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build professional websites from scratch",
+                    "ar": "بناء مواقع احترافية من الصفر"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create responsive user interfaces",
+                    "ar": "إنشاء واجهات مستخدم متجاوبة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Develop full-stack applications",
+                    "ar": "تطوير تطبيقات Full Stack"
+                }
+            }
+        ],
+        "newCourse": false
+    },
+    {
+        "name": {
+            "ar": "دورة تطوير تطبيقات الموبايل",
+            "en": "Mobile App Development Course"
+        },
+        "description": {
+            "ar": "تعلم إنشاء تطبيقات أندرويد وiOS باستخدام React Native مع إدارة الحالة وربط APIs.",
+            "en": "Learn to build Android and iOS applications using React Native with state management and API integration."
+        },
+        "image": "/storage/images/image2p1.webp",
+        "heroImage": "/storage/images/image2p1.webp",
+        "price": "249",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "React Components",
+                    "ar": "مكونات React"
+                }
+            },
+            {
+                "title": {
+                    "en": "Hooks and State Management",
+                    "ar": "الـ Hooks وإدارة الحالة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Next.js Routing",
+                    "ar": "التوجيه في Next.js"
+                }
+            },
+            {
+                "title": {
+                    "en": "Server Side Rendering",
+                    "ar": "التصيير من جهة الخادم"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build SPA and SSR applications",
+                    "ar": "بناء تطبيقات SPA وSSR"
+                }
+            },
+            {
+                "title": {
+                    "en": "Use React Hooks effectively",
+                    "ar": "استخدام React Hooks باحترافية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Deploy Next.js applications",
+                    "ar": "نشر تطبيقات Next.js"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة الذكاء الاصطناعي للمبتدئين",
+            "en": "AI for Beginners Course"
+        },
+        "description": {
+            "ar": "ابدأ رحلتك في الذكاء الاصطناعي وتعلم أساسيات تعلم الآلة وتحليل البيانات باستخدام Python.",
+            "en": "Start your journey in artificial intelligence and learn machine learning and data analysis fundamentals using Python."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة الأمن السيبراني",
+            "en": "Cybersecurity Course"
+        },
+        "description": {
+            "ar": "تعرف على أساسيات الأمن السيبراني، حماية الشبكات، واكتشاف الثغرات وتأمين التطبيقات.",
+            "en": "Discover cybersecurity fundamentals, network protection, vulnerability detection, and application security."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة تحليل البيانات",
+            "en": "Data Analysis Course"
+        },
+        "description": {
+            "ar": "تعلم تحليل البيانات باستخدام Excel وPower BI وPython لتحويل البيانات إلى تقارير احترافية.",
+            "en": "Learn data analysis using Excel, Power BI, and Python to transform data into professional reports."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة تطوير الألعاب",
+            "en": "Game Development Course"
+        },
+        "description": {
+            "ar": "تعلم تطوير الألعاب الثنائية والثلاثية الأبعاد باستخدام Unity وC# مع مشاريع عملية.",
+            "en": "Learn 2D and 3D game development using Unity and C# through hands-on projects."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة التجارة الإلكترونية",
+            "en": "E-Commerce Development Course"
+        },
+        "description": {
+            "ar": "قم ببناء متاجر إلكترونية احترافية مع أنظمة الدفع وإدارة المنتجات والعملاء.",
+            "en": "Build professional e-commerce platforms with payment systems and product/customer management."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة تطوير APIs",
+            "en": "API Development Course"
+        },
+        "description": {
+            "ar": "تعلم إنشاء APIs احترافية باستخدام Laravel وNode.js مع التوثيق والحماية.",
+            "en": "Learn to build professional APIs using Laravel and Node.js with authentication and documentation."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة الحوسبة السحابية",
+            "en": "Cloud Computing Course"
+        },
+        "description": {
+            "ar": "تعرف على خدمات AWS وAzure وكيفية نشر التطبيقات وإدارة الخوادم السحابية.",
+            "en": "Explore AWS and Azure services and learn how to deploy applications and manage cloud servers."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    },
+    {
+        "name": {
+            "ar": "دورة تطوير WordPress",
+            "en": "WordPress Development Course"
+        },
+        "description": {
+            "ar": "تعلم بناء مواقع احترافية وقوالب مخصصة باستخدام WordPress وPHP.",
+            "en": "Learn to build professional websites and custom themes using WordPress and PHP."
+        },
+        "image": "/storage/images/image3p1.webp",
+        "heroImage": "/storage/images/image3p1.webp",
+        "price": "279",
+        "images": [
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp",
+            "/storage/images/image3p1.webp"
+        ],
+        "course_topics": [
+            {
+                "title": {
+                    "en": "Laravel Routing",
+                    "ar": "التوجيه في Laravel"
+                }
+            },
+            {
+                "title": {
+                    "en": "Eloquent ORM",
+                    "ar": "Eloquent ORM"
+                }
+            },
+            {
+                "title": {
+                    "en": "REST API Development",
+                    "ar": "تطوير REST API"
+                }
+            },
+            {
+                "title": {
+                    "en": "Authentication and Authorization",
+                    "ar": "المصادقة والصلاحيات"
+                }
+            }
+        ],
+        "learning_outcomes": [
+            {
+                "title": {
+                    "en": "Build scalable backend systems",
+                    "ar": "بناء أنظمة خلفية قابلة للتوسع"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create secure REST APIs",
+                    "ar": "إنشاء واجهات برمجية آمنة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Manage databases efficiently",
+                    "ar": "إدارة قواعد البيانات بكفاءة"
+                }
+            }
+        ]
+    }
+]

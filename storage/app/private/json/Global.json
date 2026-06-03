@@ -1,0 +1,210 @@
+{
+    "ar": {
+        "headTitle": "Rowad-Architecture Engineer",
+        "navBarLogo": { "link": "/", "icon": "/storage/images/logo.png" },
+        "mainLinks": [
+            { "text": "من نحن", "id": "#about" },
+            {
+                "text": "الخدمات",
+                "id": "#services"
+            },
+            {
+                "text": "أعمالنا السابقة",
+                "id": "#projects"
+            },
+            { "text": "الإنجازات", "id": "#achivements" },
+            { "text": "آراء العملاء", "id": "#reviews" }
+        ],
+        "navBarLang": { "text": "EN", "icon": "/storage/images/lang.svg" },
+        "navBarWhatsApp": {
+            "text": "واتساب",
+            "link": ""
+        },
+        "footerLogo": "/storage/images/logo.png",
+        "footerSocialMediaLinks": [
+            {
+                "link": "https://www.facebook.com",
+                "icon": "/storage/images/facebook.svg"
+            },
+            {
+                "link": "https://www.facebook.com",
+                "icon": "/storage/images/facebook.svg"
+            },
+            {
+                "link": "https://www.youtube.com",
+                "icon": "/storage/images/youtube.svg"
+            },
+            {
+                "link": "https://www.linkedin.com",
+                "icon": "/storage/images/linkedin.svg"
+            },
+            {
+                "link": "https://www.instagram.com",
+                "icon": "/storage/images/instagram.svg"
+            },
+            {
+                "link": "https://www.x.com",
+                "icon": "/storage/images/x.svg"
+            },
+            {
+                "link": "https://www.snapchat.com",
+                "icon": "/storage/images/snapchat.svg"
+            }
+        ],
+        "siteMapTitle": "خريطة الموقع",
+        "siteMap": [
+            {
+                "text": "من نحن",
+                "id": "#about"
+            },
+            {
+                "text": "الخدمات",
+                "id": "#services"
+            },
+            {
+                "text": "أعمالنا السابقة",
+                "id": "#projects"
+            },
+            {
+                "text": "الإنجازات",
+                "id": "#achivements"
+            },
+            {
+                "text": "آراء العملاء",
+                "id": "#reviews"
+            }
+        ],
+        "contactTitle": "معلومات التواصل",
+        "contactInformations": [
+            {
+                "text": "rowad@gmail.com",
+                "icon": "/storage/images/mail.svg",
+                "link": "mailto:rowad@gmail.com"
+            },
+            {
+                "text": "rowad@gmail.com",
+                "icon": "/storage/images/mail.svg",
+                "link": "mailto:rowad@gmail.com"
+            },
+            {
+                "text": "+905352880084",
+                "icon": "/storage/images/phone.svg",
+                "link": "tel:+905352880084"
+            },
+            {
+                "text": "+905352880084",
+                "icon": "/storage/images/whitewhatsapp.svg",
+                "link": "https://wa.me/+905352880084"
+            }
+        ],
+        "footerRightsText": "© جميع الحقوق محفوظة. يُمنع نسخ أو إعادة استخدام أي جزء من محتوى الموقع دون إذن مسبق.",
+        "dashboardSideBarTitle": "لوحة التحكم",
+        "dashboardSideBarLinks": [
+            {
+                "text": "المشاريع",
+                "link": "/dashboard/projects",
+                "active": "projects"
+            }
+        ]
+    },
+
+    "en": {
+        "headTitle": "Rowad-Architecture Engineer",
+        "navBarLogo": { "link": "/", "icon": "/storage/images/logo.png" },
+        "mainLinks": [
+            { "text": "About", "id": "#about" },
+            {
+                "text": "Services",
+                "id": "#services"
+            },
+            {
+                "text": "Previous Work",
+                "id": "#projects"
+            },
+            { "text": "Achivements", "id": "#achivements" },
+            { "text": "Reviews", "id": "#reviews" }
+        ],
+        "navBarLang": { "text": "AR", "icon": "/storage/images/lang.svg" },
+        "navBarWhatsApp": {
+            "text": "Whatsapp",
+            "link": ""
+        },
+        "footerLogo": "/storage/images/logo.png",
+        "footerSocialMediaLinks": [
+            {
+                "link": "https://www.facebook.com",
+                "icon": "/storage/images/facebook.svg"
+            },
+            {
+                "link": "https://www.facebook.com",
+                "icon": "/storage/images/facebook.svg"
+            },
+            {
+                "link": "https://www.youtube.com",
+                "icon": "/storage/images/youtube.svg"
+            },
+            {
+                "link": "https://www.linkedin.com",
+                "icon": "/storage/images/linkedin.svg"
+            },
+            {
+                "link": "https://www.instagram.com",
+                "icon": "/storage/images/instagram.svg"
+            },
+            {
+                "link": "https://www.x.com",
+                "icon": "/storage/images/x.svg"
+            },
+            {
+                "link": "https://www.snapchat.com",
+                "icon": "/storage/images/snapchat.svg"
+            }
+        ],
+        "siteMapTitle": "Site Map",
+        "siteMap": [
+            { "text": "About", "id": "#about" },
+            {
+                "text": "Services",
+                "id": "#services"
+            },
+            {
+                "text": "Previous Work",
+                "id": "#projects"
+            },
+            { "text": "Achivements", "id": "#achivements" },
+            { "text": "Reviews", "id": "#reviews" }
+        ],
+        "contactTitle": "Contact Informations",
+        "contactInformations": [
+            {
+                "text": "rowad@gmail.com",
+                "icon": "/storage/images/mail.svg",
+                "link": "mailto:rowad@gmail.com"
+            },
+            {
+                "text": "rowad@gmail.com",
+                "icon": "/storage/images/mail.svg",
+                "link": "mailto:rowad@gmail.com"
+            },
+            {
+                "text": "+905352880084",
+                "icon": "/storage/images/phone.svg",
+                "link": "tel:+905352880084"
+            },
+            {
+                "text": "+905352880084",
+                "icon": "/storage/images/whitewhatsapp.svg",
+                "link": "https://wa.me/+905352880084"
+            }
+        ],
+        "footerRightsText": "© All rights reserved. No part of this website or its content may be reproduced, distributed, or used without prior written permission.",
+        "dashboardSideBarTitle": "Dashboard",
+        "dashboardSideBarLinks": [
+            {
+                "text": "Projects",
+                "link": "/dashboard/projects",
+                "active": "projects"
+            }
+        ]
+    }
+}

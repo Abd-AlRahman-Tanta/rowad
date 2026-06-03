@@ -1,0 +1,76 @@
+{
+    "en": {
+        "itemName": "Project",
+        "submitUrl": "/dashboard/projects",
+        "addButton": {
+            "text": "Add Project",
+            "link": "/dashboard/projects/create"
+        },
+        "inputs": [
+            {
+                "name": "name",
+                "label": "Project Name",
+                "type": "spatie",
+                "fullWidth": true
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "images",
+                "label": "Project Images",
+                "type": "repeater",
+                "itemLabel": "Image",
+                "repeaterFields": [
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "file",
+                        "fullWidth": true
+                    }
+                ]
+            }
+        ],
+        "searchFields": [{ "name": "name", "translatable": true }]
+    },
+    "ar": {
+        "itemName": "المشروع",
+        "submitUrl": "/dashboard/projects",
+        "addButton": {
+            "text": "إضافة مشروع",
+            "link": "/dashboard/projects/create"
+        },
+        "inputs": [
+            {
+                "name": "name",
+                "label": "اسم المشروع",
+                "type": "spatie",
+                "fullWidth": true
+            },
+            {
+                "name": "description",
+                "label": "الوصف",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "images",
+                "label": "صور المشروع",
+                "type": "repeater",
+                "itemLabel": "صورة",
+                "repeaterFields": [
+                    {
+                        "name": "image",
+                        "label": "الصورة",
+                        "type": "file",
+                        "fullWidth": true
+                    }
+                ]
+            }
+        ],
+        "searchFields": [{ "name": "name", "translatable": true }]
+    }
+}
