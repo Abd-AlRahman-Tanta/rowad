@@ -1,4 +1,4 @@
-import{R as di,r as li,g as Gp,j as Kp,a as Jp}from"./app-BnwfZ6AE.js";/**
+import{R as di,r as li,g as Gp,j as Kp,a as Jp}from"./app-C9kaElD_.js";/**
  * @license Copyright (c) 2003-2025, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */function Xp(){const n={resolve:null,promise:null};return n.promise=new Promise(e=>{n.resolve=e}),n}/**

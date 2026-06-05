@@ -134,6 +134,28 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
                 Dashboard
               </Link>
             }
+            {
+              auth && !isDashboard() &&
+              <Link
+                href={"/logout"}
+                className="
+                fixed bottom-6 right-6
+                flex items-center gap-2
+                px-5 py-3
+                bg-red-600
+              text-arch-light font-semibold
+                rounded-full
+                shadow-lg
+                hover:shadow-xl
+                hover:scale-105
+                active:scale-95
+                transition-all duration-200 cursor-pointer  
+                z-50
+                "
+              >
+                Logout!
+              </Link>
+            }
             <NavBar {...navProps} />
             {children}
             <Footer {...footer} />

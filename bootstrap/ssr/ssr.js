@@ -2581,6 +2581,14 @@ const ProjectLayout = ({ children }) => {
             ]
           }
         ),
+        auth && !isDashboard() && /* @__PURE__ */ jsx(
+          Link,
+          {
+            href: "/logout",
+            className: "\n                fixed bottom-6 right-6\n                flex items-center gap-2\n                px-5 py-3\n                bg-red-600\n              text-arch-light font-semibold\n                rounded-full\n                shadow-lg\n                hover:shadow-xl\n                hover:scale-105\n                active:scale-95\n                transition-all duration-200 cursor-pointer  \n                z-50\n                ",
+            children: "Logout!"
+          }
+        ),
         /* @__PURE__ */ jsx(NavBar, { ...navProps }),
         children,
         /* @__PURE__ */ jsx(Footer, { ...footer })
