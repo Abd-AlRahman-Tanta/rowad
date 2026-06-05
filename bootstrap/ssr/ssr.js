@@ -457,15 +457,12 @@ const EditableObject = ({
 };
 const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton, anim }) => {
   const { locale } = usePage().props;
+  const { url } = usePage();
   return /* @__PURE__ */ jsxs(
     "div",
     {
       className: `
-      desc:w-[30%]
-      desc:grow
-      max-desc:w-full
-      max-desc:max-w-[calc((100%-32px)/2)]
-      max-mob:max-w-full
+      ${url.includes("dashboard") ? "w-full" : "desc:w-[30%]    desc:grow max-desc:w-full max-desc:max-w-[calc((100%-32px)/2)] max-mob:max-w-full"}
         bg-arch-card
         rounded-3xl
         overflow-hidden

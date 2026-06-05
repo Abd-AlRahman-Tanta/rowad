@@ -30,7 +30,7 @@
                 "title": "الاستشارات الهندسية",
                 "description": "أقدم خدمات استشارية هندسية للعملاء في صناعة العمارة. تشمل خبراتي التحليل الإنشائي، ونمذجة معلومات البناء (BIM)، وإدارة مشاريع البناء. أعمل بشكل وثيق مع المهندسين المعماريين والمقاولين والمطورين لضمان تنفيذ المشاريع بكفاءة وتلبية أعلى معايير الجودة والسلامة.",
                 "icon": "/storage/images/services.svg",
-                "link": "/engineering-services"
+                "link": "/services"
             },
             {
                 "title": "الدورات التدريبية",
@@ -236,7 +236,7 @@
                 "title": "Engineering Services",
                 "description": "I provide engineering consultancy services to clients in the architecture industry. My expertise includes structural analysis, building information modeling (BIM), and construction project management. I work closely with architects, contractors, and developers to ensure that projects are executed efficiently and meet the highest standards of quality and safety.",
                 "icon": "/storage/images/services.svg",
-                "link": "/engineering-services"
+                "link": "/services"
             },
             {
                 "title": "Courses",

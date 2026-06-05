@@ -12,6 +12,6 @@ Route::group([
 ], function () {
   Route::get("/", [PagesController::class, "home"])->name("home");
   Route::get("/university", [PagesController::class, "universityServices"])->name("university");
-  Route::get("/engineering-services", [PagesController::class, "engServices"])->name("eng");
+  Route::get("/services", [PagesController::class, "engServices"])->name("eng");
   Route::get("/course/{id}", [PagesController::class, "ShowCourseDetailsPage"])->name("CoursePage");
 });
