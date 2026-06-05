@@ -1,18 +1,19 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
-import { useState, useContext, createContext, useRef, useEffect, createElement } from "react";
 import { Link, usePage, router, Head, useForm, createInertiaApp } from "@inertiajs/react";
+import { useState, useContext, createContext, useRef, useEffect, createElement } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import axios from "axios";
-import { FiSearch, FiTrash2, FiPlus } from "react-icons/fi";
+import { FiSearch, FiTrash2, FiPlus, FiEyeOff, FiEye } from "react-icons/fi";
 import { create } from "zustand";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, EffectCoverflow, Thumbs } from "swiper/modules";
-import { FaArrowRight } from "react-icons/fa6";
-import createServer from "@inertiajs/react/server";
+import { useInView } from "react-intersection-observer";
 import { FaBars } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { ImWhatsapp } from "react-icons/im";
 import { MdOutlineLanguage } from "react-icons/md";
+import { FaArrowRight } from "react-icons/fa6";
+import createServer from "@inertiajs/react/server";
 import ReactDOMServer from "react-dom/server";
 const Image = ({ src, className }) => {
   return /* @__PURE__ */ jsx("img", { loading: "lazy", src: typeof src == "string" ? src : "", className: `${className}` });
@@ -345,48 +346,185 @@ const SearchHeader = ({ placeHolder, searchFields, onSearchModeChange }) => {
     )
   ] }) });
 };
-const Layer = ({ className }) => {
-  return /* @__PURE__ */ jsx("div", { className: `  absolute  ${className}` });
+function inferFieldType(key, richText) {
+  if (!key) {
+    return;
+  }
+  const k = key.toLowerCase();
+  if (k.includes("icon") || k.includes("image") || k.includes("logo") || k.includes("webp") || k.includes("png") || k.includes("jpg") || k.includes("svg"))
+    return "image";
+  if (k.includes("description") && richText)
+    return "richtext";
+  if (k.includes("content"))
+    return "textarea";
+  return "text";
+}
+const PageContentContext = createContext("");
+const usePageName = () => useContext(PageContentContext);
+const PageContentProvider = ({ pageName, children }) => {
+  return /* @__PURE__ */ jsx(PageContentContext.Provider, { value: pageName, children });
 };
-const ProjectCard = ({ description, images, name, created_at, isActive, onCLick }) => {
-  const project = {
-    name,
-    description,
-    images,
-    created_at
+const useEditorStore = create((set) => ({
+  deletable: false,
+  array: false,
+  fields: void 0,
+  canDelete: false,
+  open: false,
+  pageName: "",
+  path: "",
+  type: void 0,
+  value: null,
+  openEditor: (pageName, path, type, value, options) => set({
+    open: true,
+    pageName,
+    path,
+    type,
+    value,
+    array: options?.array ?? false,
+    fields: options?.inputs,
+    deletable: options?.deletable
+  }),
+  setValue: (value) => set({ value }),
+  closeEditor: () => set({ open: false })
+}));
+const EditableObject = ({
+  path,
+  fields,
+  children,
+  className,
+  top,
+  start,
+  deletable,
+  richText,
+  hideFirst,
+  dontAddInputsFor,
+  style
+}) => {
+  const openEditor = useEditorStore((s) => s.openEditor);
+  const pageName = usePageName();
+  const { locale, auth } = usePage().props;
+  const isRTL = locale === "ar";
+  let inputs = [{}];
+  let editorValue = "";
+  if (typeof fields === "object" && fields !== null) {
+    const entries = Object.entries(fields);
+    const filteredEntries = dontAddInputsFor ? entries.filter(([key]) => !dontAddInputsFor.includes(key)) : entries;
+    inputs = filteredEntries.map(([key, value]) => ({
+      key,
+      value,
+      type: inferFieldType(key, richText)
+    }));
+    const richInput = inputs.find((input) => input.type === "richtext");
+    editorValue = richInput?.value;
+  } else {
+    const value = fields;
+    const type = inferFieldType(value);
+    inputs = richText ? [{
+      key: "text",
+      value,
+      type: "richtext"
+    }] : [{
+      key: type,
+      value,
+      type
+    }];
+    editorValue = value;
+  }
+  const positionStyles = {
+    top: top ?? "10%",
+    [isRTL ? "right" : "left"]: start ?? "90%",
+    position: "absolute",
+    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
   };
-  return /* @__PURE__ */ jsxs("div", { onClick: () => onCLick && onCLick({ ...project }), className: `group relative rounded-lg overflow-hidden  
-      ${isActive ? "scale-100  " : "scale-90"} cursor-pointer duration-300   `, children: [
-    /* @__PURE__ */ jsx(
-      Image,
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${hideFirst && "first:hidden"} ${className}`, style, children: [
+    children,
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
+      "button",
       {
-        src: images[0].image,
-        className: "w-full h-[28rem] max-mob:h-[22rem] object-cover group-hover:scale-105 duration-500 "
+        title: "Object Edit",
+        type: "button",
+        onClick: (e) => {
+          e.preventDefault();
+          openEditor(pageName, path, "object", editorValue, { inputs, deletable });
+        },
+        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
+        style: positionStyles,
+        children: "🧩"
       }
-    ),
-    /* @__PURE__ */ jsx(
-      Layer,
-      {
-        className: "bg-gradient-to-t from-black/90 via-black/20 to-transparent top-0 left-0 w-full h-full"
-      }
-    ),
-    /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 start-3 z-10 max-w-[calc(100%-0.75rem)] ", children: [
-      /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: "text-yellow-500 text-sm",
-          children: created_at
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        SectionTitle,
-        {
-          className: "text-arch-light text-xl leading-3 font-bold",
-          children: name
-        }
-      )
-    ] })
+    ) : ""
   ] });
+};
+const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton, anim }) => {
+  const { locale } = usePage().props;
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: `
+      desc:w-[30%]
+      desc:grow
+      max-desc:w-full
+      max-desc:max-w-[calc((100%-32px)/2)]
+      max-mob:max-w-full
+        bg-arch-card
+        rounded-3xl
+        overflow-hidden
+        shadow-md
+        hover:shadow-2xl
+        transition-all
+        duration-300
+        hover:-translate-y-2
+        border border-gray-100
+        group
+        flex flex-col justify-between
+        ${anim?.className ?? ""}
+      `,
+      style: anim?.style,
+      children: [
+        /* @__PURE__ */ jsxs("div", { className: "relative w-full", children: [
+          /* @__PURE__ */ jsx(
+            Image,
+            {
+              src: image,
+              className: "\r\n            h-64\r\n            w-full\r\n            object-cover\r\n            group-hover:scale-105\r\n            transition-all\r\n            duration-500\r\n          "
+            }
+          ),
+          newCourse && /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "\r\n              absolute\r\n              top-4\r\n              end-4\r\n              bg-arch-accent\r\n              text-arch-light\r\n              text-xs\r\n              px-3\r\n              py-1\r\n              rounded-full\r\n              font-semibold\r\n              shadow-lg\r\n            ",
+              children: locale == "en" ? "NEW" : "جديد"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "p-6 w-full grow flex flex-col justify-between", children: [
+          /* @__PURE__ */ jsx(
+            SectionTitle,
+            {
+              className: "\r\n            w-full\r\n            text-xl\r\n            font-bold\r\n            text-arch-dark\r\n            mb-3\r\n          ",
+              children: name
+            }
+          ),
+          viewCourseButton && /* @__PURE__ */ jsx(
+            EditableObject,
+            {
+              className: "w-fit max-mob:w-full",
+              dontAddInputsFor: ["link"],
+              fields: viewCourseButton,
+              path: "viewCourseButton",
+              children: /* @__PURE__ */ jsx(Button, { className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
+                Link,
+                {
+                  href: viewCourseButton.link + id,
+                  children: viewCourseButton.text
+                }
+              ) })
+            }
+          )
+        ] })
+      ]
+    }
+  );
 };
 const Pagination = ({ links }) => {
   return /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center gap-2 flex-wrap", children: links.map((link, index) => /* @__PURE__ */ jsx(
@@ -405,8 +543,8 @@ const Pagination = ({ links }) => {
     index
   )) });
 };
-const DashboardProjects = ({ allData }) => {
-  const { projects, links, content } = allData;
+const DashboardCourses = ({ allData }) => {
+  const { courses, links, content } = allData;
   const [isSearching, setIsSearching] = useState(false);
   return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
     /* @__PURE__ */ jsx(
@@ -425,43 +563,21 @@ const DashboardProjects = ({ allData }) => {
         children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
       }
     ),
-    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 mob:grid-cols-2 tab:grid-cols-3 gap-6 mb-10", children: projects.map((project, i) => /* @__PURE__ */ createElement(ProjectCard, { ...project, key: i })) }),
+    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10", children: courses.map((course, i) => /* @__PURE__ */ jsx(
+      CourseCard,
+      {
+        viewCourseButton: content.viewCourseButton,
+        ...course
+      },
+      course.id
+    )) }),
     /* @__PURE__ */ jsx(Pagination, { links })
   ] }) });
 };
 const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: DashboardProjects
+  default: DashboardCourses
 }, Symbol.toStringTag, { value: "Module" }));
-function ObjectToFormData(obj, formData = new FormData(), parentKey = "") {
-  if (obj === null || obj === void 0) {
-    if (parentKey) formData.append(parentKey, "");
-    return formData;
-  }
-  if (obj instanceof File) {
-    formData.append(parentKey, obj);
-    return formData;
-  }
-  if (Array.isArray(obj)) {
-    if (obj.length === 0) {
-      formData.append(`${parentKey}`, "");
-    } else {
-      obj.forEach((item, index) => {
-        ObjectToFormData(item, formData, `${parentKey}[${index}]`);
-      });
-    }
-    return formData;
-  }
-  if (typeof obj === "object") {
-    Object.keys(obj).forEach((key) => {
-      const formKey = parentKey ? `${parentKey}[${key}]` : key;
-      ObjectToFormData(obj[key], formData, formKey);
-    });
-    return formData;
-  }
-  formData.append(parentKey, String(obj));
-  return formData;
-}
 let editorPromise = null;
 function SharedCkEditorLoader() {
   if (!editorPromise) {
@@ -756,6 +872,35 @@ const RichTextInput = ({ Editor, name, value, onChange }) => {
     isUploading && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center text-white text-xl z-50", children: "Uploading File..." })
   ] });
 };
+function ObjectToFormData(obj, formData = new FormData(), parentKey = "") {
+  if (obj === null || obj === void 0) {
+    if (parentKey) formData.append(parentKey, "");
+    return formData;
+  }
+  if (obj instanceof File) {
+    formData.append(parentKey, obj);
+    return formData;
+  }
+  if (Array.isArray(obj)) {
+    if (obj.length === 0) {
+      formData.append(`${parentKey}`, "");
+    } else {
+      obj.forEach((item, index) => {
+        ObjectToFormData(item, formData, `${parentKey}[${index}]`);
+      });
+    }
+    return formData;
+  }
+  if (typeof obj === "object") {
+    Object.keys(obj).forEach((key) => {
+      const formKey = parentKey ? `${parentKey}[${key}]` : key;
+      ObjectToFormData(obj[key], formData, formKey);
+    });
+    return formData;
+  }
+  formData.append(parentKey, String(obj));
+  return formData;
+}
 const JsonTextarea = ({ value, onChange }) => {
   const [isInvalid, setIsInvalid] = useState(false);
   const handleChange = (e) => {
@@ -1142,7 +1287,7 @@ function DynamicForm({
               {
                 type: "button",
                 onClick: () => addRepeaterItem(field.name, field.repeaterFields || []),
-                className: "flex items-center gap-2 bg-dark text-light px-4 py-2 rounded hover:bg-primary transition max-mob:mb-4",
+                className: "flex items-center gap-2 bg-dark text-white px-4 py-2 rounded hover:bg-arch-accent/90 bg-arch-accent cursor-pointer transition max-mob:mb-4 mt-5",
                 children: [
                   /* @__PURE__ */ jsx(FiPlus, {}),
                   " ",
@@ -1340,7 +1485,7 @@ function DynamicForm({
           field.type != "spatie" && field.type != "spatie-richtext" && field.type != "spatie-file" && field.type != "spatie-json" && getError(field.name) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getError(field.name) })
         ] }, index);
       }) }),
-      /* @__PURE__ */ jsxs("div", { className: `flex ${isEdit ? "justify-between" : "justify-center"} items-center mt-8 border-t pt-4`, children: [
+      /* @__PURE__ */ jsxs("div", { className: `flex  ${isEdit ? "justify-between" : "justify-center"} items-center mt-8 border-t pt-4`, children: [
         isEdit && deleteUrl ? /* @__PURE__ */ jsx(
           "button",
           {
@@ -1354,7 +1499,7 @@ function DynamicForm({
           "button",
           {
             disabled: processing,
-            className: "bg-dark hover:bg-primary duration-300 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50",
+            className: "bg-arch-dark hover:bg-arch-charcoal duration-300 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50",
             type: "submit",
             children: isEdit ? locale === "en" ? `Update Data` : `تحديث البيانات` : locale === "en" ? `Send Data` : `إرسال البيانات`
           }
@@ -1362,23 +1507,117 @@ function DynamicForm({
       ] })
     ] }) });
 }
-const DashboardProjectsCrud = ({ allData }) => {
-  const { isEdit, content, project } = allData;
-  console.log(project);
-  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-20 py-6 px-5", children: /* @__PURE__ */ jsx(
+const DashboardCoursesCrud = ({ allData }) => {
+  const { isEdit, content, course } = allData;
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: /* @__PURE__ */ jsx(
     DynamicForm,
     {
-      deleteUrl: isEdit ? content.submitUrl + "/" + project.id : void 0,
-      initialData: isEdit ? project : void 0,
+      deleteUrl: isEdit ? content.submitUrl + "/" + course.id : void 0,
+      initialData: isEdit ? course : void 0,
       fields: content.inputs,
-      submitUrl: isEdit ? content.submitUrl + "/" + project.id : content.submitUrl,
-      returnUrl: "/dashboard/projects/services",
+      submitUrl: isEdit ? content.submitUrl + "/" + course.id : content.submitUrl,
+      returnUrl: content.submitUrl,
       itemName: content.itemName,
       isEdit
     }
   ) }) });
 };
 const __vite_glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardCoursesCrud
+}, Symbol.toStringTag, { value: "Module" }));
+const Layer = ({ className }) => {
+  return /* @__PURE__ */ jsx("div", { className: `  absolute  ${className}` });
+};
+const ProjectCard = ({ description, images, name, created_at, isActive, onCLick, id }) => {
+  const project = {
+    name,
+    description,
+    images,
+    created_at
+  };
+  const goToProjectEditPage = (id2) => {
+    router.visit(`/dashboard/projects/${id2}`);
+  };
+  const { url } = usePage();
+  const isDashboard = url.includes("dashboard");
+  return /* @__PURE__ */ jsxs("div", { onClick: () => isDashboard ? goToProjectEditPage(id) : onCLick && onCLick({ ...project }), className: `group relative rounded-lg overflow-hidden  
+      ${isActive ? "scale-100  " : "scale-90"} cursor-pointer duration-300   `, children: [
+    /* @__PURE__ */ jsx(
+      Image,
+      {
+        src: images[0].image,
+        className: "w-full h-[28rem] max-mob:h-[22rem] object-cover group-hover:scale-105 duration-500 "
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      Layer,
+      {
+        className: "bg-gradient-to-t from-black/90 via-black/20 to-transparent top-0 left-0 w-full h-full"
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 start-3 z-10 max-w-[calc(100%-0.75rem)] ", children: [
+      /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "text-yellow-500 text-sm",
+          children: created_at
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        SectionTitle,
+        {
+          className: "text-arch-light text-xl leading-3 font-bold",
+          children: name
+        }
+      )
+    ] })
+  ] });
+};
+const DashboardProjects = ({ allData }) => {
+  const { projects, links, content } = allData;
+  const [isSearching, setIsSearching] = useState(false);
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
+    /* @__PURE__ */ jsx(
+      SearchHeader,
+      {
+        searchFields: content.searchFields,
+        placeHolder: content.searchHeaderPlaceholder,
+        onSearchModeChange: setIsSearching
+      }
+    ),
+    !isSearching && /* @__PURE__ */ jsx(
+      Link,
+      {
+        href: content.addButton.link,
+        className: "block w-fit  mt-5 mb-10 mx-auto",
+        children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10", children: projects.map((project, i) => /* @__PURE__ */ createElement(ProjectCard, { ...project, key: i })) }),
+    /* @__PURE__ */ jsx(Pagination, { links })
+  ] }) });
+};
+const __vite_glob_0_2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardProjects
+}, Symbol.toStringTag, { value: "Module" }));
+const DashboardProjectsCrud = ({ allData }) => {
+  const { isEdit, content, project } = allData;
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: /* @__PURE__ */ jsx(
+    DynamicForm,
+    {
+      deleteUrl: isEdit ? content.submitUrl + "/" + project.id : void 0,
+      initialData: isEdit ? project : void 0,
+      fields: content.inputs,
+      submitUrl: isEdit ? content.submitUrl + "/" + project.id : content.submitUrl,
+      returnUrl: content.submitUrl,
+      itemName: content.itemName,
+      isEdit
+    }
+  ) }) });
+};
+const __vite_glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: DashboardProjectsCrud
 }, Symbol.toStringTag, { value: "Module" }));
@@ -1397,115 +1636,7 @@ const MainTitle = ({ children, className, white, black, hero, center }) => {
     }
   );
 };
-function inferFieldType(key, richText) {
-  if (!key) {
-    return;
-  }
-  const k = key.toLowerCase();
-  if (k.includes("icon") || k.includes("image") || k.includes("logo") || k.includes("webp") || k.includes("png") || k.includes("jpg") || k.includes("svg"))
-    return "image";
-  if (k.includes("description") && richText)
-    return "richtext";
-  if (k.includes("content"))
-    return "textarea";
-  return "text";
-}
-const PageContentContext = createContext("");
-const usePageName = () => useContext(PageContentContext);
-const PageContentProvider = ({ pageName, children }) => {
-  return /* @__PURE__ */ jsx(PageContentContext.Provider, { value: pageName, children });
-};
-const useEditorStore = create((set) => ({
-  deletable: false,
-  array: false,
-  fields: void 0,
-  canDelete: false,
-  open: false,
-  pageName: "",
-  path: "",
-  type: void 0,
-  value: null,
-  openEditor: (pageName, path, type, value, options) => set({
-    open: true,
-    pageName,
-    path,
-    type,
-    value,
-    array: options?.array ?? false,
-    fields: options?.inputs,
-    deletable: options?.deletable
-  }),
-  setValue: (value) => set({ value }),
-  closeEditor: () => set({ open: false })
-}));
-const EditableObject = ({
-  path,
-  fields,
-  children,
-  className,
-  top,
-  start,
-  deletable,
-  richText,
-  hideFirst,
-  dontAddInputsFor
-}) => {
-  const openEditor = useEditorStore((s) => s.openEditor);
-  const pageName = usePageName();
-  const { locale, auth } = usePage().props;
-  const isRTL = locale === "ar";
-  let inputs = [{}];
-  let editorValue = "";
-  if (typeof fields === "object" && fields !== null) {
-    const entries = Object.entries(fields);
-    const filteredEntries = dontAddInputsFor ? entries.filter(([key]) => !dontAddInputsFor.includes(key)) : entries;
-    inputs = filteredEntries.map(([key, value]) => ({
-      key,
-      value,
-      type: inferFieldType(key, richText)
-    }));
-    const richInput = inputs.find((input) => input.type === "richtext");
-    editorValue = richInput?.value;
-  } else {
-    const value = fields;
-    const type = inferFieldType(value);
-    inputs = richText ? [{
-      key: "text",
-      value,
-      type: "richtext"
-    }] : [{
-      key: type,
-      value,
-      type
-    }];
-    editorValue = value;
-  }
-  const positionStyles = {
-    top: top ?? "10%",
-    [isRTL ? "right" : "left"]: start ?? "90%",
-    position: "absolute",
-    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
-  };
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${hideFirst && "first:hidden"} ${className}`, children: [
-    children,
-    // auth ?
-    /* @__PURE__ */ jsx(
-      "button",
-      {
-        title: "Object Edit",
-        type: "button",
-        onClick: (e) => {
-          e.preventDefault();
-          openEditor(pageName, path, "object", editorValue, { inputs, deletable });
-        },
-        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
-        style: positionStyles,
-        children: "🧩"
-      }
-    )
-  ] });
-};
-const EditableText = ({ path, children, richtext, top, start, text, className }) => {
+const EditableText = ({ path, children, richtext, top, start, text, className, style }) => {
   const openEditor = useEditorStore((s) => s.openEditor);
   const pageName = usePageName();
   const { locale } = usePage().props;
@@ -1517,11 +1648,11 @@ const EditableText = ({ path, children, richtext, top, start, text, className })
     transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
   };
   const { auth } = usePage().props;
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, children: [
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
     !richtext && children,
     richtext && typeof children === "string" && /* @__PURE__ */ jsx("div", { dangerouslySetInnerHTML: { __html: children } }),
-    // auth ?
-    /* @__PURE__ */ jsx(
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
       "button",
       {
         title: "Text Editing",
@@ -1535,7 +1666,7 @@ const EditableText = ({ path, children, richtext, top, start, text, className })
         className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
         children: "✏️"
       }
-    )
+    ) : ""
   ] });
 };
 const Label = ({ title, path, dontEdit, className }) => {
@@ -1543,7 +1674,7 @@ const Label = ({ title, path, dontEdit, className }) => {
     return /* @__PURE__ */ jsx(
       "div",
       {
-        className: `w-fit ${className} `,
+        className: `w-fit ${className} mb-6 `,
         children: /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-sm font-medium mb-4 leading-5", children: title })
       }
     );
@@ -1551,7 +1682,7 @@ const Label = ({ title, path, dontEdit, className }) => {
     return /* @__PURE__ */ jsx(
       EditableText,
       {
-        className: `w-fit ${className} `,
+        className: `w-fit ${className} mb-6 `,
         top: "40%",
         start: "10%",
         path: path || "",
@@ -1560,355 +1691,45 @@ const Label = ({ title, path, dontEdit, className }) => {
       }
     );
 };
-const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton }) => {
-  const { locale } = usePage().props;
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      className: "\r\n        bg-arch-card\r\n        rounded-3xl\r\n        overflow-hidden\r\n        shadow-md\r\n        hover:shadow-2xl\r\n        transition-all\r\n        duration-300\r\n        hover:-translate-y-2\r\n        border border-gray-100\r\n        group\r\n        flex flex-col justify-between\r\n      ",
-      children: [
-        /* @__PURE__ */ jsxs("div", { className: "relative w-full", children: [
-          /* @__PURE__ */ jsx(
-            Image,
-            {
-              src: image,
-              className: "\r\n            h-64\r\n            w-full\r\n            object-cover\r\n            group-hover:scale-105\r\n            transition-all\r\n            duration-500\r\n          "
-            }
-          ),
-          newCourse && /* @__PURE__ */ jsx(
-            "div",
-            {
-              className: "\r\n              absolute\r\n              top-4\r\n              end-4\r\n              bg-arch-accent\r\n              text-arch-light\r\n              text-xs\r\n              px-3\r\n              py-1\r\n              rounded-full\r\n              font-semibold\r\n              shadow-lg\r\n            ",
-              children: locale == "en" ? "NEW" : "جديد"
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "p-6 w-full grow flex flex-col justify-between", children: [
-          /* @__PURE__ */ jsx(
-            SectionTitle,
-            {
-              className: "\r\n            w-full\r\n            text-xl\r\n            font-bold\r\n            text-arch-dark\r\n            mb-3\r\n          ",
-              children: name
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            EditableObject,
-            {
-              className: "w-fit max-mob:w-full",
-              dontAddInputsFor: ["link"],
-              fields: viewCourseButton,
-              path: "viewCourseButton",
-              children: /* @__PURE__ */ jsx(Button, { className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
-                Link,
-                {
-                  href: viewCourseButton.link + id,
-                  children: viewCourseButton.text
-                }
-              ) })
-            }
-          )
-        ] })
-      ]
-    }
-  );
-};
-const CourseDetailsPage = ({ allData }) => {
-  const { data, course, moreCourses } = allData;
-  const { courses, links } = moreCourses;
-  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Course", children: /* @__PURE__ */ jsxs("div", { className: "pb-16 pt-32 relative bg-arch-accent/10", children: [
-    /* @__PURE__ */ jsxs("div", { className: "px-largeSaveSpace max-desc:px-mobSaveSpace ", children: [
-      /* @__PURE__ */ jsx(
-        Image,
-        {
-          className: "w-full h-[80vh] object-cover absolute inset-0 ",
-          src: course.heroImage
-        }
-      ),
-      /* @__PURE__ */ jsx("div", { className: "relative z-10", children: /* @__PURE__ */ jsxs("div", { className: "bg-arch-card rounded-3xl overflow-hidden shadow-xl grid grid-cols-1 desc:grid-cols-2 content-center", children: [
-        /* @__PURE__ */ jsxs("div", { className: "p-8 max-mob:p-6 text-arch-dark", children: [
-          /* @__PURE__ */ jsx(
-            Image,
-            {
-              src: course.image,
-              className: "w-full aspect-[1.5] object-cover rounded-2xl mb-10"
-            }
-          ),
-          /* @__PURE__ */ jsx(MainTitle, { black: true, className: "mb-7", children: course.name }),
-          /* @__PURE__ */ jsx(
-            "div",
-            {
-              className: "text-arch-gray leading-8 text-lg mb-2",
-              dangerouslySetInnerHTML: { __html: course.description }
-            }
-          ),
-          /* @__PURE__ */ jsxs("div", { className: "mb-6", children: [
-            /* @__PURE__ */ jsx(
-              EditableText,
-              {
-                path: "priceTitle",
-                text: data.priceTitle,
-                className: "text-sm font-semibold text-arch-accent w-fit",
-                children: data.priceTitle
-              }
-            ),
-            /* @__PURE__ */ jsxs(
-              "div",
-              {
-                className: "text-3xl font-bold text-arch-dark",
-                children: [
-                  course.price,
-                  /* @__PURE__ */ jsx("span", { className: "text-arch-accent", children: "$" })
-                ]
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsx(
-            EditableObject,
-            {
-              className: "w-fit max-mob:w-full",
-              fields: data.enrollButton,
-              path: "enrollButton",
-              children: /* @__PURE__ */ jsx("a", { target: "_blank", href: data.enrollButton.link, children: /* @__PURE__ */ jsx(Button, { className: "mx-auto max-mob:w-full", children: data.enrollButton.text }) })
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "p-8 max-mob:p-6 desc:border-s border-gray-300", children: [
-          course.newCourse && /* @__PURE__ */ jsx(EditableText, { path: "newCourseTitle", text: data.newCourseTitle, className: "block w-fit bg-arch-accent text-arch-light px-4 py-1 rounded-full text-sm font-semibold mb-6", children: data.newCourseTitle }),
-          /* @__PURE__ */ jsxs("div", { className: "mb-6", children: [
-            /* @__PURE__ */ jsx(EditableText, { start: "10%", path: "CourseTopicsTitle", text: data.CourseTopicsTitle, className: "text-2xl font-bold mb-3 text-arch-dark", children: data.CourseTopicsTitle }),
-            /* @__PURE__ */ jsx("ul", { className: "space-y-2", children: course.topics.map((topic) => /* @__PURE__ */ jsxs(
-              "li",
-              {
-                className: "flex items-center gap-3 text-arch-charcoal leading-7",
-                children: [
-                  /* @__PURE__ */ jsx("span", { className: " w-2 aspect-square bg-arch-accent/95 rounded-full" }),
-                  topic.title
-                ]
-              },
-              topic.id
-            )) })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx(
-              EditableText,
-              {
-                start: "10%",
-                text: data.learningPointsTitle,
-                path: "learningPointsTitle",
-                className: "text-2xl font-bold mb-3 text-arch-dark",
-                children: data.learningPointsTitle
-              }
-            ),
-            /* @__PURE__ */ jsx("ul", { className: "space-y-2", children: course.learningPoints.map((point) => /* @__PURE__ */ jsxs(
-              "li",
-              {
-                className: "flex items-center gap-3 text-arch-charcoal  leading-7",
-                children: [
-                  /* @__PURE__ */ jsx("span", { className: " w-2 h-2 bg-arch-accent/95 rounded-full" }),
-                  point.title
-                ]
-              },
-              point.id
-            )) })
-          ] })
-        ] })
-      ] }) })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "relative pt-16 overflow-hidden  ", children: [
-      /* @__PURE__ */ jsxs("div", { className: "mb-8 px-largeSaveSpace max-desc:px-mobSaveSpace", children: [
-        /* @__PURE__ */ jsx(Label, { title: data.label, path: "label" }),
-        /* @__PURE__ */ jsx(EditableText, { className: "w-fit", path: "title", text: data.title, children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: data.title }) })
-      ] }),
-      /* @__PURE__ */ jsx(
-        Swiper,
-        {
-          modules: [Autoplay, Navigation, EffectCoverflow],
-          effect: "coverflow",
-          grabCursor: true,
-          centeredSlides: true,
-          loop: true,
-          slidesPerView: "auto",
-          speed: 900,
-          autoplay: {
-            delay: 3e3,
-            disableOnInteraction: false
-          },
-          navigation: {
-            nextEl: ".arch-next",
-            prevEl: ".arch-prev"
-          },
-          coverflowEffect: {
-            rotate: 0,
-            stretch: 60,
-            depth: 220,
-            modifier: 1,
-            slideShadows: false,
-            scale: 0.82
-          },
-          className: "!overflow-visible",
-          children: course.images.map((image, index) => /* @__PURE__ */ jsx(
-            SwiperSlide,
-            {
-              className: "!w-[320px] mob:!w-[420px] tab:!w-[560px] desc:!w-[680px]",
-              children: ({ isActive }) => /* @__PURE__ */ jsx(
-                "div",
-                {
-                  className: `relative overflow-hidden transition-all duration-700 ${isActive ? "opacity-100" : "opacity-40 scale-95"}`,
-                  children: /* @__PURE__ */ jsxs("div", { className: "relative aspect-[16/10] overflow-hidden", children: [
-                    /* @__PURE__ */ jsx(
-                      Image,
-                      {
-                        src: image.image,
-                        className: `w-full h-full object-cover transition-all duration-700 ${isActive ? "grayscale-0 scale-100" : "grayscale scale-105"}`
-                      }
-                    ),
-                    /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" }),
-                    /* @__PURE__ */ jsx(
-                      "div",
-                      {
-                        className: `absolute bottom-0 left-0 h-[2px] bg-arch-accent transition-all duration-700 ${isActive ? "w-full" : "w-0"}`
-                      }
-                    ),
-                    /* @__PURE__ */ jsx("div", { className: "absolute bottom-5 left-5 bg-arch-dark px-2 py-1", children: /* @__PURE__ */ jsx("div", { className: "text-arch-card font-medium text-sm", children: ` ${index + 1}` }) })
-                  ] })
-                }
-              )
-            },
-            index
-          ))
-        }
-      ),
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mt-6  px-largeSaveSpace max-desc:px-mobSaveSpace   ", children: [
-        /* @__PURE__ */ jsx(
-          EditableText,
-          {
-            className: "w-fit",
-            text: data.prevLabel,
-            path: "prevLabel",
-            children: /* @__PURE__ */ jsxs(Button, { className: "arch-prev", children: [
-              /* @__PURE__ */ jsx("span", { className: "flex items-center justify-center w-10 h-10", children: /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: /* @__PURE__ */ jsx("path", { d: "M10 3L5 8L10 13", stroke: "currentColor", strokeWidth: "1.2" }) }) }),
-              /* @__PURE__ */ jsx("span", { className: "text-xs tracking-[0.12em] uppercase hidden sm:block ", children: data.prevLabel })
-            ] })
-          }
-        ),
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-1 mx-6", children: [
-          /* @__PURE__ */ jsx("div", { className: "h-[1px] flex-1 bg-gray-300" }),
-          /* @__PURE__ */ jsx("span", { className: "w-3 aspect-square bg-arch-accent rounded-full" }),
-          /* @__PURE__ */ jsx("div", { className: "h-[1px] flex-1 bg-gray-300" })
-        ] }),
-        /* @__PURE__ */ jsx(
-          EditableText,
-          {
-            className: "w-fit",
-            text: data.nextLabel,
-            path: "nextLabel",
-            children: /* @__PURE__ */ jsxs(Button, { className: "arch-next", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-xs tracking-[0.12em] uppercase hidden sm:block ", children: data.nextLabel }),
-              /* @__PURE__ */ jsx("span", { className: "flex items-center justify-center w-10 h-10 ", children: /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: /* @__PURE__ */ jsx("path", { d: "M6 3L11 8L6 13", stroke: "currentColor", strokeWidth: "1.2" }) }) })
-            ] })
-          }
-        )
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace pt-20", children: [
-      /* @__PURE__ */ jsx(Label, { title: data.showMoreLabel, path: "showMoreLabel" }),
-      /* @__PURE__ */ jsx(
-        EditableText,
-        {
-          text: data.showMoreTitle,
-          path: "showMoreTitle",
-          className: "w-fit mb-14",
-          children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: data.showMoreTitle })
-        }
-      ),
-      /* @__PURE__ */ jsx("div", { className: "grid max-mob:grid-cols-1 max-desc:grid-cols-2 grid-cols-3 gap-8", children: courses.map((course2) => /* @__PURE__ */ jsx(
-        CourseCard,
-        {
-          viewCourseButton: data.viewCourseButton,
-          ...course2
-        },
-        course2.id
-      )) }),
-      /* @__PURE__ */ jsx("div", { className: "mt-14 flex justify-center", children: /* @__PURE__ */ jsx(Pagination, { links }) })
-    ] })
-  ] }) });
-};
-const __vite_glob_0_2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: CourseDetailsPage
-}, Symbol.toStringTag, { value: "Module" }));
-const AboutSection = ({ aboutButton, aboutDescription, aboutImages, aboutTitle, aboutLabel }) => {
-  return /* @__PURE__ */ jsxs("div", { id: "about", className: "scroll-m-10 w-full py-20 flex justify-between items-center gap-10 max-desc:flex-col px-largeSaveSpace max-desc:px-mobSaveSpace ", children: [
-    /* @__PURE__ */ jsxs("div", { children: [
-      /* @__PURE__ */ jsx(Label, { path: "aboutLabel", title: aboutLabel }),
-      /* @__PURE__ */ jsx(
-        EditableText,
-        {
-          start: "10%",
-          top: "40%",
-          path: "aboutTitle",
-          text: aboutTitle,
-          children: /* @__PURE__ */ jsx(
-            MainTitle,
-            {
-              black: true,
-              children: aboutTitle
-            }
-          )
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        EditableText,
-        {
-          start: "10%",
-          top: "40%",
-          className: "mt-4 mb-7 text-arch-gray text-justify text-lg leading-4 ",
-          text: aboutDescription,
-          path: "aboutDescription",
-          richtext: true,
-          children: aboutDescription
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        EditableObject,
-        {
-          className: "w-fit max-desc:mx-auto  max-mob:w-full",
-          path: "aboutButton",
-          fields: aboutButton,
-          children: /* @__PURE__ */ jsx("a", { target: "", href: aboutButton.id, children: /* @__PURE__ */ jsx(
-            Button,
-            {
-              className: "max-mob:w-full",
-              children: aboutButton.text
-            }
-          ) })
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsxs(
-      EditableObject,
+const EditableImage = ({
+  src,
+  path,
+  className,
+  children,
+  top,
+  start,
+  zIndex,
+  style
+}) => {
+  const openEditor = useEditorStore((s) => s.openEditor);
+  const pageName = usePageName();
+  const { locale, auth } = usePage().props;
+  const isRTL = locale === "ar";
+  const positionStyles = {
+    top: top ?? "20%",
+    [isRTL ? "right" : "left"]: start ?? "50%",
+    position: "absolute",
+    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`,
+    zIndex
+  };
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
+    children,
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
+      "button",
       {
-        className: "max-w-xl w-full rounded-lg overflow-hidden",
-        path: "aboutImages",
-        fields: aboutImages,
-        children: [
-          /* @__PURE__ */ jsx(
-            Image,
-            {
-              className: "w-full h-full absolute inset-0  object-cover ",
-              src: aboutImages.image2
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            Image,
-            {
-              className: "w-full aspect-[1.2] object-cover mix-blend-multiply  opacity-85 ",
-              src: aboutImages.image1
-            }
-          )
-        ]
+        type: "button",
+        title: "Edit image",
+        onClick: (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openEditor(pageName, path, "image", src);
+        },
+        style: positionStyles,
+        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
+        children: "🖼️"
       }
-    )
+    ) : ""
   ] });
 };
 const EditableArray = ({
@@ -1918,7 +1739,8 @@ const EditableArray = ({
   className,
   top,
   start,
-  dontAddInputsFor
+  dontAddInputsFor,
+  style
 }) => {
   const openEditor = useEditorStore((s) => s.openEditor);
   const pageName = usePageName();
@@ -1947,10 +1769,10 @@ const EditableArray = ({
     position: "absolute",
     transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
   };
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, children: [
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
     children,
-    // auth ?
-    /* @__PURE__ */ jsx(
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
       "button",
       {
         title: "Add Item",
@@ -1960,860 +1782,15 @@ const EditableArray = ({
         style: positionStyles,
         children: locale === "en" ? "➕Add" : "➕اضافة"
       }
-    )
+    ) : ""
   ] });
 };
-const EditableImage = ({
-  src,
-  path,
-  className,
-  children,
-  top,
-  start,
-  zIndex
-}) => {
-  const openEditor = useEditorStore((s) => s.openEditor);
-  const pageName = usePageName();
-  const { locale, auth } = usePage().props;
-  const isRTL = locale === "ar";
-  const positionStyles = {
-    top: top ?? "20%",
-    [isRTL ? "right" : "left"]: start ?? "50%",
-    position: "absolute",
-    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`,
-    zIndex
-  };
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, children: [
-    children,
-    // auth ?
-    /* @__PURE__ */ jsx(
-      "button",
-      {
-        type: "button",
-        title: "Edit image",
-        onClick: (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openEditor(pageName, path, "image", src);
-        },
-        style: positionStyles,
-        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
-        children: "🖼️"
-      }
-    )
-  ] });
-};
-const AchivementsSection = ({ achivements, achivementsLabel, achivementsTitle, achivementsImage }) => {
-  const { locale } = usePage().props;
-  return /* @__PURE__ */ jsxs("div", { id: "achivements", className: "w-full scroll-m-20 px-largeSaveSpace max-desc:px-mobSaveSpace  py-20 relative", children: [
-    /* @__PURE__ */ jsx(EditableImage, { start: "90%", top: "4rem", path: "achivementsImage", src: achivementsImage, className: "w-full h-full absolute! top-0 left-0 ", children: /* @__PURE__ */ jsx(Image, { className: "w-full h-full absolute top-0 left-0 object-cover opacity-10", src: achivementsImage }) }),
-    /* @__PURE__ */ jsx(Label, { title: achivementsLabel, path: "achivementsLabel", className: "mx-auto" }),
-    /* @__PURE__ */ jsx(EditableText, { path: "achivementsTitle", text: achivementsTitle, className: "mb-6 w-fit mx-auto mt-2 ", children: /* @__PURE__ */ jsx(MainTitle, { center: true, black: true, children: achivementsTitle }) }),
-    /* @__PURE__ */ jsx("div", { dir: "ltr", children: /* @__PURE__ */ jsxs(
-      EditableArray,
-      {
-        top: "-0.8rem",
-        start: "4rem",
-        fields: achivements[0],
-        path: "achivements",
-        className: "flex flex-col items-center max-desc:items-start gap-8 w-full pt-4 ",
-        children: [
-          achivements.map((ahv, i) => /* @__PURE__ */ jsx(
-            EditableObject,
-            {
-              path: `achivements.${i}`,
-              fields: ahv,
-              hideFirst: true,
-              deletable: true,
-              richText: true,
-              className: ` ${i % 2 != 0 ? "desc:-translate-x-1/2 desc:left-5" : "desc:translate-x-1/2 desc:right-5"}  z-10 `,
-              top: "40%",
-              start: "40%",
-              children: /* @__PURE__ */ jsxs(
-                "div",
-                {
-                  className: `w-fit  flex max-desc:flex-col-reverse 
-                ${i % 2 == 0 && "desc:flex-row-reverse"}  items-start max-desc:items-center  gap-8 `,
-                  children: [
-                    /* @__PURE__ */ jsxs("div", { dir: locale == "ar" ? "rtl" : "ltr", className: "desc:max-w-[23rem] w-full  ", children: [
-                      /* @__PURE__ */ jsx(SectionTitle, { children: ahv.title, className: `text-2xl leading-4 text-arch-dark  font-medium mb-3  ` }),
-                      /* @__PURE__ */ jsx(
-                        "div",
-                        {
-                          className: "text-lg text-arch-gray leading-3",
-                          dangerouslySetInnerHTML: { __html: ahv.description }
-                        }
-                      )
-                    ] }),
-                    /* @__PURE__ */ jsx(
-                      "div",
-                      {
-                        className: "shrink-0 mt-3 w-10 aspect-square rounded-full flex justify-center items-center text-arch-card bg-arch-accent ",
-                        children: i
-                      }
-                    )
-                  ]
-                }
-              )
-            },
-            i
-          )),
-          /* @__PURE__ */ jsx("div", { className: "w-1 bg-arch-gray/20 h-full absolute top-0 left-1/2 -translate-x-1/2 max-desc:hidden" })
-        ]
-      }
-    ) })
-  ] });
-};
-const CoursesSection = ({ viewCourseButton, courses, coursesTitle, links, coursesLabel }) => {
-  return /* @__PURE__ */ jsxs("div", { id: "courses", className: "scroll-m-10 py-16 px-largeSaveSpace max-desc:px-mobSaveSpace bg-arch-accent/10", children: [
-    /* @__PURE__ */ jsx(Label, { path: "coursesLabel", title: coursesLabel }),
-    /* @__PURE__ */ jsx(EditableText, { path: "coursesTitle", text: coursesTitle, className: "w-fit mb-14", children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: coursesTitle }) }),
-    /* @__PURE__ */ jsx("div", { className: "grid max-mob:grid-cols-1 max-desc:grid-cols-2 grid-cols-3 gap-8", children: courses.map((course) => /* @__PURE__ */ jsx(
-      CourseCard,
-      {
-        viewCourseButton,
-        ...course
-      },
-      course.id
-    )) }),
-    /* @__PURE__ */ jsx("div", { className: "mt-14 flex justify-center", children: /* @__PURE__ */ jsx(Pagination, { links }) })
-  ] });
-};
-const Description = ({ children, className }) => {
-  return /* @__PURE__ */ jsx("p", { className: `${className}`, children });
-};
-const ProjectPopup = ({ project, onClose }) => {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, []);
-  if (!project) return null;
-  const { locale } = usePage().props;
-  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[1300] bg-black/80 flex items-center justify-center animate-fadeIn", children: [
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        className: "absolute inset-0",
-        onClick: onClose
-      }
-    ),
-    /* @__PURE__ */ jsxs("div", { className: "relative w-[90%] max-w-[1920px] h-[90%] bg-arch-light rounded-2xl removeScroll shadow-2xl flex max-desc:flex-col animate-scaleIn overflow-auto", children: [
-      /* @__PURE__ */ jsxs("div", { className: "w-[60%] h-full max-desc:w-full  bg-black removeScroll ", children: [
-        /* @__PURE__ */ jsx("div", { className: "h-[calc(100%-100px)]", children: /* @__PURE__ */ jsx(
-          Swiper,
-          {
-            modules: [Thumbs],
-            thumbs: { swiper: thumbsSwiper },
-            className: "h-full",
-            children: project.images.map((img, i) => /* @__PURE__ */ jsx(SwiperSlide, { children: /* @__PURE__ */ jsx(
-              "img",
-              {
-                src: img.image,
-                className: "w-full h-full object-cover"
-              }
-            ) }, i))
-          }
-        ) }),
-        /* @__PURE__ */ jsx("div", { className: "h-[100px] p-2 bg-black", children: /* @__PURE__ */ jsx(
-          Swiper,
-          {
-            modules: [Thumbs],
-            onSwiper: setThumbsSwiper,
-            slidesPerView: 4,
-            spaceBetween: 10,
-            watchSlidesProgress: true,
-            className: "h-full",
-            children: project.images.map((img, i) => /* @__PURE__ */ jsx(SwiperSlide, { className: "p-2", children: /* @__PURE__ */ jsx("div", { className: "h-full w-full cursor-pointer rounded-md overflow-hidden border-2 border-transparent  swiper-thumb", children: /* @__PURE__ */ jsx(
-              "img",
-              {
-                src: img.image,
-                className: "w-full h-full object-cover"
-              }
-            ) }) }, i))
-          }
-        ) })
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "w-[40%] max-desc:w-full p-10 max-desc:p-6 max-mob:p-mobSaveSpace flex flex-col justify-center", children: [
-        /* @__PURE__ */ jsx(Description, { className: "text-sm text-gray-400 mb-2", children: project.created_at }),
-        /* @__PURE__ */ jsx(SectionTitle, { className: "text-3xl font-bold mb-4", children: project.name }),
-        /* @__PURE__ */ jsx(Description, { className: "text-gray-600 leading-7", children: project.description }),
-        /* @__PURE__ */ jsx(
-          Button,
-          {
-            className: "mt-6 w-fit max-mob:w-full",
-            children: locale === "en" ? "close" : "اغلاق",
-            clickFunction: onClose
-          }
-        )
-      ] })
-    ] })
-  ] });
-};
-const ProjectsSection = ({ projects, projectsDescription, projectsLabel, projectsTitle }) => {
-  const [activeProject, setActiveProject] = useState(null);
-  return /* @__PURE__ */ jsxs("div", { id: "projects", className: "w-full py-20 scroll-m-20", children: [
-    /* @__PURE__ */ jsxs("div", { className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace mb-16", children: [
-      /* @__PURE__ */ jsx(Label, { className: "mx-auto", path: "projectsLabel", title: projectsLabel }),
-      /* @__PURE__ */ jsx(
-        EditableText,
-        {
-          top: "50%",
-          path: "projectsTitle",
-          text: projectsTitle,
-          className: "w-fit mx-auto",
-          children: /* @__PURE__ */ jsx(
-            MainTitle,
-            {
-              center: true,
-              children: projectsTitle,
-              black: true
-            }
-          )
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        EditableText,
-        {
-          richtext: true,
-          text: projectsDescription,
-          path: "projectsDescription",
-          children: projectsDescription,
-          className: "text-arch-gray w-fit my-4 text-lg leading-4  text-center "
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsx(
-      Swiper,
-      {
-        modules: [Autoplay],
-        slidesPerView: 1.5,
-        centeredSlides: true,
-        spaceBetween: 0,
-        initialSlide: 2,
-        speed: 900,
-        autoplay: {
-          delay: 3500,
-          disableOnInteraction: false
-        },
-        breakpoints: {
-          768: {
-            slidesPerView: 2.5
-          },
-          992: {
-            slidesPerView: 3.5
-          }
-        },
-        className: "projects-swiper  ",
-        children: projects.map((project, index) => /* @__PURE__ */ jsx(SwiperSlide, { children: ({ isActive }) => /* @__PURE__ */ jsx(
-          ProjectCard,
-          {
-            onCLick: setActiveProject,
-            ...project,
-            isActive
-          }
-        ) }, index))
-      }
-    ),
-    activeProject && /* @__PURE__ */ jsx(
-      ProjectPopup,
-      {
-        project: activeProject,
-        onClose: () => setActiveProject(null)
-      }
-    )
-  ] });
-};
-const ServicesSection = ({ services, servicesLabel, servicesTitle, viewCardButtonText }) => {
-  const goToPage = (e, link) => {
-    e.preventDefault();
-    router.visit(link);
-  };
-  return /* @__PURE__ */ jsx("section", { id: "services", className: "py-20 bg-arch-accent/10 px-largeSaveSpace max-desc:px-mobSaveSpace scroll-m-16", children: /* @__PURE__ */ jsxs("div", { className: "", children: [
-    /* @__PURE__ */ jsx(Label, { title: servicesLabel, path: "servicesLabel" }),
-    /* @__PURE__ */ jsx(
-      EditableText,
-      {
-        className: "w-fit mt-1 mb-8",
-        text: servicesTitle,
-        path: "servicesTitle",
-        children: /* @__PURE__ */ jsx(MainTitle, { children: servicesTitle, black: true })
-      }
-    ),
-    /* @__PURE__ */ jsx("div", { className: "flex flex-wrap justify-center gap-6", children: services.map((service, index) => /* @__PURE__ */ jsx(
-      EditableObject,
-      {
-        dontAddInputsFor: ["link"],
-        richText: true,
-        fields: service,
-        path: `services.${index}`,
-        className: "bg-arch-light rounded-lg shadow-md   hover:shadow-xl transition border-2 border-transparent hover:border-arch-accent w-[calc((100%-3rem)/3)] max-desc:w-[calc((100%-3rem)/2)] max-mob:w-full ",
-        children: /* @__PURE__ */ jsxs(
-          "a",
-          {
-            className: "w-full p-6  h-full flex flex-col justify-between",
-            onClick: (e) => !service.link.includes("#") && goToPage(e, service.link),
-            href: service.link,
-            children: [
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("div", { className: "rounded-lg bg-arch-accent/20 p-3 w-fit aspect-square flex items-center justify-center mb-6", children: /* @__PURE__ */ jsx(Image, { src: service.icon, className: "w-16 object-contain" }) }),
-                /* @__PURE__ */ jsx(SectionTitle, { className: "font-bold text-xl text-arch-dark mb-3 ", children: service.title }),
-                /* @__PURE__ */ jsx("div", { className: "text-arch-gray font-medium", dangerouslySetInnerHTML: { __html: service.description } })
-              ] }),
-              /* @__PURE__ */ jsx(
-                EditableText,
-                {
-                  text: viewCardButtonText,
-                  path: "viewCardButtonText",
-                  className: "w-fit max-mob:w-full mt-5",
-                  children: /* @__PURE__ */ jsx(Button, { className: "max-mob:w-full", children: viewCardButtonText })
-                }
-              )
-            ]
-          }
-        )
-      },
-      index
-    )) })
-  ] }) });
-};
-const Review = ({ description, stars, userImage, userJob, userName, index }) => {
-  const [expanded, setExpanded] = useState(false);
-  const [isClamped, setIsClamped] = useState(false);
-  const descRef = useRef(null);
-  useEffect(() => {
-    const el = descRef.current;
-    if (!el) return;
-    setIsClamped(el.scrollHeight >= el.clientHeight + 1);
-  }, [description]);
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-[25.5rem] bg-arch-card rounded-3xl\r\n                  border border-arch-gray/10\r\n                  p-8\r\n                  shadow-review\r\n                  hover:shadow-reviewHover\r\n                  transition-all duration-500\r\n                  hover:-translate-y-2", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 mb-6", children: [
-      userImage ? /* @__PURE__ */ jsx(
-        Image,
-        {
-          src: userImage,
-          className: "\r\n                        w-16 aspect-square rounded-full object-cover\r\n                        border-2 border-arch-accent/20\r\n                      "
-        }
-      ) : /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: "\r\n                        w-16 aspect-square rounded-full\r\n                        bg-arch-light\r\n                        border-2 border-arch-accent/20\r\n                        flex items-center justify-center\r\n                        text-arch-accent\r\n                        font-bold text-lg\r\n                      ",
-          children: userName?.charAt(0)
-        }
-      ),
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx(SectionTitle, { children: userName, className: "text-lg font-medium text-arch-dark" }),
-        /* @__PURE__ */ jsx(
-          Description,
-          {
-            children: userJob,
-            className: "text-sm text-arch-gray"
-          }
-        )
-      ] })
-    ] }),
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        ref: descRef,
-        className: `
-          text-xl text-arch-gray leading-4
-          overflow-hidden
-          transition-all duration-500 ease-in-out
-          ${!expanded ? "line-clamp-4" : "line-clamp-none"}
-        `,
-        dangerouslySetInnerHTML: { __html: description }
-      }
-    ),
-    isClamped && /* @__PURE__ */ jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsx(
-      Button,
-      {
-        transparent: true,
-        dontAddShadow: true,
-        dontAddHoverEffect: true,
-        dontAddPadding: true,
-        black: true,
-        clickFunction: () => setExpanded((prev) => !prev),
-        className: "",
-        children: expanded ? "Show Less ↑" : "Show More ↓"
-      }
-    ) }),
-    /* @__PURE__ */ jsx("div", { className: "mt-8 flex items-center gap-1", children: Array.from({ length: 5 }).map((_, i) => {
-      const starsNumbers = Number(stars);
-      const filled = i < Math.floor(starsNumbers);
-      const half = !filled && i < starsNumbers;
-      return /* @__PURE__ */ jsxs(
-        "svg",
-        {
-          xmlns: "http://www.w3.org/2000/svg",
-          viewBox: "0 0 24 24",
-          className: "w-5 h-5",
-          stroke: "currentColor",
-          strokeWidth: 1.5,
-          fill: "none",
-          style: { color: "var(--color-arch-accent, #B09B71)" },
-          children: [
-            /* @__PURE__ */ jsx("defs", { children: /* @__PURE__ */ jsx("clipPath", { id: `half-${index}-${i}`, children: /* @__PURE__ */ jsx("rect", { x: "0", y: "0", width: "12", height: "24" }) }) }),
-            /* @__PURE__ */ jsx(
-              "path",
-              {
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                fill: "currentColor",
-                clipPath: half ? `url(#half-${index}-${i})` : void 0,
-                opacity: filled || half ? 1 : 0,
-                d: "M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              "path",
-              {
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                d: "M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
-              }
-            )
-          ]
-        },
-        i
-      );
-    }) })
-  ] });
-};
-function StudentReviews({ reviews, reviewsLabel, reviewsTitle }) {
-  return /* @__PURE__ */ jsx("section", { id: "reviews", className: "w-full py-24 bg-arch-accent/10 overflow-hidden scroll-m-8", children: /* @__PURE__ */ jsxs("div", { className: "px-largeSaveSpace max-desc:px-mobSaveSpace", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-12", children: [
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx(Label, { title: reviewsLabel, path: "reviewsLabel" }),
-        /* @__PURE__ */ jsx(
-          EditableText,
-          {
-            className: "w-fit",
-            path: "reviewsTitle",
-            text: reviewsTitle,
-            children: /* @__PURE__ */ jsx(MainTitle, { children: reviewsTitle, black: true })
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "hidden tab:flex rtl:flex-row-reverse items-center gap-3", children: [
-        /* @__PURE__ */ jsx(Button, { className: "student-prev button", children: /* @__PURE__ */ jsx(FaArrowRight, { className: "-scale-x-100" }) }),
-        /* @__PURE__ */ jsx(Button, { className: "student-next button", children: /* @__PURE__ */ jsx(FaArrowRight, {}) })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsx(
-      EditableArray,
-      {
-        fields: reviews[0],
-        path: "reviews",
-        top: "-1rem",
-        start: "1rem",
-        children: /* @__PURE__ */ jsx(
-          Swiper,
-          {
-            modules: [Navigation, Autoplay],
-            centeredSlides: true,
-            spaceBetween: 24,
-            slidesPerView: 1.2,
-            speed: 900,
-            autoplay: {
-              delay: 3500,
-              disableOnInteraction: false
-            },
-            navigation: {
-              prevEl: ".student-prev",
-              nextEl: ".student-next"
-            },
-            breakpoints: {
-              768: {
-                slidesPerView: 2
-              },
-              992: {
-                slidesPerView: 3
-              }
-            },
-            className: "!overflow-visible",
-            children: reviews.map((review, index) => index > 0 && /* @__PURE__ */ jsx(SwiperSlide, { children: /* @__PURE__ */ jsx(
-              EditableObject,
-              {
-                path: `reviews.${index}`,
-                fields: review,
-                deletable: true,
-                richText: true,
-                children: /* @__PURE__ */ jsx(Review, { ...review, index })
-              }
-            ) }, index))
-          }
-        )
-      }
-    )
-  ] }) });
-}
-const Hero = ({
-  heroBackground,
-  heroProjectsButton,
-  heroCoursesButton,
-  heroDescription,
-  heroProfileImage,
-  heroTitle
-}) => {
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      className: "w-full min-h-screen relative overflow-hidden px-largeSaveSpace max-desc:px-mobSaveSpace flex justify-center items-center  pt-32 max-desc:pt-40 pb-10",
-      children: [
-        heroBackground && /* @__PURE__ */ jsxs(
-          EditableImage,
-          {
-            start: "40%",
-            top: "8rem",
-            className: "absolute! top-0 start-0 w-full h-full",
-            src: heroBackground,
-            path: "heroBackground",
-            children: [
-              /* @__PURE__ */ jsx(
-                Image,
-                {
-                  className: "absolute w-full h-full top-0 left-0 object-cover",
-                  src: heroBackground
-                }
-              ),
-              /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0  bg-gradient-to-br from-arch-dark/35  to-arch-charcoal/50" })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxs(
-          "div",
-          {
-            className: "w-full flex justify-between items-center max-desc:items-start gap-10 max-desc:gap-5 max-desc:flex-col ",
-            children: [
-              /* @__PURE__ */ jsxs(
-                "div",
-                {
-                  className: "desc:max-w-xl  w-full",
-                  children: [
-                    heroTitle && /* @__PURE__ */ jsx(
-                      EditableText,
-                      {
-                        top: "30%",
-                        start: "10%",
-                        text: heroTitle,
-                        path: "heroTitle",
-                        children: /* @__PURE__ */ jsx(
-                          MainTitle,
-                          {
-                            hero: true,
-                            className: "mb-4",
-                            white: true,
-                            children: heroTitle
-                          }
-                        )
-                      }
-                    ),
-                    heroDescription && /* @__PURE__ */ jsx(
-                      EditableText,
-                      {
-                        start: "10%",
-                        top: "40%",
-                        text: heroDescription,
-                        path: "heroDescription",
-                        className: "text-arch-light/90 text-lg leading-4",
-                        richtext: true,
-                        children: heroDescription
-                      }
-                    ),
-                    /* @__PURE__ */ jsxs(
-                      "div",
-                      {
-                        className: "flex max-mob:flex-col items-center max-desc:justify-center gap-4 mt-6",
-                        children: [
-                          heroProjectsButton && /* @__PURE__ */ jsx(
-                            EditableObject,
-                            {
-                              dontAddInputsFor: ["id"],
-                              className: "max-mob:w-full",
-                              fields: heroProjectsButton,
-                              path: "heroProjectsButton",
-                              children: /* @__PURE__ */ jsx("a", { href: heroProjectsButton.id, children: /* @__PURE__ */ jsx(
-                                Button,
-                                {
-                                  className: "max-mob:w-full",
-                                  children: heroProjectsButton.text
-                                }
-                              ) })
-                            }
-                          ),
-                          heroCoursesButton && /* @__PURE__ */ jsx(
-                            EditableObject,
-                            {
-                              dontAddInputsFor: ["id"],
-                              className: "max-mob:w-full",
-                              fields: heroCoursesButton,
-                              path: "heroCoursesButton",
-                              children: /* @__PURE__ */ jsx("a", { href: heroCoursesButton.id, children: /* @__PURE__ */ jsx(
-                                Button,
-                                {
-                                  className: "max-mob:w-full",
-                                  children: heroCoursesButton.text,
-                                  border: true
-                                }
-                              ) })
-                            }
-                          )
-                        ]
-                      }
-                    )
-                  ]
-                }
-              ),
-              heroProfileImage && /* @__PURE__ */ jsx(
-                EditableImage,
-                {
-                  className: "max-w-sm w-full max-desc:self-center rounded-lg overflow-hidden",
-                  src: heroProfileImage,
-                  path: "heroProfileImage",
-                  children: /* @__PURE__ */ jsx(
-                    Image,
-                    {
-                      className: "w-full",
-                      src: heroProfileImage
-                    }
-                  )
-                }
-              )
-            ]
-          }
-        )
-      ]
-    }
-  );
-};
-const Home = ({ allData }) => {
-  const { data, projects, coursesData } = allData;
-  const { courses, links } = coursesData;
-  const hero = {
-    heroProjectsButton: data.heroProjectsButton,
-    heroBackground: data.heroBackground,
-    heroCoursesButton: data.heroCoursesButton,
-    heroDescription: data.heroDescription,
-    heroTitle: data.heroTitle,
-    heroProfileImage: data.heroProfileImage
-  };
-  const about = {
-    aboutButton: data.aboutButton,
-    aboutDescription: data.aboutDescription,
-    aboutImages: data.aboutImages,
-    aboutTitle: data.aboutTitle,
-    aboutLabel: data.aboutLabel
-  };
-  const projectsSectionProps = {
-    projects,
-    projectsDescription: data.projectsDescription,
-    projectsLabel: data.projectsLabel,
-    projectsTitle: data.projectsTitle
-  };
-  const coursesSectionProps = {
-    coursesTitle: data.coursesTitle,
-    viewCourseButton: data.viewCourseButton,
-    courses,
-    links,
-    coursesLabel: data.coursesLabel
-  };
-  const achivements = {
-    achivements: data.achivements,
-    achivementsLabel: data.achivementsLabel,
-    achivementsTitle: data.achivementsTitle,
-    achivementsImage: data.achivementsImage
-  };
-  const reviews = {
-    reviews: data.reviews,
-    reviewsLabel: data.reviewsLabel,
-    reviewsTitle: data.reviewsTitle
-  };
-  const services = {
-    services: data.services,
-    servicesLabel: data.servicesLabel,
-    servicesTitle: data.servicesTitle,
-    viewCardButtonText: data.viewCardButtonText
-  };
-  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Home", children: /* @__PURE__ */ jsxs("div", { className: "", children: [
-    /* @__PURE__ */ jsx(Hero, { ...hero }),
-    /* @__PURE__ */ jsx(AboutSection, { ...about }),
-    /* @__PURE__ */ jsx(ServicesSection, { ...services }),
-    /* @__PURE__ */ jsx(ProjectsSection, { ...projectsSectionProps }),
-    /* @__PURE__ */ jsx(CoursesSection, { ...coursesSectionProps }),
-    /* @__PURE__ */ jsx(AchivementsSection, { ...achivements }),
-    /* @__PURE__ */ jsx(StudentReviews, { ...reviews })
-  ] }) });
-};
-const __vite_glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: Home
-}, Symbol.toStringTag, { value: "Module" }));
-const GlobalServices = ({ discoverButton, services }) => {
-  return /* @__PURE__ */ jsxs("div", { className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace py-20", children: [
-    /* @__PURE__ */ jsx(EditableArray, { top: "-1.5rem", path: "services", fields: services[0], className: "w-full", children: services.map((service, i) => /* @__PURE__ */ jsxs(
-      EditableObject,
-      {
-        top: "30%",
-        start: i % 2 == 0 ? "10%" : "90%",
-        richText: true,
-        fields: service,
-        deletable: true,
-        hideFirst: true,
-        path: `services.${i}`,
-        className: `w-full flex ${i % 2 == 0 ? "max-desc:flex-col" : "max-desc:flex-col flex-row-reverse"}  justify-between items-center gap-8 mb-10`,
-        children: [
-          /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx(
-              SectionTitle,
-              {
-                children: service.title,
-                className: "text-xl font-bold text-arch-dark leading-2 mb-4"
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              "div",
-              {
-                className: "text-arch-gray text-lg leading-2",
-                dangerouslySetInnerHTML: { __html: service.description }
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsx(
-            Image,
-            {
-              src: service.image,
-              className: "max-w-xl w-full"
-            }
-          )
-        ]
-      },
-      i
-    )) }),
-    /* @__PURE__ */ jsx(
-      EditableObject,
-      {
-        className: "w-fit max-mob:w-full mx-auto mt-24",
-        fields: discoverButton,
-        path: "discoverButton",
-        children: /* @__PURE__ */ jsx("a", { href: discoverButton.link, target: "_blank", className: "max-mob:w-full max-mob:block", children: /* @__PURE__ */ jsx(
-          Button,
-          {
-            className: "max-mob:w-full",
-            children: discoverButton.text
-          }
-        ) })
-      }
-    )
-  ] });
-};
-const Services = ({ allData }) => {
-  const { data, serviceName } = allData;
-  const hero = {
-    heroBackground: data.heroBackground,
-    heroDescription: data.heroDescription,
-    heroTitle: data.heroTitle
-  };
-  const global = {
-    discoverButton: data.discoverButton,
-    services: data.services
-  };
-  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: serviceName, children: /* @__PURE__ */ jsxs("div", { children: [
-    /* @__PURE__ */ jsx(Hero, { ...hero }),
-    /* @__PURE__ */ jsx(GlobalServices, { ...global })
-  ] }) });
-};
-const __vite_glob_0_4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: Services
-}, Symbol.toStringTag, { value: "Module" }));
-const Login = () => {
-  const { locale } = usePage().props;
-  const [error, setError] = useState("");
-  const submit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const button = form.querySelector("button[type='submit']");
-    const email = form.email.value;
-    const password = form.password.value;
-    button.disabled = true;
-    button.innerHTML = `
-      <span class="flex items-center justify-center gap-2">
-        <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-        ${locale === "ar" ? "جاري تسجيل الدخول..." : "Logging in..."}
-      </span>
-    `;
-    setError("");
-    try {
-      const res = await axios.post("/login", { email, password });
-      if (res.data) {
-        router.reload();
-        router.visit("/dashboard");
-      }
-    } catch {
-      setError(
-        locale === "ar" ? "البريد الإلكتروني أو كلمة المرور غير صحيحة" : "Invalid email or password"
-      );
-    } finally {
-      button.disabled = false;
-      button.innerHTML = locale === "ar" ? "تسجيل الدخول" : "Login";
-    }
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen flex items-center justify-center bg-gray-100", children: [
-    /* @__PURE__ */ jsx(Head, { title: "login" }),
-    /* @__PURE__ */ jsxs(
-      "form",
-      {
-        onSubmit: submit,
-        className: "w-full max-w-md bg-white p-6 rounded-xl shadow-md space-y-4",
-        children: [
-          /* @__PURE__ */ jsx("h1", { className: "text-2xl font-semibold text-center", children: locale === "ar" ? "تسجيل الدخول" : "Login" }),
-          /* @__PURE__ */ jsx(
-            "input",
-            {
-              name: "email",
-              type: "email",
-              placeholder: locale === "ar" ? "البريد الإلكتروني" : "Email",
-              className: "w-full border rounded-lg px-4 py-2",
-              required: true
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "input",
-            {
-              name: "password",
-              type: "password",
-              placeholder: locale === "ar" ? "كلمة المرور" : "Password",
-              className: "w-full border rounded-lg px-4 py-2 ",
-              required: true
-            }
-          ),
-          error && /* @__PURE__ */ jsx("p", { className: "text-sm text-red-600 text-center", children: error }),
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              type: "submit",
-              className: "w-full bg-primary-500 text-white py-2 rounded-lg hover:bg-primary-600 transition disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center",
-              children: locale === "ar" ? "تسجيل الدخول" : "Login"
-            }
-          )
-        ]
-      }
-    )
-  ] });
-};
-const __vite_glob_0_5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: Login
-}, Symbol.toStringTag, { value: "Module" }));
 const Footer = ({ contactInformations, footerLogo, footerRightsText, footerSocialMediaLinks, siteMap, contactTitle, siteMapTitle }) => {
   const { component } = usePage();
   const scrollToSection = (id, e) => {
     e.preventDefault();
-    router.visit("/" + id);
+    localStorage.setItem("scrollToSection", id);
+    router.visit("/");
   };
   return /* @__PURE__ */ jsx("div", { className: "w-full py-20 bg-arch-charcoal", children: /* @__PURE__ */ jsxs("div", { className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace", children: [
     /* @__PURE__ */ jsxs("div", { className: "w-full  flex max-desc:flex-col justify-between gap-8 pb-8", children: [
@@ -2919,13 +1896,13 @@ const Footer = ({ contactInformations, footerLogo, footerRightsText, footerSocia
         ) })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "w-full  pt-8 border-t-2 border-t-arch-card/10", children: /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsx("div", { className: "w-full  pt-8 border-t-2  border-t-arch-card/10", children: /* @__PURE__ */ jsx(
       EditableText,
       {
         richtext: true,
         text: footerRightsText,
         path: "footerRightsText",
-        className: "text-arch-card text-center text-lg leading-2",
+        className: "text-arch-card text-center mx-auto w-fit text-lg leading-3",
         children: footerRightsText
       }
     ) })
@@ -2959,7 +1936,8 @@ const NavBarLinks = ({ mainLinks, navBarWhatsApp, className, closeList, navBarLo
   const { component } = usePage();
   const scrollToSection = (id, e) => {
     e.preventDefault();
-    router.visit("/" + id);
+    localStorage.setItem("scrollToSection", id);
+    router.visit("/");
   };
   return /* @__PURE__ */ jsxs("ul", { onClick: () => closeList && closeList(false), className: `  ${className} `, children: [
     navBarLogo && /* @__PURE__ */ jsx(
@@ -3024,15 +2002,11 @@ const LanguageChanger = ({
   const {
     props: { locale }
   } = usePage();
-  const [newUrl, setNewUrl] = useState(null);
-  useEffect(() => {
-    const { pathname, search, hash } = window.location;
-    const noPublic = pathname.replace(/^\/public/, "");
-    const cleanPath = noPublic.replace(/^\/(en|ar)/, "");
-    const finalPath = `${cleanPath || "/"}${search}${hash}`;
-    const url = locale === "en" ? `/ar${finalPath}` : `/en${finalPath}`;
-    setNewUrl(url);
-  }, [locale]);
+  const { pathname, search, hash } = window.location;
+  const noPublic = pathname.replace(/^\/public/, "");
+  const cleanPath = noPublic.replace(/^\/(en|ar)/, "");
+  const finalPath = `${cleanPath || "/"}${search}${hash}`;
+  const newUrl = locale === "en" ? `/ar${finalPath}` : `/en${finalPath}`;
   return /* @__PURE__ */ jsx(EditableObject, { dontAddInputsFor: ["icon"], top: "40%", path: "navBarLang", fields: navBarLang, children: /* @__PURE__ */ jsxs(
     Link,
     {
@@ -3204,6 +2178,7 @@ const EditorModal = () => {
   const [loading, setLoading] = useState(false);
   const Editor = useSharedCkEditor();
   if (!open) return null;
+  if (!auth) return null;
   const t = {
     title: locale === "en" ? "Edit Content" : "تعديل المحتوى",
     cancel: locale === "en" ? "Cancel" : "إلغاء",
@@ -3540,11 +2515,36 @@ const EditorModal = () => {
   ) });
 };
 const Notify = createContext(null);
+const Animations = createContext(null);
 const ProjectLayout = ({ children }) => {
   const [message, setMessage] = useState(null);
   const { globalData, locale, auth } = usePage().props;
   const { url } = usePage();
   const isDashboard = () => url.includes("/dashboard");
+  const getAnimClass = (inView, opts = {}) => {
+    const {
+      easing = "out",
+      variant = "fadeUp"
+    } = opts;
+    const easeClass = easing === "in" ? "ease-in" : easing === "inOut" ? "ease-in-out" : easing === "linear" ? "ease-linear" : "ease-out";
+    const base = `transition-all ${easeClass} will-change-transform will-change-opacity`;
+    if (variant === "fadeUp") {
+      return `${inView ? "viewEndEffect" : "viewStartEffect"} ${base}`;
+    }
+    const startOverride = variant === "fadeDown" ? "opacity-0 translate-y-10" : variant === "fadeLeft" ? "opacity-0 translate-x-10" : variant === "fadeRight" ? "opacity-0 -translate-x-10" : variant === "zoom" ? "opacity-0 scale-[0.98]" : variant === "blur" ? "opacity-0 blur-sm" : "";
+    const endOverride = variant === "fadeDown" || variant === "fadeLeft" || variant === "fadeRight" ? "opacity-100 translate-x-0 translate-y-0" : variant === "zoom" ? "opacity-100 scale-100" : variant === "blur" ? "opacity-100 blur-0" : "";
+    return `${inView ? endOverride : startOverride} ${base}`;
+  };
+  const animProps = (inView, opts = {}) => {
+    const { delay = 0, duration = 700 } = opts;
+    return {
+      className: `a-props ${getAnimClass(inView, opts)}`,
+      style: {
+        transitionDelay: `${delay}ms`,
+        transitionDuration: `${duration}ms`
+      }
+    };
+  };
   const navProps = {
     navBarLang: globalData.navBarLang,
     mainLinks: globalData.mainLinks,
@@ -3560,7 +2560,7 @@ const ProjectLayout = ({ children }) => {
     siteMap: globalData.siteMap,
     siteMapTitle: globalData.siteMapTitle
   };
-  return /* @__PURE__ */ jsx(Notify.Provider, { value: { message, setMessage }, children: /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Global", children: /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(Notify.Provider, { value: { message, setMessage }, children: /* @__PURE__ */ jsx(Animations.Provider, { value: { getAnimClass, animProps }, children: /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Global", children: /* @__PURE__ */ jsxs(
     "div",
     {
       id: "pageLayout",
@@ -3589,19 +2589,1276 @@ const ProjectLayout = ({ children }) => {
         /* @__PURE__ */ jsx(Footer, { ...footer })
       ]
     }
-  ) }) });
+  ) }) }) });
 };
+const CourseDetailsPage = ({ allData }) => {
+  const { data, course, moreCourses } = allData;
+  const { courses, links } = moreCourses;
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
+  const anim = useContext(Animations);
+  const pCard = anim?.animProps(inView, { delay: 0, duration: 900, variant: "zoom" });
+  const pLeft = anim?.animProps(inView, { delay: 120, duration: 850, variant: "fadeLeft" });
+  const pRight = anim?.animProps(inView, { delay: 220, duration: 850, variant: "fadeRight" });
+  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Course", children: /* @__PURE__ */ jsxs("div", { ref, className: "pb-16 pt-32 relative bg-arch-accent/10", children: [
+    /* @__PURE__ */ jsxs("div", { className: "px-largeSaveSpace max-desc:px-mobSaveSpace ", children: [
+      /* @__PURE__ */ jsx(
+        Image,
+        {
+          className: "w-full h-[80vh] object-cover absolute inset-0 ",
+          src: course.heroImage
+        }
+      ),
+      /* @__PURE__ */ jsx("div", { className: "relative z-10", children: /* @__PURE__ */ jsxs("div", { className: `bg-arch-card rounded-3xl overflow-hidden shadow-xl grid grid-cols-1 desc:grid-cols-2 content-center ${pCard?.className ?? ""}`, style: pCard?.style, children: [
+        /* @__PURE__ */ jsxs("div", { className: `p-8 max-mob:p-6 text-arch-dark ${pLeft?.className ?? ""}`, style: pLeft?.style, children: [
+          /* @__PURE__ */ jsx(
+            Image,
+            {
+              src: course.image,
+              className: "w-full aspect-[1.5] object-cover rounded-2xl mb-10"
+            }
+          ),
+          /* @__PURE__ */ jsx(MainTitle, { black: true, className: "mb-7", children: course.name }),
+          /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "text-arch-gray leading-8 text-lg mb-2",
+              dangerouslySetInnerHTML: { __html: course.description }
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "mb-6", children: [
+            /* @__PURE__ */ jsx(
+              EditableText,
+              {
+                path: "priceTitle",
+                text: data.priceTitle,
+                className: "text-sm font-semibold text-arch-accent w-fit",
+                children: data.priceTitle
+              }
+            ),
+            /* @__PURE__ */ jsxs(
+              "div",
+              {
+                className: "text-3xl font-bold text-arch-dark",
+                children: [
+                  course.price,
+                  /* @__PURE__ */ jsx("span", { className: "text-arch-accent", children: "$" })
+                ]
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx(
+            EditableObject,
+            {
+              className: "w-fit max-mob:w-full",
+              fields: data.enrollButton,
+              path: "enrollButton",
+              children: /* @__PURE__ */ jsx("a", { target: "_blank", href: data.enrollButton.link, children: /* @__PURE__ */ jsx(Button, { className: "mx-auto max-mob:w-full", children: data.enrollButton.text }) })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: `p-8 max-mob:p-6 desc:border-s border-gray-300 ${pRight?.className ?? ""}`, style: pRight?.style, children: [
+          course.newCourse && /* @__PURE__ */ jsx(EditableText, { path: "newCourseTitle", text: data.newCourseTitle, className: "block w-fit bg-arch-accent text-arch-light px-4 py-1 rounded-full text-sm font-semibold mb-6", children: data.newCourseTitle }),
+          /* @__PURE__ */ jsxs("div", { className: "mb-6", children: [
+            /* @__PURE__ */ jsx(EditableText, { start: "10%", path: "CourseTopicsTitle", text: data.CourseTopicsTitle, className: "text-2xl font-bold mb-3 text-arch-dark", children: data.CourseTopicsTitle }),
+            /* @__PURE__ */ jsx("ul", { className: "space-y-2", children: course.topics.map((topic) => /* @__PURE__ */ jsxs(
+              "li",
+              {
+                className: "flex items-center gap-3 text-arch-charcoal leading-7",
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: " w-2 aspect-square bg-arch-accent/95 rounded-full" }),
+                  topic.title
+                ]
+              },
+              topic.id
+            )) })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx(
+              EditableText,
+              {
+                start: "10%",
+                text: data.learningPointsTitle,
+                path: "learningPointsTitle",
+                className: "text-2xl font-bold mb-3 text-arch-dark",
+                children: data.learningPointsTitle
+              }
+            ),
+            /* @__PURE__ */ jsx("ul", { className: "space-y-2", children: course.learningPoints.map((point) => /* @__PURE__ */ jsxs(
+              "li",
+              {
+                className: "flex items-center gap-3 text-arch-charcoal  leading-7",
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: " w-2 h-2 bg-arch-accent/95 rounded-full" }),
+                  point.title
+                ]
+              },
+              point.id
+            )) })
+          ] })
+        ] })
+      ] }) })
+    ] }),
+    course.images.length > 0 && (() => {
+      const pGalleryHead = anim?.animProps(inView, { delay: 140, duration: 850, variant: "fadeUp" });
+      const pGallery = anim?.animProps(inView, { delay: 240, duration: 900, variant: "blur" });
+      return /* @__PURE__ */ jsxs("div", { className: `relative pt-16 overflow-hidden  ${pGallery?.className ?? ""}`, style: pGallery?.style, children: [
+        /* @__PURE__ */ jsxs("div", { className: `mb-8 px-largeSaveSpace max-desc:px-mobSaveSpace ${pGalleryHead?.className ?? ""}`, style: pGalleryHead?.style, children: [
+          /* @__PURE__ */ jsx(Label, { title: data.label, path: "label" }),
+          /* @__PURE__ */ jsx(EditableText, { className: "w-fit", path: "title", text: data.title, children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: data.title }) })
+        ] }),
+        /* @__PURE__ */ jsx(
+          Swiper,
+          {
+            modules: [Autoplay, Navigation, EffectCoverflow],
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            loop: true,
+            slidesPerView: "auto",
+            speed: 900,
+            autoplay: {
+              delay: 3e3,
+              disableOnInteraction: false
+            },
+            navigation: {
+              nextEl: ".arch-next",
+              prevEl: ".arch-prev"
+            },
+            coverflowEffect: {
+              rotate: 0,
+              stretch: 60,
+              depth: 220,
+              modifier: 1,
+              slideShadows: false,
+              scale: 0.82
+            },
+            className: "!overflow-visible",
+            children: course.images.map((image, index) => /* @__PURE__ */ jsx(
+              SwiperSlide,
+              {
+                className: "!w-[320px] mob:!w-[420px] tab:!w-[560px] desc:!w-[680px]",
+                children: ({ isActive }) => /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: `relative overflow-hidden transition-all duration-700 ${isActive ? "opacity-100" : "opacity-40 scale-95"}`,
+                    children: /* @__PURE__ */ jsxs("div", { className: "relative aspect-[16/10] overflow-hidden", children: [
+                      /* @__PURE__ */ jsx(
+                        Image,
+                        {
+                          src: image.image,
+                          className: `w-full h-full object-cover transition-all duration-700 ${isActive ? "grayscale-0 scale-100" : "grayscale scale-105"}`
+                        }
+                      ),
+                      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" }),
+                      /* @__PURE__ */ jsx(
+                        "div",
+                        {
+                          className: `absolute bottom-0 left-0 h-[2px] bg-arch-accent transition-all duration-700 ${isActive ? "w-full" : "w-0"}`
+                        }
+                      ),
+                      /* @__PURE__ */ jsx("div", { className: "absolute bottom-5 left-5 bg-arch-dark px-2 py-1", children: /* @__PURE__ */ jsx("div", { className: "text-arch-card font-medium text-sm", children: ` ${index + 1}` }) })
+                    ] })
+                  }
+                )
+              },
+              index
+            ))
+          }
+        ),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mt-6  px-largeSaveSpace max-desc:px-mobSaveSpace   ", children: [
+          /* @__PURE__ */ jsx(
+            EditableText,
+            {
+              className: "w-fit",
+              text: data.prevLabel,
+              path: "prevLabel",
+              children: /* @__PURE__ */ jsxs(Button, { className: "arch-prev", children: [
+                /* @__PURE__ */ jsx("span", { className: "flex items-center justify-center w-10 h-10", children: /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: /* @__PURE__ */ jsx("path", { d: "M10 3L5 8L10 13", stroke: "currentColor", strokeWidth: "1.2" }) }) }),
+                /* @__PURE__ */ jsx("span", { className: "text-xs tracking-[0.12em] uppercase hidden sm:block ", children: data.prevLabel })
+              ] })
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 flex-1 mx-6", children: [
+            /* @__PURE__ */ jsx("div", { className: "h-[1px] flex-1 bg-gray-300" }),
+            /* @__PURE__ */ jsx("span", { className: "w-3 aspect-square bg-arch-accent rounded-full" }),
+            /* @__PURE__ */ jsx("div", { className: "h-[1px] flex-1 bg-gray-300" })
+          ] }),
+          /* @__PURE__ */ jsx(
+            EditableText,
+            {
+              className: "w-fit",
+              text: data.nextLabel,
+              path: "nextLabel",
+              children: /* @__PURE__ */ jsxs(Button, { className: "arch-next", children: [
+                /* @__PURE__ */ jsx("span", { className: "text-xs tracking-[0.12em] uppercase hidden sm:block ", children: data.nextLabel }),
+                /* @__PURE__ */ jsx("span", { className: "flex items-center justify-center w-10 h-10 ", children: /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 16 16", fill: "none", children: /* @__PURE__ */ jsx("path", { d: "M6 3L11 8L6 13", stroke: "currentColor", strokeWidth: "1.2" }) }) })
+              ] })
+            }
+          )
+        ] })
+      ] });
+    })(),
+    /* @__PURE__ */ jsxs("div", { className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace pt-20", children: [
+      (() => {
+        const pMoreHead = anim?.animProps(inView, { delay: 0, duration: 850, variant: "fadeUp" });
+        return /* @__PURE__ */ jsxs("div", { className: pMoreHead?.className, style: pMoreHead?.style, children: [
+          /* @__PURE__ */ jsx(Label, { title: data.showMoreLabel, path: "showMoreLabel" }),
+          /* @__PURE__ */ jsx(
+            EditableText,
+            {
+              text: data.showMoreTitle,
+              path: "showMoreTitle",
+              className: "w-fit mb-14",
+              children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: data.showMoreTitle })
+            }
+          )
+        ] });
+      })(),
+      /* @__PURE__ */ jsx("div", { className: "w-full flex flex-wrap justify-center gap-8", children: courses.map((c, index) => {
+        const pDomino = anim?.animProps(inView, {
+          delay: 140 + index % 9 * 90,
+          duration: 900,
+          variant: index % 2 === 0 ? "fadeUp" : "fadeDown"
+        });
+        return /* @__PURE__ */ jsx(
+          CourseCard,
+          {
+            anim: pDomino,
+            viewCourseButton: data.viewCourseButton,
+            ...c
+          },
+          c.id
+        );
+      }) }),
+      /* @__PURE__ */ jsx("div", { className: "mt-14 flex justify-center", children: /* @__PURE__ */ jsx(Pagination, { links }) })
+    ] })
+  ] }) });
+};
+const __vite_glob_0_4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: CourseDetailsPage
+}, Symbol.toStringTag, { value: "Module" }));
+const AboutSection = ({ aboutButton, aboutDescription, aboutImages, aboutTitle, aboutLabel }) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.6 });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeUp" });
+  const pDesc = anim?.animProps(inView, { delay: 120, duration: 850, variant: "blur" });
+  const pBtn = anim?.animProps(inView, { delay: 240, duration: 750, variant: "zoom" });
+  const pImg = anim?.animProps(inView, { delay: 150, duration: 900, variant: "fadeRight" });
+  return /* @__PURE__ */ jsxs("div", { ref, id: "about", className: "scroll-m-10 w-full py-20 flex justify-between items-center gap-10 max-desc:flex-col px-largeSaveSpace max-desc:px-mobSaveSpace ", children: [
+    /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx(Label, { path: "aboutLabel", title: aboutLabel }),
+      /* @__PURE__ */ jsx(
+        EditableText,
+        {
+          start: "10%",
+          top: "40%",
+          path: "aboutTitle",
+          text: aboutTitle,
+          className: pTitle?.className,
+          style: pTitle?.style,
+          children: /* @__PURE__ */ jsx(
+            MainTitle,
+            {
+              black: true,
+              children: aboutTitle
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        EditableText,
+        {
+          start: "10%",
+          top: "40%",
+          className: `mt-4 mb-7 text-arch-gray text-justify text-lg leading-4 ${pDesc?.className ?? ""}`,
+          style: pDesc?.style,
+          text: aboutDescription,
+          path: "aboutDescription",
+          richtext: true,
+          children: aboutDescription
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        EditableObject,
+        {
+          dontAddInputsFor: ["id"],
+          className: `w-fit max-desc:mx-auto  max-mob:w-full ${pBtn?.className ?? ""}`,
+          style: pBtn?.style,
+          path: "aboutButton",
+          fields: aboutButton,
+          children: /* @__PURE__ */ jsx("a", { target: "", href: aboutButton.id, children: /* @__PURE__ */ jsx(
+            Button,
+            {
+              className: "max-mob:w-full",
+              children: aboutButton.text
+            }
+          ) })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs(
+      EditableObject,
+      {
+        className: `max-w-xl max-xl:max-w-md shrink-0  w-full rounded-lg overflow-hidden ${pImg?.className ?? ""}`,
+        style: pImg?.style,
+        path: "aboutImages",
+        fields: aboutImages,
+        children: [
+          /* @__PURE__ */ jsx(
+            Image,
+            {
+              className: "w-full h-full absolute inset-0  object-cover ",
+              src: aboutImages.image2
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            Image,
+            {
+              className: "w-full aspect-[1.2] object-cover mix-blend-multiply  opacity-85 ",
+              src: aboutImages.image1
+            }
+          )
+        ]
+      }
+    )
+  ] });
+};
+const AchivementsSection = ({ achivements, achivementsLabel, achivementsTitle, achivementsImage }) => {
+  const { locale } = usePage().props;
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const anim = useContext(Animations);
+  const pBg = anim?.animProps(inView, { delay: 0, duration: 900, variant: "blur" });
+  const pTitle = anim?.animProps(inView, { delay: 80, duration: 850, variant: "fadeUp" });
+  return /* @__PURE__ */ jsxs("div", { ref, id: "achivements", className: "w-full scroll-m-20 px-largeSaveSpace max-desc:px-mobSaveSpace  py-20 relative", children: [
+    /* @__PURE__ */ jsx(EditableImage, { start: "90%", top: "4rem", path: "achivementsImage", src: achivementsImage, className: `w-full h-full absolute! top-0 left-0 ${pBg?.className ?? ""}`, style: pBg?.style, children: /* @__PURE__ */ jsx(Image, { className: "w-full h-full absolute top-0 left-0 object-cover opacity-10", src: achivementsImage }) }),
+    /* @__PURE__ */ jsx(Label, { title: achivementsLabel, path: "achivementsLabel", className: "mx-auto" }),
+    /* @__PURE__ */ jsx(EditableText, { path: "achivementsTitle", text: achivementsTitle, className: `mb-6 w-fit mx-auto mt-2 ${pTitle?.className ?? ""}`, style: pTitle?.style, children: /* @__PURE__ */ jsx(MainTitle, { center: true, black: true, children: achivementsTitle }) }),
+    /* @__PURE__ */ jsx("div", { dir: "ltr", children: /* @__PURE__ */ jsxs(
+      EditableArray,
+      {
+        top: "-0.8rem",
+        start: "4rem",
+        fields: achivements[0],
+        path: "achivements",
+        className: "flex flex-col items-center max-desc:items-start gap-8 w-full pt-4 ",
+        children: [
+          achivements.map((ahv, i) => {
+            const pItem = anim?.animProps(inView, { delay: 200 + i * 90, duration: 850, variant: i % 2 === 0 ? "fadeLeft" : "fadeRight" });
+            return /* @__PURE__ */ jsx(
+              EditableObject,
+              {
+                path: `achivements.${i}`,
+                fields: ahv,
+                hideFirst: true,
+                deletable: true,
+                richText: true,
+                className: ` ${i % 2 != 0 ? "desc:-translate-x-1/2 desc:left-5" : "desc:translate-x-1/2 desc:right-5"}  z-10 max-desc:w-full ${pItem?.className ?? ""}`,
+                style: pItem?.style,
+                top: "40%",
+                start: "40%",
+                children: /* @__PURE__ */ jsxs(
+                  "div",
+                  {
+                    className: `w-fit max-desc:w-full  flex max-desc:flex-col-reverse 
+                ${i % 2 == 0 && "desc:flex-row-reverse"}  items-start max-desc:items-center  gap-8 `,
+                    children: [
+                      /* @__PURE__ */ jsxs("div", { dir: locale == "ar" ? "rtl" : "ltr", className: "desc:max-w-[23rem] w-full  ", children: [
+                        /* @__PURE__ */ jsx(SectionTitle, { children: ahv.title, className: `text-2xl leading-4 text-arch-dark  font-medium mb-3  ` }),
+                        /* @__PURE__ */ jsx(
+                          "div",
+                          {
+                            className: "text-lg text-arch-gray leading-3",
+                            dangerouslySetInnerHTML: { __html: ahv.description }
+                          }
+                        )
+                      ] }),
+                      /* @__PURE__ */ jsx(
+                        "div",
+                        {
+                          className: "shrink-0 mt-3 w-10 aspect-square rounded-full flex justify-center items-center text-arch-card bg-arch-accent ",
+                          children: i
+                        }
+                      )
+                    ]
+                  }
+                )
+              },
+              i
+            );
+          }),
+          /* @__PURE__ */ jsx("div", { className: "w-1 bg-arch-gray/20 h-full absolute top-0 left-1/2 -translate-x-1/2 max-desc:hidden" })
+        ]
+      }
+    ) })
+  ] });
+};
+const CoursesSection = ({ viewCourseButton, courses, coursesTitle, links, coursesLabel }) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: window.innerWidth < 768 ? 0.3 : 0.6 });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeUp" });
+  return /* @__PURE__ */ jsxs("div", { ref, id: "courses", className: "scroll-m-10 py-16 px-largeSaveSpace max-desc:px-mobSaveSpace bg-arch-accent/10", children: [
+    /* @__PURE__ */ jsx(Label, { path: "coursesLabel", title: coursesLabel }),
+    /* @__PURE__ */ jsx(EditableText, { path: "coursesTitle", text: coursesTitle, className: `w-fit mb-14 ${pTitle?.className ?? ""}`, style: pTitle?.style, children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: coursesTitle }) }),
+    /* @__PURE__ */ jsx("div", { className: "w-full flex flex-wrap justify-center gap-8", children: courses.map((course, index) => {
+      const pCard = anim?.animProps(inView, {
+        delay: 140 + index % 6 * 90,
+        duration: 850,
+        variant: index % 2 === 0 ? "fadeUp" : "fadeDown"
+      });
+      return /* @__PURE__ */ jsx(
+        CourseCard,
+        {
+          viewCourseButton,
+          ...course,
+          anim: pCard
+        },
+        course.id
+      );
+    }) }),
+    /* @__PURE__ */ jsx("div", { className: "mt-14 flex justify-center", children: /* @__PURE__ */ jsx(Pagination, { links }) })
+  ] });
+};
+const Description = ({ children, className }) => {
+  return /* @__PURE__ */ jsx("p", { className: `${className}`, dangerouslySetInnerHTML: { __html: children } });
+};
+const ProjectPopup = ({ project, onClose }) => {
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, []);
+  if (!project) return null;
+  const { locale } = usePage().props;
+  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[1300] bg-black/80 flex items-center justify-center animate-fadeIn", children: [
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "absolute inset-0",
+        onClick: onClose
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "relative w-[90%] max-w-[1920px] h-[90%] bg-arch-light rounded-2xl removeScroll shadow-2xl flex max-desc:flex-col animate-scaleIn overflow-auto", children: [
+      /* @__PURE__ */ jsxs("div", { className: "w-[60%] h-full max-desc:w-full  bg-black removeScroll ", children: [
+        /* @__PURE__ */ jsx("div", { className: "h-[calc(100%-100px)]", children: /* @__PURE__ */ jsx(
+          Swiper,
+          {
+            modules: [Thumbs],
+            thumbs: { swiper: thumbsSwiper },
+            className: "h-full",
+            children: project.images.map((img, i) => /* @__PURE__ */ jsx(SwiperSlide, { children: /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: img.image,
+                className: "w-full h-full object-cover"
+              }
+            ) }, i))
+          }
+        ) }),
+        /* @__PURE__ */ jsx("div", { className: "h-[100px] p-2 bg-black", children: /* @__PURE__ */ jsx(
+          Swiper,
+          {
+            modules: [Thumbs],
+            onSwiper: setThumbsSwiper,
+            slidesPerView: 4,
+            spaceBetween: 10,
+            watchSlidesProgress: true,
+            className: "h-full",
+            children: project.images.map((img, i) => /* @__PURE__ */ jsx(SwiperSlide, { className: "p-2", children: /* @__PURE__ */ jsx("div", { className: "h-full w-full cursor-pointer rounded-md overflow-hidden border-2 border-transparent  swiper-thumb", children: /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: img.image,
+                className: "w-full h-full object-cover"
+              }
+            ) }) }, i))
+          }
+        ) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "w-[40%] max-desc:w-full p-10 max-desc:p-6 max-mob:p-mobSaveSpace flex flex-col justify-center", children: [
+        /* @__PURE__ */ jsx(Description, { className: "text-sm text-gray-400 mb-2", children: project.created_at }),
+        /* @__PURE__ */ jsx(SectionTitle, { className: "text-3xl font-bold mb-4", children: project.name }),
+        /* @__PURE__ */ jsx(Description, { className: "text-gray-600 leading-7", children: project.description }),
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            className: "mt-6 w-fit max-mob:w-full",
+            children: locale === "en" ? "close" : "اغلاق",
+            clickFunction: onClose
+          }
+        )
+      ] })
+    ] })
+  ] });
+};
+const ProjectsSection = ({ projects, projectsDescription, projectsLabel, projectsTitle }) => {
+  const [activeProject, setActiveProject] = useState(null);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: window.innerWidth < 768 ? 0.3 : 0.45,
+    rootMargin: "0px 0px -15% 0px"
+  });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 850, variant: "fadeUp" });
+  const pDesc = anim?.animProps(inView, { delay: 140, duration: 900, variant: "blur" });
+  return /* @__PURE__ */ jsxs("div", { ref, id: "projects", className: "w-full py-20 scroll-m-20", children: [
+    /* @__PURE__ */ jsxs("div", { className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace mb-16", children: [
+      /* @__PURE__ */ jsx(Label, { className: "mx-auto", path: "projectsLabel", title: projectsLabel }),
+      /* @__PURE__ */ jsx(
+        EditableText,
+        {
+          top: "50%",
+          path: "projectsTitle",
+          text: projectsTitle,
+          className: `w-fit mx-auto ${pTitle?.className ?? ""}`,
+          style: pTitle?.style,
+          children: /* @__PURE__ */ jsx(
+            MainTitle,
+            {
+              center: true,
+              children: projectsTitle,
+              black: true
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        EditableText,
+        {
+          richtext: true,
+          text: projectsDescription,
+          path: "projectsDescription",
+          children: projectsDescription,
+          className: `text-arch-gray  my-4 text-lg text-center   leading-4  ${pDesc?.className ?? ""}`,
+          style: pDesc?.style
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx(
+      Swiper,
+      {
+        modules: [Autoplay],
+        slidesPerView: 1.5,
+        centeredSlides: true,
+        spaceBetween: 0,
+        initialSlide: 2,
+        speed: 900,
+        autoplay: {
+          delay: 3500,
+          disableOnInteraction: false
+        },
+        breakpoints: {
+          768: {
+            slidesPerView: 2.5
+          },
+          992: {
+            slidesPerView: 3.5
+          }
+        },
+        className: "projects-swiper",
+        children: projects.map((project, index) => {
+          return /* @__PURE__ */ jsx(
+            SwiperSlide,
+            {
+              children: ({ isActive }) => /* @__PURE__ */ jsx(
+                ProjectCard,
+                {
+                  onCLick: setActiveProject,
+                  ...project,
+                  isActive
+                }
+              )
+            },
+            index
+          );
+        })
+      }
+    ),
+    activeProject && /* @__PURE__ */ jsx(
+      ProjectPopup,
+      {
+        project: activeProject,
+        onClose: () => setActiveProject(null)
+      }
+    )
+  ] });
+};
+const ServicesSection = ({ services, servicesLabel, servicesTitle, viewCardButtonText }) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: window.innerWidth < 768 ? 0.3 : 0.6 });
+  const anim = useContext(Animations);
+  const pHead = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeUp" });
+  const goToPage = (e, link) => {
+    e.preventDefault();
+    router.visit(link);
+  };
+  return /* @__PURE__ */ jsx("section", { ref, id: "services", className: "py-20 bg-arch-accent/10 px-largeSaveSpace max-desc:px-mobSaveSpace scroll-m-16", children: /* @__PURE__ */ jsxs("div", { className: "", children: [
+    /* @__PURE__ */ jsx(Label, { title: servicesLabel, path: "servicesLabel" }),
+    /* @__PURE__ */ jsx(
+      EditableText,
+      {
+        className: `w-fit mt-1 mb-8 ${pHead?.className ?? ""}`,
+        style: pHead?.style,
+        text: servicesTitle,
+        path: "servicesTitle",
+        children: /* @__PURE__ */ jsx(MainTitle, { children: servicesTitle, black: true })
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "flex flex-wrap justify-center gap-6", children: services.map((service, index) => {
+      const pCard = anim?.animProps(inView, {
+        delay: 120 + index % 6 * 80,
+        duration: 800,
+        variant: index % 2 === 0 ? "fadeUp" : "fadeDown"
+      });
+      return /* @__PURE__ */ jsx(
+        EditableObject,
+        {
+          dontAddInputsFor: ["link"],
+          richText: true,
+          fields: service,
+          path: `services.${index}`,
+          className: `bg-arch-light rounded-lg shadow-md hover:shadow-xl transition border-2 border-transparent hover:border-arch-accent w-[calc((100%-3rem)/3)] max-desc:w-[calc((100%-1.5rem)/2)] max-mob:w-full ${pCard?.className ?? ""}`,
+          style: pCard?.style,
+          children: /* @__PURE__ */ jsxs(
+            "a",
+            {
+              className: "w-full p-6  h-full flex flex-col justify-between",
+              onClick: (e) => !service.link.includes("#") && goToPage(e, service.link),
+              href: service.link,
+              children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("div", { className: "rounded-lg bg-arch-accent/20 p-3 w-fit aspect-square flex items-center justify-center mb-6", children: /* @__PURE__ */ jsx(Image, { src: service.icon, className: "w-16 object-contain" }) }),
+                  /* @__PURE__ */ jsx(SectionTitle, { className: "font-bold text-xl text-arch-dark mb-3 ", children: service.title }),
+                  /* @__PURE__ */ jsx("div", { className: "text-arch-gray font-medium", dangerouslySetInnerHTML: { __html: service.description } })
+                ] }),
+                /* @__PURE__ */ jsx(
+                  EditableText,
+                  {
+                    text: viewCardButtonText,
+                    path: "viewCardButtonText",
+                    className: "w-fit max-mob:w-full mt-5",
+                    children: /* @__PURE__ */ jsx(Button, { className: "max-mob:w-full", children: viewCardButtonText })
+                  }
+                )
+              ]
+            }
+          )
+        },
+        index
+      );
+    }) })
+  ] }) });
+};
+const Review = ({ description, stars, userImage, userJob, userName, index }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const descRef = useRef(null);
+  useEffect(() => {
+    const el = descRef.current;
+    if (!el) return;
+    setIsClamped(el.scrollHeight >= el.clientHeight + 1);
+  }, [description]);
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-[25.5rem] bg-arch-card rounded-3xl\r\n                  border border-arch-gray/10\r\n                  p-8\r\n                  shadow-review\r\n                  hover:shadow-reviewHover\r\n                  transition-all duration-500\r\n                  hover:-translate-y-1", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 mb-6", children: [
+      userImage ? /* @__PURE__ */ jsx(
+        Image,
+        {
+          src: userImage,
+          className: "\r\n                        w-16 aspect-square rounded-full object-cover\r\n                        border-2 border-arch-accent/20\r\n                      "
+        }
+      ) : /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "\r\n                        w-16 aspect-square rounded-full\r\n                        bg-arch-light\r\n                        border-2 border-arch-accent/20\r\n                        flex items-center justify-center\r\n                        text-arch-accent\r\n                        font-bold text-lg\r\n                      ",
+          children: userName?.charAt(0)
+        }
+      ),
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx(SectionTitle, { children: userName, className: "text-lg font-medium text-arch-dark" }),
+        /* @__PURE__ */ jsx(
+          Description,
+          {
+            children: userJob,
+            className: "text-sm text-arch-gray"
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref: descRef,
+        className: `
+          text-xl text-arch-gray leading-4
+          overflow-hidden
+          transition-all duration-500 ease-in-out
+          ${!expanded ? "line-clamp-4" : "line-clamp-none"}
+        `,
+        dangerouslySetInnerHTML: { __html: description }
+      }
+    ),
+    isClamped && /* @__PURE__ */ jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsx(
+      Button,
+      {
+        transparent: true,
+        dontAddShadow: true,
+        dontAddHoverEffect: true,
+        dontAddPadding: true,
+        black: true,
+        clickFunction: () => setExpanded((prev) => !prev),
+        className: "",
+        children: expanded ? "Show Less ↑" : "Show More ↓"
+      }
+    ) }),
+    /* @__PURE__ */ jsx("div", { className: "mt-8 flex items-center gap-1", children: Array.from({ length: 5 }).map((_, i) => {
+      const starsNumbers = Number(stars);
+      const filled = i < Math.floor(starsNumbers);
+      const half = !filled && i < starsNumbers;
+      return /* @__PURE__ */ jsxs(
+        "svg",
+        {
+          xmlns: "http://www.w3.org/2000/svg",
+          viewBox: "0 0 24 24",
+          className: "w-5 h-5",
+          stroke: "currentColor",
+          strokeWidth: 1.5,
+          fill: "none",
+          style: { color: "var(--color-arch-accent, #B09B71)" },
+          children: [
+            /* @__PURE__ */ jsx("defs", { children: /* @__PURE__ */ jsx("clipPath", { id: `half-${index}-${i}`, children: /* @__PURE__ */ jsx("rect", { x: "0", y: "0", width: "12", height: "24" }) }) }),
+            /* @__PURE__ */ jsx(
+              "path",
+              {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                fill: "currentColor",
+                clipPath: half ? `url(#half-${index}-${i})` : void 0,
+                opacity: filled || half ? 1 : 0,
+                d: "M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "path",
+              {
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                d: "M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+              }
+            )
+          ]
+        },
+        i
+      );
+    }) })
+  ] });
+};
+function StudentReviews({ reviews, reviewsLabel, reviewsTitle }) {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: window.innerWidth < 768 ? 0.3 : 0.5 });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 850, variant: "fadeUp" });
+  const pSlider = anim?.animProps(inView, { delay: 160, duration: 900, variant: "zoom" });
+  return /* @__PURE__ */ jsx("section", { ref, id: "reviews", className: "w-full py-24 bg-arch-accent/10 overflow-hidden scroll-m-8", children: /* @__PURE__ */ jsxs("div", { className: "px-largeSaveSpace max-desc:px-mobSaveSpace", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-12", children: [
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx(Label, { title: reviewsLabel, path: "reviewsLabel" }),
+        /* @__PURE__ */ jsx(
+          EditableText,
+          {
+            className: `w-fit ${pTitle?.className ?? ""}`,
+            style: pTitle?.style,
+            path: "reviewsTitle",
+            text: reviewsTitle,
+            children: /* @__PURE__ */ jsx(MainTitle, { children: reviewsTitle, black: true })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "hidden tab:flex rtl:flex-row-reverse items-center gap-3", children: [
+        /* @__PURE__ */ jsx(Button, { className: "student-prev button", children: /* @__PURE__ */ jsx(FaArrowRight, { className: "-scale-x-100" }) }),
+        /* @__PURE__ */ jsx(Button, { className: "student-next button", children: /* @__PURE__ */ jsx(FaArrowRight, {}) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx(
+      EditableArray,
+      {
+        fields: reviews[0],
+        path: "reviews",
+        top: "-1rem",
+        start: "1rem",
+        className: pSlider?.className,
+        style: pSlider?.style,
+        children: /* @__PURE__ */ jsx(
+          Swiper,
+          {
+            modules: [Navigation, Autoplay],
+            centeredSlides: true,
+            spaceBetween: 24,
+            slidesPerView: 1.2,
+            speed: 900,
+            autoplay: {
+              delay: 3500,
+              disableOnInteraction: false
+            },
+            navigation: {
+              prevEl: ".student-prev",
+              nextEl: ".student-next"
+            },
+            breakpoints: {
+              768: {
+                slidesPerView: 2
+              },
+              992: {
+                slidesPerView: 3
+              }
+            },
+            className: "!overflow-visible",
+            children: reviews.map((review, index) => {
+              if (index === 0) return null;
+              const pReview = anim?.animProps(inView, {
+                delay: 220 + index % 8 * 90,
+                duration: 900,
+                variant: index % 2 === 0 ? "fadeUp" : "fadeDown"
+              });
+              return /* @__PURE__ */ jsx(SwiperSlide, { children: /* @__PURE__ */ jsx(
+                EditableObject,
+                {
+                  path: `reviews.${index}`,
+                  fields: review,
+                  deletable: true,
+                  richText: true,
+                  className: pReview?.className,
+                  style: pReview?.style,
+                  children: /* @__PURE__ */ jsx(Review, { ...review, index })
+                }
+              ) }, index);
+            })
+          }
+        )
+      }
+    )
+  ] }) });
+}
+const Hero = ({
+  heroBackground,
+  heroProjectsButton,
+  heroCoursesButton,
+  heroDescription,
+  heroProfileImage,
+  heroTitle
+}) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.2
+  });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeLeft" });
+  const pDesc = anim?.animProps(inView, { delay: 150, duration: 850, variant: "fadeLeft" });
+  const pBtnsWrap = anim?.animProps(inView, { delay: 300, duration: 750, variant: "blur" });
+  const pBtn1 = anim?.animProps(inView, { delay: 350, duration: 700, variant: "fadeLeft" });
+  const pBtn2 = anim?.animProps(inView, { delay: 450, duration: 700, variant: "fadeLeft" });
+  const pImg = anim?.animProps(inView, { delay: 250, duration: 900, variant: "fadeRight" });
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref,
+      className: "w-full min-h-screen relative overflow-hidden px-largeSaveSpace max-desc:px-mobSaveSpace flex justify-center items-center  pt-32 max-desc:pt-40 pb-10",
+      children: [
+        heroBackground && /* @__PURE__ */ jsxs(
+          EditableImage,
+          {
+            start: "40%",
+            top: "8rem",
+            className: "absolute! top-0 start-0 w-full h-full",
+            src: heroBackground,
+            path: "heroBackground",
+            children: [
+              /* @__PURE__ */ jsx(
+                Image,
+                {
+                  className: "absolute w-full h-full top-0 left-0 object-cover",
+                  src: heroBackground
+                }
+              ),
+              /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0  bg-gradient-to-br from-arch-dark/35  to-arch-charcoal/50" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: "w-full flex justify-between items-center max-desc:items-start gap-10 max-desc:gap-5 max-desc:flex-col ",
+            children: [
+              /* @__PURE__ */ jsxs(
+                "div",
+                {
+                  className: "desc:max-w-xl  w-full",
+                  children: [
+                    heroTitle && /* @__PURE__ */ jsx(
+                      EditableText,
+                      {
+                        top: "30%",
+                        start: "10%",
+                        text: heroTitle,
+                        path: "heroTitle",
+                        className: pTitle?.className,
+                        style: pTitle?.style,
+                        children: /* @__PURE__ */ jsx(
+                          MainTitle,
+                          {
+                            hero: true,
+                            className: "mb-4",
+                            white: true,
+                            children: heroTitle
+                          }
+                        )
+                      }
+                    ),
+                    heroDescription && /* @__PURE__ */ jsx(
+                      EditableText,
+                      {
+                        start: "10%",
+                        top: "40%",
+                        text: heroDescription,
+                        path: "heroDescription",
+                        className: `text-arch-light/90 text-lg leading-4 ${pDesc?.className ?? ""}`,
+                        style: pDesc?.style,
+                        richtext: true,
+                        children: heroDescription
+                      }
+                    ),
+                    /* @__PURE__ */ jsxs(
+                      "div",
+                      {
+                        className: `flex max-mob:flex-col items-center max-desc:justify-center gap-4 mt-6 ${pBtnsWrap?.className ?? ""}`,
+                        style: pBtnsWrap?.style,
+                        children: [
+                          heroProjectsButton && /* @__PURE__ */ jsx(
+                            EditableObject,
+                            {
+                              dontAddInputsFor: ["id"],
+                              className: `max-mob:w-full ${pBtn1?.className ?? ""}`,
+                              style: pBtn1?.style,
+                              fields: heroProjectsButton,
+                              path: "heroProjectsButton",
+                              children: /* @__PURE__ */ jsx("a", { href: heroProjectsButton.id, className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
+                                Button,
+                                {
+                                  className: "max-mob:w-full",
+                                  children: heroProjectsButton.text
+                                }
+                              ) })
+                            }
+                          ),
+                          heroCoursesButton && /* @__PURE__ */ jsx(
+                            EditableObject,
+                            {
+                              dontAddInputsFor: ["id"],
+                              className: `max-mob:w-full ${pBtn2?.className ?? ""}`,
+                              style: pBtn2?.style,
+                              fields: heroCoursesButton,
+                              path: "heroCoursesButton",
+                              children: /* @__PURE__ */ jsx("a", { href: heroCoursesButton.id, className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
+                                Button,
+                                {
+                                  className: "max-mob:w-full",
+                                  children: heroCoursesButton.text,
+                                  border: true
+                                }
+                              ) })
+                            }
+                          )
+                        ]
+                      }
+                    )
+                  ]
+                }
+              ),
+              heroProfileImage && /* @__PURE__ */ jsx(
+                EditableImage,
+                {
+                  className: `max-w-sm w-full max-desc:self-center rounded-lg overflow-hidden ${pImg?.className ?? ""}`,
+                  style: pImg?.style,
+                  src: heroProfileImage,
+                  path: "heroProfileImage",
+                  children: /* @__PURE__ */ jsx(
+                    Image,
+                    {
+                      className: "w-full",
+                      src: heroProfileImage
+                    }
+                  )
+                }
+              )
+            ]
+          }
+        )
+      ]
+    }
+  );
+};
+const Home = ({ allData }) => {
+  const { data, projects, coursesData } = allData;
+  const { courses, links } = coursesData;
+  const hero = {
+    heroProjectsButton: data.heroProjectsButton,
+    heroBackground: data.heroBackground,
+    heroCoursesButton: data.heroCoursesButton,
+    heroDescription: data.heroDescription,
+    heroTitle: data.heroTitle,
+    heroProfileImage: data.heroProfileImage
+  };
+  const about = {
+    aboutButton: data.aboutButton,
+    aboutDescription: data.aboutDescription,
+    aboutImages: data.aboutImages,
+    aboutTitle: data.aboutTitle,
+    aboutLabel: data.aboutLabel
+  };
+  const projectsSectionProps = {
+    projects,
+    projectsDescription: data.projectsDescription,
+    projectsLabel: data.projectsLabel,
+    projectsTitle: data.projectsTitle
+  };
+  const coursesSectionProps = {
+    coursesTitle: data.coursesTitle,
+    viewCourseButton: data.viewCourseButton,
+    courses,
+    links,
+    coursesLabel: data.coursesLabel
+  };
+  const achivements = {
+    achivements: data.achivements,
+    achivementsLabel: data.achivementsLabel,
+    achivementsTitle: data.achivementsTitle,
+    achivementsImage: data.achivementsImage
+  };
+  const reviews = {
+    reviews: data.reviews,
+    reviewsLabel: data.reviewsLabel,
+    reviewsTitle: data.reviewsTitle
+  };
+  const services = {
+    services: data.services,
+    servicesLabel: data.servicesLabel,
+    servicesTitle: data.servicesTitle,
+    viewCardButtonText: data.viewCardButtonText
+  };
+  useEffect(() => {
+    if (localStorage.getItem("scrollToSection")) {
+      window.location.hash = `${localStorage.getItem("scrollToSection")}`;
+      const timeout = setTimeout(() => localStorage.removeItem("scrollToSection"), 100);
+      return () => clearTimeout(timeout);
+    }
+  }, []);
+  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Home", children: /* @__PURE__ */ jsxs("div", { className: "", children: [
+    /* @__PURE__ */ jsx(Hero, { ...hero }),
+    /* @__PURE__ */ jsx(AboutSection, { ...about }),
+    /* @__PURE__ */ jsx(ServicesSection, { ...services }),
+    /* @__PURE__ */ jsx(ProjectsSection, { ...projectsSectionProps }),
+    /* @__PURE__ */ jsx(CoursesSection, { ...coursesSectionProps }),
+    /* @__PURE__ */ jsx(AchivementsSection, { ...achivements }),
+    /* @__PURE__ */ jsx(StudentReviews, { ...reviews })
+  ] }) });
+};
+const __vite_glob_0_5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Home
+}, Symbol.toStringTag, { value: "Module" }));
+const GlobalServices = ({ discoverButton, services }) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
+  const anim = useContext(Animations);
+  const pBtn = anim?.animProps(inView, { delay: 120 + services.length * 80, duration: 850, variant: "zoom" });
+  return /* @__PURE__ */ jsxs("div", { ref, className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace py-20", children: [
+    /* @__PURE__ */ jsx(EditableArray, { top: "-1.5rem", path: "services", fields: services[0], className: "w-full", children: services.map((service, i) => {
+      const pItem = anim?.animProps(inView, {
+        delay: 100 + i % 8 * 110,
+        duration: 900,
+        variant: i % 2 === 0 ? "fadeLeft" : "fadeRight"
+      });
+      return /* @__PURE__ */ jsxs(
+        EditableObject,
+        {
+          top: "30%",
+          start: i % 2 == 0 ? "10%" : "90%",
+          richText: true,
+          fields: service,
+          deletable: true,
+          hideFirst: true,
+          path: `services.${i}`,
+          className: `w-full flex ${i % 2 == 0 ? "max-desc:flex-col" : "max-desc:flex-col flex-row-reverse"}  justify-between items-center gap-8 mb-10 ${pItem?.className ?? ""}`,
+          style: pItem?.style,
+          children: [
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx(
+                SectionTitle,
+                {
+                  children: service.title,
+                  className: "text-xl font-bold text-arch-dark leading-2 mb-4"
+                }
+              ),
+              /* @__PURE__ */ jsx(
+                "div",
+                {
+                  className: "text-arch-gray text-lg leading-2",
+                  dangerouslySetInnerHTML: { __html: service.description }
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsx(
+              Image,
+              {
+                src: service.image,
+                className: "max-w-xl w-full"
+              }
+            )
+          ]
+        },
+        i
+      );
+    }) }),
+    /* @__PURE__ */ jsx(
+      EditableObject,
+      {
+        className: `w-fit max-mob:w-full mx-auto mt-24 ${pBtn?.className ?? ""}`,
+        style: pBtn?.style,
+        fields: discoverButton,
+        path: "discoverButton",
+        children: /* @__PURE__ */ jsx("a", { href: discoverButton.link, target: "_blank", className: "max-mob:w-full max-mob:block", children: /* @__PURE__ */ jsx(
+          Button,
+          {
+            className: "max-mob:w-full",
+            children: discoverButton.text
+          }
+        ) })
+      }
+    )
+  ] });
+};
+const Services = ({ allData }) => {
+  const { data, serviceName } = allData;
+  const hero = {
+    heroBackground: data.heroBackground,
+    heroDescription: data.heroDescription,
+    heroTitle: data.heroTitle
+  };
+  const global = {
+    discoverButton: data.discoverButton,
+    services: data.services
+  };
+  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: serviceName, children: /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+    /* @__PURE__ */ jsx(Hero, { ...hero }),
+    /* @__PURE__ */ jsx(GlobalServices, { ...global })
+  ] }) });
+};
+const __vite_glob_0_6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Services
+}, Symbol.toStringTag, { value: "Module" }));
+const Login = () => {
+  const { locale } = usePage().props;
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const submit = async (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const button = form.querySelector("button[type='submit']");
+    const email = form.email.value;
+    const password = form.password.value;
+    button.disabled = true;
+    button.innerHTML = `
+      <span class="flex items-center justify-center gap-2">
+        <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        ${locale === "ar" ? "جاري تسجيل الدخول..." : "Logging in..."}
+      </span>
+    `;
+    setError("");
+    try {
+      const res = await axios.post("/login", { email, password });
+      if (res.data) {
+        router.reload();
+        router.visit("/dashboard");
+      }
+    } catch {
+      setError(
+        locale === "ar" ? "البريد الإلكتروني أو كلمة المرور غير صحيحة" : "Invalid email or password"
+      );
+    } finally {
+      button.disabled = false;
+      button.innerHTML = locale === "ar" ? "تسجيل الدخول" : "Login";
+    }
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen flex items-center justify-center bg-gray-100", children: [
+    /* @__PURE__ */ jsx(Head, { title: "login" }),
+    /* @__PURE__ */ jsxs(
+      "form",
+      {
+        onSubmit: submit,
+        className: "w-full max-w-md bg-white p-6 rounded-xl shadow-md space-y-4",
+        children: [
+          /* @__PURE__ */ jsx("h1", { className: "text-2xl font-semibold text-center", children: locale === "ar" ? "تسجيل الدخول" : "Login" }),
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              name: "email",
+              type: "email",
+              placeholder: locale === "ar" ? "البريد الإلكتروني" : "Email",
+              className: "w-full border rounded-lg px-4 py-2",
+              required: true
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                name: "password",
+                type: showPassword ? "text" : "password",
+                placeholder: locale === "ar" ? "كلمة المرور" : "Password",
+                className: "w-full border rounded-lg px-4 py-2 pr-10",
+                required: true
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => setShowPassword(!showPassword),
+                className: "absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-500 hover:text-gray-700",
+                children: showPassword ? /* @__PURE__ */ jsx(FiEyeOff, { size: 20 }) : /* @__PURE__ */ jsx(FiEye, { size: 20 })
+              }
+            )
+          ] }),
+          error && /* @__PURE__ */ jsx("p", { className: "text-sm text-red-600 text-center", children: error }),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "submit",
+              className: "w-full bg-arch-accent text-white py-2 rounded-lg transition disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed flex items-center justify-center",
+              children: locale === "ar" ? "تسجيل الدخول" : "Login"
+            }
+          )
+        ]
+      }
+    )
+  ] });
+};
+const __vite_glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Login
+}, Symbol.toStringTag, { value: "Module" }));
 const renderPage = (page) => createInertiaApp({
   page,
   render: ReactDOMServer.renderToString,
   resolve: (name) => {
     const pages = /* @__PURE__ */ Object.assign({
-      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjects.tsx": __vite_glob_0_0,
-      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjectsCrud.tsx": __vite_glob_0_1,
-      "/Modules/Pages/resources/assets/js/pages/CourseDetailsPage.tsx": __vite_glob_0_2,
-      "/Modules/Pages/resources/assets/js/pages/Home.tsx": __vite_glob_0_3,
-      "/Modules/Pages/resources/assets/js/pages/Services.tsx": __vite_glob_0_4,
-      "/Modules/Shared/resources/assets/js/pages/Login.tsx": __vite_glob_0_5
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardCourses.tsx": __vite_glob_0_0,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardCoursesCrud.tsx": __vite_glob_0_1,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjects.tsx": __vite_glob_0_2,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjectsCrud.tsx": __vite_glob_0_3,
+      "/Modules/Pages/resources/assets/js/pages/CourseDetailsPage.tsx": __vite_glob_0_4,
+      "/Modules/Pages/resources/assets/js/pages/Home.tsx": __vite_glob_0_5,
+      "/Modules/Pages/resources/assets/js/pages/Services.tsx": __vite_glob_0_6,
+      "/Modules/Shared/resources/assets/js/pages/Login.tsx": __vite_glob_0_7
     });
     const pageModule = Object.entries(pages).find(([path]) => path.includes(`/${name}.tsx`))?.[1];
     if (!pageModule) throw new Error(`Page not found: ${name}`);

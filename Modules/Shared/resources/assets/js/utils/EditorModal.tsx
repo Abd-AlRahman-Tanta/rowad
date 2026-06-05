@@ -27,7 +27,7 @@ const EditorModal = () => {
   const [loading, setLoading] = useState<any>(false);
   const Editor = useSharedCkEditor();
   if (!open) return null;
-  // if (!auth) return null;
+  if (!auth) return null;
 
   /* ======================
      TRANSLATIONS

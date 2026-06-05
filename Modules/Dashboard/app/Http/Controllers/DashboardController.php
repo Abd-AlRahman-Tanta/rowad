@@ -3,7 +3,9 @@
 namespace Modules\Dashboard\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class DashboardController extends Controller
 {
@@ -36,5 +38,42 @@ class DashboardController extends Controller
       return $field;
     })->toArray();
     return $modifiedFields;
+  }
+  public static function updateSyncImages(Model $model, $validated, $request)
+  {
+    $oldUrls = $model->images ? $model->images->pluck('image')->toArray() : [];
+    $keptUrls = [];
+    if (isset($validated["images"])) {
+      foreach ($validated["images"] as $key => $item) {
+        $file = $request->file("images.{$key}.image");
+        if ($file instanceof UploadedFile) {
+          $path = UploadImageController::uploadImage($file);
+          $model->images()->create(['image' => $path]);
+        } elseif (isset($item['image']) && is_string($item['image'])) {
+          $keptUrls[] = $item['image'];
+        }
+      }
+      foreach ($oldUrls as $oldUrl) {
+        if (!in_array($oldUrl, $keptUrls)) {
+          UploadImageController::deleteImage($oldUrl);
+          $model->images()->where('image', $oldUrl)->delete();
+        }
+      }
+    } else {
+      if ($model->images) {
+        foreach ($model->images as $image) {
+          UploadImageController::deleteImage($image->image);
+        }
+        $model->images()->delete();
+      }
+    }
+  }
+  public static function syncImages(Model $model, array $files): void
+  {
+    foreach ($files as $file) {
+      if (!$file) continue;
+      $path = UploadImageController::uploadImage($file['image']);
+      $model->images()->create(['image' => $path]);
+    }
   }
 }

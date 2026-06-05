@@ -11,6 +11,7 @@ const EditableImage = ({
   top,
   start,
   zIndex,
+  style,
 }: {
   src: string;
   path: string;
@@ -21,6 +22,7 @@ const EditableImage = ({
   start?: string;
   end?: string;
   zIndex?: string
+  style?: React.CSSProperties
 }) => {
   const openEditor = useEditorStore((s) => s.openEditor);
   const pageName = usePageName();
@@ -35,25 +37,26 @@ const EditableImage = ({
     zIndex: zIndex
   };
 
+  const { url } = usePage()
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} style={style}>
       {children}
       {
-        // auth ?
-        <button
-          type="button"
-          title="Edit image"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            openEditor(pageName, path, "image", src);
-          }}
-          style={positionStyles}
-          className="w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm"
-        >
-          🖼️
-        </button>
-        // : ""
+        auth && !url.includes("dashboard") ?
+          <button
+            type="button"
+            title="Edit image"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openEditor(pageName, path, "image", src);
+            }}
+            style={positionStyles}
+            className="w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm"
+          >
+            🖼️
+          </button>
+          : ""
       }
     </div>
   );

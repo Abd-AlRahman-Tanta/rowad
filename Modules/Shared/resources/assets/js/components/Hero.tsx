@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Image from './Image'
 import Layer from './Layer'
 import EditableArray from '@shared/utils/EditableArray'
@@ -10,6 +10,8 @@ import Button from './Button'
 import { Link } from '@inertiajs/react'
 import EditableObject from '@shared/utils/EditableObject'
 import { HeroProps } from '../Types'
+import { useInView } from 'react-intersection-observer'
+import { Animations } from '../layouts/ProjectLayout'
 const Hero = (
   {
     heroBackground,
@@ -20,8 +22,22 @@ const Hero = (
     heroTitle
   }: HeroProps
 ) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.2
+  })
+
+  const anim = useContext(Animations)
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: 'fadeLeft' })
+  const pDesc = anim?.animProps(inView, { delay: 150, duration: 850, variant: 'fadeLeft' })
+  const pBtnsWrap = anim?.animProps(inView, { delay: 300, duration: 750, variant: 'blur' })
+  const pBtn1 = anim?.animProps(inView, { delay: 350, duration: 700, variant: 'fadeLeft' })
+  const pBtn2 = anim?.animProps(inView, { delay: 450, duration: 700, variant: 'fadeLeft' })
+  const pImg = anim?.animProps(inView, { delay: 250, duration: 900, variant: 'fadeRight' })
+
   return (
     <div
+      ref={ref}
       className='w-full min-h-screen relative overflow-hidden px-largeSaveSpace max-desc:px-mobSaveSpace flex justify-center items-center  pt-32 max-desc:pt-40 pb-10'
     >
       {
@@ -53,6 +69,8 @@ const Hero = (
               start='10%'
               text={heroTitle}
               path='heroTitle'
+              className={pTitle?.className}
+              style={pTitle?.style}
             >
               <MainTitle
                 hero
@@ -69,23 +87,26 @@ const Hero = (
               top='40%'
               text={heroDescription}
               path='heroDescription'
-              className='text-arch-light/90 text-lg leading-4'
+              className={`text-arch-light/90 text-lg leading-4 ${pDesc?.className ?? ''}`}
+              style={pDesc?.style}
               richtext
               children={heroDescription}
             />
           }
           <div
-            className='flex max-mob:flex-col items-center max-desc:justify-center gap-4 mt-6'
+            className={`flex max-mob:flex-col items-center max-desc:justify-center gap-4 mt-6 ${pBtnsWrap?.className ?? ''}`}
+            style={pBtnsWrap?.style}
           >
             {
               heroProjectsButton &&
               <EditableObject
                 dontAddInputsFor={["id"]}
-                className='max-mob:w-full'
+                className={`max-mob:w-full ${pBtn1?.className ?? ''}`}
+                style={pBtn1?.style}
                 fields={heroProjectsButton}
                 path='heroProjectsButton'
               >
-                <a href={heroProjectsButton.id}>
+                <a href={heroProjectsButton.id} className='max-mob:w-full'>
                   <Button
                     className='max-mob:w-full'
                     children={heroProjectsButton.text}
@@ -97,11 +118,12 @@ const Hero = (
               heroCoursesButton &&
               <EditableObject
                 dontAddInputsFor={["id"]}
-                className='max-mob:w-full'
+                className={`max-mob:w-full ${pBtn2?.className ?? ''}`}
+                style={pBtn2?.style}
                 fields={heroCoursesButton}
                 path='heroCoursesButton'
               >
-                <a href={heroCoursesButton.id}>
+                <a href={heroCoursesButton.id} className='max-mob:w-full'>
                   <Button
                     className='max-mob:w-full'
                     children={heroCoursesButton.text}
@@ -115,7 +137,8 @@ const Hero = (
         {
           heroProfileImage &&
           <EditableImage
-            className='max-w-sm w-full max-desc:self-center rounded-lg overflow-hidden'
+            className={`max-w-sm w-full max-desc:self-center rounded-lg overflow-hidden ${pImg?.className ?? ''}`}
+            style={pImg?.style}
             src={heroProfileImage}
             path='heroProfileImage'
           >

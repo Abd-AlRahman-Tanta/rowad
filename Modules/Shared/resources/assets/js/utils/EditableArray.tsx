@@ -11,7 +11,8 @@ const EditableArray = ({
   className,
   top,
   start,
-  dontAddInputsFor
+  dontAddInputsFor,
+  style,
 }: {
   children: ReactNode;
   path: string;
@@ -20,6 +21,7 @@ const EditableArray = ({
   top?: string;
   start?: string;
   dontAddInputsFor?: Array<string>
+  style?: React.CSSProperties
 }) => {
   const openEditor = useEditorStore((s) => s.openEditor);
   const pageName = usePageName();
@@ -53,25 +55,26 @@ const EditableArray = ({
     transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`,
   };
 
+  const { url } = usePage()
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} style={style}>
       {children}
       {
-        // auth ?
-        <button
-          title="Add Item"
-          type="button"
-          onClick={() =>
-            openEditor(pageName, path, undefined, undefined, { array, inputs })
-          }
-          className="w-16  h-9 rounded-full shadow-lg flex items-center justify-center gap-2 text-sm
+        auth && !url.includes("dashboard") ?
+          <button
+            title="Add Item"
+            type="button"
+            onClick={() =>
+              openEditor(pageName, path, undefined, undefined, { array, inputs })
+            }
+            className="w-16  h-9 rounded-full shadow-lg flex items-center justify-center gap-2 text-sm
           bg-green-600 text-white cursor-pointer hover:bg-green-700 hover:scale-105 
           transition-transform z-1000"
-          style={positionStyles}
-        >
-          {locale === "en" ? "➕Add" : "➕اضافة"}
-        </button>
-        // : ""
+            style={positionStyles}
+          >
+            {locale === "en" ? "➕Add" : "➕اضافة"}
+          </button>
+          : ""
       }
     </div>
   );

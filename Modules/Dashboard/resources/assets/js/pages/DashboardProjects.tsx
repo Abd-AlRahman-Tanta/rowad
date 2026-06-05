@@ -26,7 +26,7 @@ const DashboardProjects = ({ allData }: { allData: any }) => {
             <Button children={content.addButton.text} />
           </Link>
         }
-        <div className='grid grid-cols-1 mob:grid-cols-2 tab:grid-cols-3 gap-6 mb-10'>
+        <div className='grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10'>
           {
             projects.map((project, i) => (
               <ProjectCard {...project} key={i} />

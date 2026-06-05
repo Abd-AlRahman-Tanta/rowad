@@ -7,11 +7,23 @@ import SectionTitle from '@shared/components/SectionTitle';
 import EditableObject from '@shared/utils/EditableObject';
 import React from 'react'
 
-const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton }: CourseProps & { viewCourseButton: { text: string, link: string } }) => {
+type AnimProps = { className: string; style: React.CSSProperties }
+
+type CourseCardProps = CourseProps & {
+  viewCourseButton?: { text: string, link: string }
+  anim?: AnimProps
+}
+
+const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton, anim }: CourseCardProps) => {
   const { locale } = usePage().props
   return (
     <div
-      className="
+      className={`
+      desc:w-[30%]
+      desc:grow
+      max-desc:w-full
+      max-desc:max-w-[calc((100%-32px)/2)]
+      max-mob:max-w-full
         bg-arch-card
         rounded-3xl
         overflow-hidden
@@ -23,7 +35,9 @@ const CourseCard = ({ topics, description, image, learningPoints, name, price, i
         border border-gray-100
         group
         flex flex-col justify-between
-      "
+        ${anim?.className ?? ''}
+      `}
+      style={anim?.style}
     >
       <div className="relative w-full">
         <Image
@@ -69,23 +83,26 @@ const CourseCard = ({ topics, description, image, learningPoints, name, price, i
         >
           {name}
         </SectionTitle>
-        <EditableObject
-          className='w-fit max-mob:w-full'
-          dontAddInputsFor={['link']}
-          fields={viewCourseButton}
-          path='viewCourseButton'
-        >
-          <Button className='max-mob:w-full'>
-            <Link
-              href={viewCourseButton.link + id}
-            >
-              {viewCourseButton.text}
-            </Link>
-          </Button>
-        </EditableObject>
+        {
+          viewCourseButton &&
+          <EditableObject
+            className='w-fit max-mob:w-full'
+            dontAddInputsFor={['link']}
+            fields={viewCourseButton}
+            path='viewCourseButton'
+          >
+            <Button className='max-mob:w-full'>
+              <Link
+                href={viewCourseButton.link + id}
+              >
+                {viewCourseButton.text}
+              </Link>
+            </Button>
+          </EditableObject>
+        }
       </div>
     </div>
-  );
+  )
 }
 
 export default CourseCard

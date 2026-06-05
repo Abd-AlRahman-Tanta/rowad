@@ -18,7 +18,8 @@ const NavBarLinks = ({ mainLinks, navBarWhatsApp, className, closeList, navBarLo
   const { component } = usePage()
   const scrollToSection = (id: string, e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
-    router.visit("/" + id);
+    localStorage.setItem("scrollToSection", id);
+    router.visit("/");
   }
 
   return (

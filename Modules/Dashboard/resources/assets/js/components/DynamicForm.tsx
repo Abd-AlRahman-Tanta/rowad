@@ -1,4 +1,3 @@
-import ObjectToFormData from "@dashboard/utils/ObjectToFormData";
 import { router, useForm, usePage } from "@inertiajs/react";
 import { useSharedCkEditor } from "@shared/utils/editor/useSharedCkEditor";
 import axios from "axios";
@@ -10,6 +9,7 @@ import ImageInput from "@shared/components/ImageInput";
 import VideoInput from "@shared/components/VideoInput";
 import CustomSelect from "@shared/components/CustomSelect";
 import RichTextInput from "@shared/utils/editor/RichTextInput";
+import ObjectToFormData from "@dashboard/utils/ObjectToFormData";
 
 
 export type FieldType = 'text' | 'number' | 'textarea' | 'file' | 'spatie' | 'repeater' | 'richtext' | 'spatie-richtext' | 'select' | 'spatie-file' | 'video' | 'json' | 'spatie-json';
@@ -498,7 +498,7 @@ export default function DynamicForm({
                       <button
                         type="button"
                         onClick={() => addRepeaterItem(field.name, field.repeaterFields || [])}
-                        className="flex items-center gap-2 bg-dark text-light px-4 py-2 rounded hover:bg-primary transition max-mob:mb-4"
+                        className="flex items-center gap-2 bg-dark text-white px-4 py-2 rounded hover:bg-arch-accent/90 bg-arch-accent cursor-pointer transition max-mob:mb-4 mt-5"
                       >
                         <FiPlus /> {locale === "ar" ? `إضافة ${field.itemLabel || 'قسم'}` : `Add ${field.itemLabel || 'Section'}`}
                       </button>
@@ -718,7 +718,7 @@ export default function DynamicForm({
           </div>
 
           {/* action buttons */}
-          <div className={`flex ${isEdit ? "justify-between" : "justify-center"} items-center mt-8 border-t pt-4`}>
+          <div className={`flex  ${isEdit ? "justify-between" : "justify-center"} items-center mt-8 border-t pt-4`}>
             {isEdit && deleteUrl ? (
               <button
                 type='button'
@@ -733,7 +733,7 @@ export default function DynamicForm({
 
             <button
               disabled={processing}
-              className="bg-dark hover:bg-primary duration-300 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50"
+              className="bg-arch-dark hover:bg-arch-charcoal duration-300 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50"
               type="submit"
             >
               {isEdit ? (locale === "en" ? `Update Data` : `تحديث البيانات`) : (locale === "en" ? `Send Data` : `إرسال البيانات`)}

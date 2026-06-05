@@ -5,11 +5,21 @@ import Label from '@shared/components/Label'
 import MainTitle from '@shared/components/MainTitle'
 import EditableObject from '@shared/utils/EditableObject'
 import EditableText from '@shared/utils/EditableText'
-import React from 'react'
+import React, { useContext } from 'react'
+import { useInView } from 'react-intersection-observer'
+import { Animations } from '@shared/layouts/ProjectLayout'
 
 const AboutSection = ({ aboutButton, aboutDescription, aboutImages, aboutTitle, aboutLabel }: AboutSectionProps) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.6 })
+  const anim = useContext(Animations)
+
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: 'fadeUp' })
+  const pDesc = anim?.animProps(inView, { delay: 120, duration: 850, variant: 'blur' })
+  const pBtn = anim?.animProps(inView, { delay: 240, duration: 750, variant: 'zoom' })
+  const pImg = anim?.animProps(inView, { delay: 150, duration: 900, variant: 'fadeRight' })
+
   return (
-    <div id='about' className='scroll-m-10 w-full py-20 flex justify-between items-center gap-10 max-desc:flex-col px-largeSaveSpace max-desc:px-mobSaveSpace '>
+    <div ref={ref} id='about' className='scroll-m-10 w-full py-20 flex justify-between items-center gap-10 max-desc:flex-col px-largeSaveSpace max-desc:px-mobSaveSpace '>
       <div>
         <Label path='aboutLabel' title={aboutLabel} />
         <EditableText
@@ -17,6 +27,8 @@ const AboutSection = ({ aboutButton, aboutDescription, aboutImages, aboutTitle, 
           top='40%'
           path='aboutTitle'
           text={aboutTitle}
+          className={pTitle?.className}
+          style={pTitle?.style}
         >
           <MainTitle
             black
@@ -26,14 +38,17 @@ const AboutSection = ({ aboutButton, aboutDescription, aboutImages, aboutTitle, 
         <EditableText
           start='10%'
           top='40%'
-          className='mt-4 mb-7 text-arch-gray text-justify text-lg leading-4 '
+          className={`mt-4 mb-7 text-arch-gray text-justify text-lg leading-4 ${pDesc?.className ?? ''}`}
+          style={pDesc?.style}
           text={aboutDescription}
           path='aboutDescription'
           richtext
           children={aboutDescription}
         />
         <EditableObject
-          className='w-fit max-desc:mx-auto  max-mob:w-full'
+          dontAddInputsFor={["id"]}
+          className={`w-fit max-desc:mx-auto  max-mob:w-full ${pBtn?.className ?? ''}`}
+          style={pBtn?.style}
           path='aboutButton'
           fields={aboutButton}
         >
@@ -46,7 +61,8 @@ const AboutSection = ({ aboutButton, aboutDescription, aboutImages, aboutTitle, 
         </EditableObject>
       </div>
       <EditableObject
-        className='max-w-xl w-full rounded-lg overflow-hidden'
+        className={`max-w-xl max-xl:max-w-md shrink-0  w-full rounded-lg overflow-hidden ${pImg?.className ?? ''}`}
+        style={pImg?.style}
         path='aboutImages'
         fields={aboutImages}
       >

@@ -14,7 +14,8 @@ const EditableObject = ({
   deletable,
   richText,
   hideFirst,
-  dontAddInputsFor
+  dontAddInputsFor,
+  style,
 }: {
   children: ReactNode;
   path: string;
@@ -26,6 +27,7 @@ const EditableObject = ({
   hideFirst?: boolean,
   richText?: boolean,
   dontAddInputsFor?: Array<string>
+  style?: React.CSSProperties
 }) => {
   const openEditor = useEditorStore((s) => s.openEditor);
   const pageName = usePageName();
@@ -72,25 +74,26 @@ const EditableObject = ({
     position: "absolute",
     transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`,
   };
+  const { url } = usePage()
   return (
-    <div className={`relative ${hideFirst && "first:hidden"} ${className}`}>
+    <div className={`relative ${hideFirst && "first:hidden"} ${className}`} style={style}>
       {children}
       {
-        // auth ?
-        <button
-          title="Object Edit"
-          type="button"
-          onClick={(e) => {
-            e.preventDefault()
-            openEditor(pageName, path, "object", editorValue, { inputs, deletable })
-          }
-          }
-          className="w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm"
-          style={positionStyles}
-        >
-          🧩
-        </button>
-        // : ""
+        auth && !url.includes("dashboard") ?
+          <button
+            title="Object Edit"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault()
+              openEditor(pageName, path, "object", editorValue, { inputs, deletable })
+            }
+            }
+            className="w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm"
+            style={positionStyles}
+          >
+            🧩
+          </button>
+          : ""
       }
     </div>
   );

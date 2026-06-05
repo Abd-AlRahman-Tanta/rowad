@@ -1,0 +1,188 @@
+{
+    "en": {
+        "itemName": "Course",
+        "submitUrl": "/dashboard/courses",
+        "addButton": {
+            "text": "Add Course",
+            "link": "/dashboard/courses/create"
+        },
+        "inputs": [
+            {
+                "name": "name",
+                "label": "Course Name",
+                "type": "spatie",
+                "fullWidth": true
+            },
+            {
+                "name": "description",
+                "label": "Description",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            { "name": "price", "label": "Price", "type": "number" },
+            {
+                "name": "newCourse",
+                "label": "New Course?",
+                "type": "select",
+                "selectChoices": [
+                    { "val": true, "label": "Yes" },
+                    { "val": false, "label": "No" }
+                ],
+                "selectViewedOption": "label",
+                "selectValueOption": "val",
+                "selectPickOne": true
+            },
+            { "name": "image", "label": "Main Image", "type": "file" },
+            { "name": "heroImage", "label": "Hero Image", "type": "file" },
+            {
+                "name": "learningPoints",
+                "label": "Learning Points",
+                "type": "repeater",
+                "itemLabel": "Point",
+                "repeaterFields": [
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "spatie",
+                        "fullWidth": true
+                    }
+                ]
+            },
+            {
+                "name": "topics",
+                "label": "Topics",
+                "type": "repeater",
+                "itemLabel": "Topic",
+                "repeaterFields": [
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "spatie",
+                        "fullWidth": true
+                    }
+                ]
+            },
+            {
+                "name": "images",
+                "label": "Additional Images",
+                "type": "repeater",
+                "itemLabel": "Image",
+                "repeaterFields": [
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "file",
+                        "fullWidth": true
+                    }
+                ]
+            }
+        ],
+        "searchFields": [{ "name": "name", "translatable": true }],
+        "viewCourseButton": {
+            "text": "Edit Course Details",
+            "link": "/dashboard/courses/"
+        }
+    },
+    "ar": {
+        "itemName": "دورة",
+        "submitUrl": "/dashboard/courses",
+        "addButton": {
+            "text": "إضافة دورة",
+            "link": "/dashboard/courses/create"
+        },
+        "inputs": [
+            {
+                "name": "name",
+                "label": "اسم الدورة",
+                "type": "spatie",
+                "fullWidth": true
+            },
+            {
+                "name": "description",
+                "label": "الوصف",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "price",
+                "label": "السعر",
+                "type": "number"
+            },
+            {
+                "name": "newCourse",
+                "label": "دورة جديدة؟",
+                "type": "select",
+                "selectChoices": [
+                    {
+                        "val": true,
+                        "label": "نعم"
+                    },
+                    {
+                        "val": false,
+                        "label": "لا"
+                    }
+                ],
+                "selectViewedOption": "label",
+                "selectValueOption": "val",
+                "selectPickOne": true
+            },
+            {
+                "name": "image",
+                "label": "الصورة الرئيسية",
+                "type": "file"
+            },
+            {
+                "name": "heroImage",
+                "label": "صورة الغلاف",
+                "type": "file"
+            },
+            {
+                "name": "learningPoints",
+                "label": "ما ستتعلمه",
+                "type": "repeater",
+                "itemLabel": "نقطة",
+                "repeaterFields": [
+                    {
+                        "name": "title",
+                        "label": "العنوان",
+                        "type": "spatie",
+                        "fullWidth": true
+                    }
+                ]
+            },
+            {
+                "name": "topics",
+                "label": "المواضيع",
+                "type": "repeater",
+                "itemLabel": "موضوع",
+                "repeaterFields": [
+                    {
+                        "name": "title",
+                        "label": "العنوان",
+                        "type": "spatie",
+                        "fullWidth": true
+                    }
+                ]
+            },
+            {
+                "name": "images",
+                "label": "صور إضافية",
+                "type": "repeater",
+                "itemLabel": "صورة",
+                "repeaterFields": [
+                    {
+                        "name": "image",
+                        "label": "الصورة",
+                        "type": "file",
+                        "fullWidth": true
+                    }
+                ]
+            }
+        ],
+        "searchFields": [{ "name": "name", "translatable": true }],
+        "viewCourseButton": {
+            "text": "تعديل تفاصيل الكورس",
+            "link": "/dashboard/courses/"
+        }
+    }
+}

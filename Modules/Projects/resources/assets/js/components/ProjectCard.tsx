@@ -1,3 +1,4 @@
+import { router, usePage } from '@inertiajs/react'
 import { Project } from '@projects/interfaces'
 import Description from '@shared/components/Description'
 import Image from '@shared/components/Image'
@@ -7,15 +8,20 @@ import SectionTitle from '@shared/components/SectionTitle'
 import React, { Dispatch, SetStateAction } from 'react'
 import { BiRightTopArrowCircle } from "react-icons/bi";
 
-const ProjectCard = ({ description, images, name, created_at, isActive, onCLick }: Project & { isActive?: boolean, onCLick?: Dispatch<SetStateAction<Project | null>> }) => {
+const ProjectCard = ({ description, images, name, created_at, isActive, onCLick, id }: Project & { isActive?: boolean, onCLick?: Dispatch<SetStateAction<Project | null>> }) => {
   const project = {
     name,
     description,
     images,
     created_at,
   }
+  const goToProjectEditPage = (id?: string) => {
+    router.visit(`/dashboard/projects/${id}`)
+  }
+  const { url } = usePage()
+  const isDashboard = url.includes("dashboard");
   return (
-    <div onClick={() => onCLick && onCLick({ ...project })} className={`group relative rounded-lg overflow-hidden  
+    <div onClick={() => isDashboard ? goToProjectEditPage(id) : onCLick && onCLick({ ...project })} className={`group relative rounded-lg overflow-hidden  
       ${isActive
         ? "scale-100  "
         : "scale-90"} cursor-pointer duration-300   `}>
@@ -35,10 +41,6 @@ const ProjectCard = ({ description, images, name, created_at, isActive, onCLick 
           className='text-arch-light text-xl leading-3 font-bold'
           children={name}
         />
-        {/* <Description
-          children={description}
-          className='text-arch-light/90 leading-3 text-sm '
-        /> */}
       </div>
     </div>
   )

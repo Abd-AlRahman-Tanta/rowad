@@ -20,7 +20,8 @@ class SharedDatabaseSeeder extends Seeder
       "Course" => "Course",
       "UniversityServices" => "UniversityServices",
       "EngServices" => "EngServices",
-      "DashboardProjectsCrud" => "DashboardProjectsCrud"
+      "DashboardProjectsCrud" => "DashboardProjectsCrud",
+      "DashboardCoursesCrud" => "DashboardCoursesCrud"
     ];
     foreach ($page as $key => $value) {
       $this->seedToDataBase($key, $value);

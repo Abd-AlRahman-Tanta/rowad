@@ -60,6 +60,13 @@ const Home = ({ allData }: { allData: any }) => {
     servicesTitle: data.servicesTitle,
     viewCardButtonText: data.viewCardButtonText
   }
+  useEffect(() => {
+    if (localStorage.getItem("scrollToSection")) {
+      window.location.hash = `${localStorage.getItem("scrollToSection")}`
+      const timeout = setTimeout(() => localStorage.removeItem("scrollToSection"), 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [])
   return (
     <PageContentProvider pageName='Home'>
       <div className=''>

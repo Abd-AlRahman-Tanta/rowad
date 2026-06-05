@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\DashboardModule\Http\Controllers;
+namespace Modules\Dashboard\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\UploadedFile;

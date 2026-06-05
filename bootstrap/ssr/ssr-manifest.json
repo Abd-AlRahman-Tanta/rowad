@@ -5,6 +5,8 @@
   "Modules/Dashboard/resources/assets/js/components/DeletePopUp.tsx": [],
   "Modules/Dashboard/resources/assets/js/components/DynamicForm.tsx": [],
   "Modules/Dashboard/resources/assets/js/components/SearchHeader.tsx": [],
+  "Modules/Dashboard/resources/assets/js/pages/DashboardCourses.tsx": [],
+  "Modules/Dashboard/resources/assets/js/pages/DashboardCoursesCrud.tsx": [],
   "Modules/Dashboard/resources/assets/js/pages/DashboardProjects.tsx": [],
   "Modules/Dashboard/resources/assets/js/pages/DashboardProjectsCrud.tsx": [],
   "Modules/Dashboard/resources/assets/js/utils/ObjectToFormData.ts": [],

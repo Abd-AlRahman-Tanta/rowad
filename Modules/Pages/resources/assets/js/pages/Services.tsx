@@ -18,7 +18,7 @@ const Services = ({ allData }: { allData: any }) => {
   }
   return (
     <PageContentProvider pageName={serviceName}>
-      <div>
+      <div className='relative'>
         <Hero {...hero} />
         <GlobalServices {...global} />
       </div>

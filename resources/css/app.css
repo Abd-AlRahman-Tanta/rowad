@@ -285,11 +285,11 @@ input:-webkit-autofill:active.removeBack {
   animation: scaleIn 0.35s ease;
 }
 
-.button {
+button {
   cursor: pointer;
 }
 
-.button:disabled {
+button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -308,3 +308,48 @@ input:-webkit-autofill:active.removeBack {
   opacity: 1;
   transform: scale(1.05);
 }
+
+@keyframes archFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes archFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.arch-anim {
+  will-change: transform, opacity;
+}
+
+/* Animation helpers (variable-driven delay/duration without inline styles) */
+.a-props {
+  transition-delay: var(--a-delay, 0ms);
+  transition-duration: var(--a-duration, 700ms);
+}
+
+.a-d-0 { --a-delay: 0ms; }
+.a-d-150 { --a-delay: 150ms; }
+.a-d-250 { --a-delay: 250ms; }
+.a-d-300 { --a-delay: 300ms; }
+.a-d-350 { --a-delay: 350ms; }
+.a-d-450 { --a-delay: 450ms; }
+
+.a-du-700 { --a-duration: 700ms; }
+.a-du-750 { --a-duration: 750ms; }
+.a-du-800 { --a-duration: 800ms; }
+.a-du-850 { --a-duration: 850ms; }
+.a-du-900 { --a-duration: 900ms; }

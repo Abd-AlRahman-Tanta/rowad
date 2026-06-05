@@ -16,17 +16,26 @@ import SectionTitle from "@shared/components/SectionTitle";
 import Description from "@shared/components/Description";
 import EditableArray from "@shared/utils/EditableArray";
 import Review from "./Review";
+import React, { useContext } from 'react'
+import { useInView } from 'react-intersection-observer'
+import { Animations } from '@shared/layouts/ProjectLayout'
 
 
 export default function StudentReviews({ reviews, reviewsLabel, reviewsTitle }: StudentReviewsProps) {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: window.innerWidth < 768 ? 0.3 : 0.5 })
+  const anim = useContext(Animations)
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 850, variant: 'fadeUp' })
+  const pSlider = anim?.animProps(inView, { delay: 160, duration: 900, variant: 'zoom' })
+
   return (
-    <section id="reviews" className="w-full py-24 bg-arch-accent/10 overflow-hidden scroll-m-8">
+    <section ref={ref} id="reviews" className="w-full py-24 bg-arch-accent/10 overflow-hidden scroll-m-8">
       <div className="px-largeSaveSpace max-desc:px-mobSaveSpace">
         <div className="flex items-center justify-between mb-12">
           <div>
             <Label title={reviewsLabel} path="reviewsLabel" />
             <EditableText
-              className="w-fit"
+              className={`w-fit ${pTitle?.className ?? ''}`}
+              style={pTitle?.style}
               path="reviewsTitle"
               text={reviewsTitle}
             >
@@ -48,6 +57,8 @@ export default function StudentReviews({ reviews, reviewsLabel, reviewsTitle }: 
           path="reviews"
           top="-1rem"
           start="1rem"
+          className={pSlider?.className}
+          style={pSlider?.style}
         >
           <Swiper
             modules={[Navigation, Autoplay]}
@@ -73,19 +84,31 @@ export default function StudentReviews({ reviews, reviewsLabel, reviewsTitle }: 
             }}
             className="!overflow-visible"
           >
-            {reviews.map((review, index) => (
-              index > 0 &&
-              <SwiperSlide key={index}>
-                <EditableObject
-                  path={`reviews.${index}`}
-                  fields={review}
-                  deletable
-                  richText
-                >
-                  <Review {...review} index={index} />
-                </EditableObject>
-              </SwiperSlide>
-            ))}
+            {reviews.map((review, index) => {
+              if (index === 0) return null
+
+              // Domino: stagger repeats every 8 slides so it stays snappy.
+              const pReview = anim?.animProps(inView, {
+                delay: 220 + (index % 8) * 90,
+                duration: 900,
+                variant: index % 2 === 0 ? 'fadeUp' : 'fadeDown'
+              })
+
+              return (
+                <SwiperSlide key={index}>
+                  <EditableObject
+                    path={`reviews.${index}`}
+                    fields={review}
+                    deletable
+                    richText
+                    className={pReview?.className}
+                    style={pReview?.style}
+                  >
+                    <Review {...review} index={index} />
+                  </EditableObject>
+                </SwiperSlide>
+              )
+            })}
           </Swiper>
         </EditableArray>
       </div>

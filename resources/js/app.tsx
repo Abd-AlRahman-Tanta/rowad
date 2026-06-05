@@ -1,5 +1,5 @@
 import { createInertiaApp, router } from "@inertiajs/react";
-import { hydrateRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import ProjectLayout from "@shared/layouts/ProjectLayout";
 import "../css/app.css";
 import "./bootstrap";
@@ -49,7 +49,7 @@ createInertiaApp({
       );
     }
 
-    hydrateRoot(el, <Root />)
+    createRoot(el).render(<Root />);
   },
 
   progress: false,

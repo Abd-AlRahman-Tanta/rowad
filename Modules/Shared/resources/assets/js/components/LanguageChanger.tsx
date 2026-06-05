@@ -41,18 +41,18 @@ const LanguageChanger = ({
     props: { locale },
   } = usePage();
 
-  const [newUrl, setNewUrl] = useState<string | null>(null)
-  useEffect(() => {
-    const { pathname, search, hash } = window.location;
-    const noPublic = pathname.replace(/^\/public/, "");
-    const cleanPath = noPublic.replace(/^\/(en|ar)/, "");
-    const finalPath = `${cleanPath || "/"}${search}${hash}`;
-    const url =
-      locale === "en"
-        ? `/ar${finalPath}`
-        : `/en${finalPath}`;
-    setNewUrl(url)
-  }, [locale])
+
+  const { pathname, search, hash } = window.location;
+
+  const noPublic = pathname.replace(/^\/public/, "");
+  const cleanPath = noPublic.replace(/^\/(en|ar)/, "");
+
+  const finalPath = `${cleanPath || "/"}${search}${hash}`;
+
+  const newUrl =
+    locale === "en"
+      ? `/ar${finalPath}`
+      : `/en${finalPath}`;
   return (
     <EditableObject dontAddInputsFor={["icon"]} top="40%" path="navBarLang" fields={navBarLang}>
       <Link

@@ -18,7 +18,7 @@
         "navBarLang": { "text": "EN", "icon": "/storage/images/lang.svg" },
         "navBarWhatsApp": {
             "text": "واتساب",
-            "link": ""
+            "link": "https://wa.me/+905352880084"
         },
         "footerLogo": "/storage/images/logo.png",
         "footerSocialMediaLinks": [
@@ -104,6 +104,11 @@
                 "text": "المشاريع",
                 "link": "/dashboard/projects",
                 "active": "projects"
+            },
+            {
+                "text": "الكورسات",
+                "link": "/dashboard/courses",
+                "active": "courses"
             }
         ]
     },
@@ -127,7 +132,7 @@
         "navBarLang": { "text": "AR", "icon": "/storage/images/lang.svg" },
         "navBarWhatsApp": {
             "text": "Whatsapp",
-            "link": ""
+            "link": "https://wa.me/+905352880084"
         },
         "footerLogo": "/storage/images/logo.png",
         "footerSocialMediaLinks": [
@@ -204,6 +209,11 @@
                 "text": "Projects",
                 "link": "/dashboard/projects",
                 "active": "projects"
+            },
+            {
+                "text": "Courses",
+                "link": "/dashboard/courses",
+                "active": "courses"
             }
         ]
     }

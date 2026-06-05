@@ -1,6 +1,6 @@
 {
   "Modules/Shared/resources/assets/js/utils/editor/CustomizedCkEditor.tsx": {
-    "file": "assets/CustomizedCkEditor-D3BrTxcS.js",
+    "file": "assets/CustomizedCkEditor-g7Qx9vjL.js",
     "name": "CustomizedCkEditor",
     "src": "Modules/Shared/resources/assets/js/utils/editor/CustomizedCkEditor.tsx",
     "isDynamicEntry": true,
@@ -12,7 +12,7 @@
     ]
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-B80r-kRf.js",
+    "file": "assets/app-BS4Fr7uP.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -20,7 +20,7 @@
       "Modules/Shared/resources/assets/js/utils/editor/CustomizedCkEditor.tsx"
     ],
     "css": [
-      "assets/app-CNT7-44p.css"
+      "assets/app-C8mVOT2b.css"
     ]
   }
 }

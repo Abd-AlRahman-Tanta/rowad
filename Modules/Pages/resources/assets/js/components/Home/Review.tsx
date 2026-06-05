@@ -23,7 +23,7 @@ const Review = ({ description, stars, userImage, userJob, userName, index }: Stu
                   shadow-review
                   hover:shadow-reviewHover
                   transition-all duration-500
-                  hover:-translate-y-2'>
+                  hover:-translate-y-1'>
       <div className="flex items-center gap-4 mb-6">
         {userImage ? (
           <Image

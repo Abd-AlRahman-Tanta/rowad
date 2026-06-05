@@ -27,16 +27,16 @@
         "servicesTitle": "ما أقدمه",
         "services": [
             {
-                "title": "الدورات التدريبية",
-                "description": "أقدم دورات تدريبية شاملة في هندسة العمارة تغطي مجموعة واسعة من المواضيع، بما في ذلك التصميم المعماري، وتقنيات البناء، وممارسات البناء المستدام، والتخطيط الحضري. صُممت دوراتي لتزويد الطلاب بالمهارات العملية والمعرفة النظرية للتفوق في مجال العمارة.",
-                "icon": "/storage/images/courses.svg",
-                "link": "#courses"
-            },
-            {
                 "title": "الاستشارات الهندسية",
                 "description": "أقدم خدمات استشارية هندسية للعملاء في صناعة العمارة. تشمل خبراتي التحليل الإنشائي، ونمذجة معلومات البناء (BIM)، وإدارة مشاريع البناء. أعمل بشكل وثيق مع المهندسين المعماريين والمقاولين والمطورين لضمان تنفيذ المشاريع بكفاءة وتلبية أعلى معايير الجودة والسلامة.",
                 "icon": "/storage/images/services.svg",
                 "link": "/engineering-services"
+            },
+            {
+                "title": "الدورات التدريبية",
+                "description": "أقدم دورات تدريبية شاملة في هندسة العمارة تغطي مجموعة واسعة من المواضيع، بما في ذلك التصميم المعماري، وتقنيات البناء، وممارسات البناء المستدام، والتخطيط الحضري. صُممت دوراتي لتزويد الطلاب بالمهارات العملية والمعرفة النظرية للتفوق في مجال العمارة.",
+                "icon": "/storage/images/courses.svg",
+                "link": "#courses"
             },
             {
                 "title": "استكمال التعليم الجامعي",
@@ -233,16 +233,16 @@
         "servicesTitle": "What I Offer",
         "services": [
             {
-                "title": "Courses",
-                "description": "I offer comprehensive courses in architecture engineering that cover a wide range of topics, including architectural design, construction techniques, sustainable building practices, and urban planning. My courses are designed to provide students with practical skills and theoretical knowledge to excel in the field of architecture.",
-                "icon": "/storage/images/courses.svg",
-                "link": "#courses"
-            },
-            {
                 "title": "Engineering Services",
                 "description": "I provide engineering consultancy services to clients in the architecture industry. My expertise includes structural analysis, building information modeling (BIM), and construction project management. I work closely with architects, contractors, and developers to ensure that projects are executed efficiently and meet the highest standards of quality and safety.",
                 "icon": "/storage/images/services.svg",
                 "link": "/engineering-services"
+            },
+            {
+                "title": "Courses",
+                "description": "I offer comprehensive courses in architecture engineering that cover a wide range of topics, including architectural design, construction techniques, sustainable building practices, and urban planning. My courses are designed to provide students with practical skills and theoretical knowledge to excel in the field of architecture.",
+                "icon": "/storage/images/courses.svg",
+                "link": "#courses"
             },
             {
                 "title": "University Continuation",

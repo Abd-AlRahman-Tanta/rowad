@@ -13,7 +13,8 @@ const Footer = ({ contactInformations, footerLogo, footerRightsText, footerSocia
   const { component } = usePage()
   const scrollToSection = (id: string, e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
-    router.visit("/" + id);
+    localStorage.setItem("scrollToSection", id);
+    router.visit("/");
   }
   return (
     <div className='w-full py-20 bg-arch-charcoal'>
@@ -113,12 +114,12 @@ const Footer = ({ contactInformations, footerLogo, footerRightsText, footerSocia
             </div>
           </div>
         </div>
-        <div className='w-full  pt-8 border-t-2 border-t-arch-card/10'>
+        <div className='w-full  pt-8 border-t-2  border-t-arch-card/10'>
           <EditableText
             richtext
             text={footerRightsText}
             path='footerRightsText'
-            className='text-arch-card text-center text-lg leading-2'
+            className='text-arch-card text-center mx-auto w-fit text-lg leading-3'
             children={footerRightsText}
           />
         </div>
