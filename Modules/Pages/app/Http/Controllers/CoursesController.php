@@ -131,4 +131,19 @@ class CoursesController extends Controller
       $course->topics()->create(['title' => $topic['title']]);
     }
   }
+  public function destroy(Request $request, Course $id)
+  {
+    $course = $id;
+    $course->load(["images", "learningPoints", "topics"]);
+    UploadImageController::deleteImage($course->image);
+    UploadImageController::deleteImage($course->heroImage);
+    foreach ($course->images as $img) {
+      UploadImageController::deleteImage($img->image);
+    }
+    $course->images()->delete();
+    $course->learningPoints()->delete();
+    $course->topics()->delete();
+    $course->delete();
+    return response()->json(["message" => "course deleted successfully!"]);
+  }
 }
