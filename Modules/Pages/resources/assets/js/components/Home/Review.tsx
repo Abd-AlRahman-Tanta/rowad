@@ -13,7 +13,39 @@ const Review = ({ description, stars, userImage, userJob, userName, index }: Stu
   useEffect(() => {
     const el = descRef.current;
     if (!el) return;
-    setIsClamped(el.scrollHeight >= el.clientHeight + 1);
+
+    const check = () => {
+      // نشيل الـ clamp بالكامل عبر style مباشرة
+      el.style.display = 'block';
+      el.style.webkitLineClamp = 'unset';
+      el.style.overflow = 'visible';
+      el.style.webkitBoxOrient = 'unset';
+
+      const fullHeight = el.scrollHeight;
+
+      // نرجع الـ style
+      el.style.display = '';
+      el.style.webkitLineClamp = '';
+      el.style.overflow = '';
+      el.style.webkitBoxOrient = '';
+
+      const clampedHeight = el.clientHeight;
+
+      setIsClamped(fullHeight > clampedHeight + 2);
+    };
+
+    // نستنى frame واحد عشان الـ browser يحسب الـ layout
+    const frame = requestAnimationFrame(check);
+
+    const observer = new ResizeObserver(() => {
+      requestAnimationFrame(check);
+    });
+    observer.observe(el);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, [description]);
 
   return (

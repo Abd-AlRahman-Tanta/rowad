@@ -4027,7 +4027,28 @@ const Review = ({ description, stars, userImage, userJob, userName, index }) => 
   useEffect(() => {
     const el = descRef.current;
     if (!el) return;
-    setIsClamped(el.scrollHeight >= el.clientHeight + 1);
+    const check = () => {
+      el.style.display = "block";
+      el.style.webkitLineClamp = "unset";
+      el.style.overflow = "visible";
+      el.style.webkitBoxOrient = "unset";
+      const fullHeight = el.scrollHeight;
+      el.style.display = "";
+      el.style.webkitLineClamp = "";
+      el.style.overflow = "";
+      el.style.webkitBoxOrient = "";
+      const clampedHeight = el.clientHeight;
+      setIsClamped(fullHeight > clampedHeight + 2);
+    };
+    const frame = requestAnimationFrame(check);
+    const observer = new ResizeObserver(() => {
+      requestAnimationFrame(check);
+    });
+    observer.observe(el);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, [description]);
   return /* @__PURE__ */ jsxs("div", { className: "min-h-[25.5rem] bg-arch-card rounded-3xl\r\n                  border border-arch-gray/10\r\n                  p-8\r\n                  shadow-review\r\n                  hover:shadow-reviewHover\r\n                  transition-all duration-500\r\n                  hover:-translate-y-1", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-4 mb-6", children: [
