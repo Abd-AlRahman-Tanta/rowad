@@ -3,5 +3,6 @@
     "Shared": true,
     "Pages": true,
     "Projects": true,
-    "Dashboard": true
+    "Dashboard": true,
+    "Blogs": true
 }

@@ -1,364 +1,108 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
-import { Link, usePage, router, Head, useForm, createInertiaApp } from "@inertiajs/react";
-import { useState, useContext, createContext, useRef, useEffect, createElement } from "react";
-import { IoIosArrowDown } from "react-icons/io";
-import axios from "axios";
-import { FiSearch, FiTrash2, FiPlus, FiEyeOff, FiEye } from "react-icons/fi";
+import { usePage, Link, router, Head, useForm, createInertiaApp } from "@inertiajs/react";
+import React, { createContext, useContext, useState, useEffect, useRef, createElement } from "react";
 import { create } from "zustand";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, EffectCoverflow, Thumbs } from "swiper/modules";
-import { useInView } from "react-intersection-observer";
 import { FaBars } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { ImWhatsapp } from "react-icons/im";
 import { MdOutlineLanguage } from "react-icons/md";
+import axios from "axios";
+import { useInView } from "react-intersection-observer";
+import { IoIosArrowDown } from "react-icons/io";
+import { FiSearch, FiTrash2, FiAlertCircle, FiX, FiChevronLeft, FiChevronRight, FiPlus, FiSave, FiEyeOff, FiEye } from "react-icons/fi";
+import { toast } from "sonner";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, EffectCoverflow, Thumbs } from "swiper/modules";
 import { FaArrowRight } from "react-icons/fa6";
 import createServer from "@inertiajs/react/server";
 import ReactDOMServer from "react-dom/server";
 const Image = ({ src, className }) => {
   return /* @__PURE__ */ jsx("img", { loading: "lazy", src: typeof src == "string" ? src : "", className: `${className}` });
 };
-const Button = ({
-  disable,
-  className,
-  children,
-  clickFunction,
-  icon,
-  transparent,
-  border,
-  black,
-  dontAddPadding,
-  dontAddHoverEffect,
-  dontAddShadow
-}) => {
-  return /* @__PURE__ */ jsxs(
-    "button",
-    {
-      disabled: disable,
-      className: `
-        ${!dontAddHoverEffect && "hover:scale-105"}
-        ${!dontAddShadow && "shadow-md"}
-        text-[18px]
-        font-semibold
-        cursor-pointer
-        duration-300
-        active:scale-90
-        disabled:opacity-60 disabled:cursor-not-allowed
-      flex items-center justify-center 
-      rounded-md
-      ${!dontAddPadding && "px-5 py-2"}
-      ${black ? "text-arch-dark" : "text-arch-light"}
-      ${border && "border-1 border-arch-accent"}
-      ${icon && "gap-2"}
-      ${transparent ? "bg-transparent" : "bg-arch-accent"}
-      ${className || ""}
-    `,
-      onClick: clickFunction,
-      children: [
-        children,
-        icon && /* @__PURE__ */ jsx(Image, { className: "w-5 shrink-0 object-contain icon", src: icon })
-      ]
-    }
-  );
-};
 const SectionTitle = ({ children, className }) => {
   return /* @__PURE__ */ jsx("h2", { className: `${className}`, children });
 };
-const DashboardToggleLink = ({ btn }) => {
-  const [list, setList] = useState(false);
+const BlogCard = ({
+  id,
+  image,
+  title,
+  summary,
+  category,
+  readTime,
+  created_at,
+  viewBlogButton,
+  anim
+}) => {
+  const { locale, url } = usePage().props;
+  const { url: pageUrl } = usePage();
+  const isDashboard = pageUrl.includes("dashboard");
+  const titleText = typeof title === "object" ? title[locale] : title;
+  const summaryText = typeof summary === "object" ? summary[locale] : summary;
   return /* @__PURE__ */ jsxs(
     "div",
     {
-      onClick: () => setList((prev) => !prev),
       className: `
-        cursor-pointer
-        rounded-lg
-        font-medium
-        text-light
-        text-lg
-        
+        ${isDashboard ? "w-full" : "desc:w-[30%] desc:grow max-desc:w-full max-desc:max-w-[calc((100%-32px)/2)] max-mob:max-w-full"}
+        bg-arch-card
+        rounded-3xl
+        overflow-hidden
+        shadow-md
+        hover:shadow-2xl
+        transition-all
+        duration-300
+        hover:-translate-y-2
+        border border-gray-100
+        group
+        flex flex-col
+        ${anim?.className ?? ""}
       `,
+      style: anim?.style,
       children: [
-        /* @__PURE__ */ jsxs("span", { className: `flex justify-between items-center w-full px-4 py-2 hover:bg-primary 
-        rounded-lg duration-300`, children: [
-          btn.text,
+        /* @__PURE__ */ jsxs("div", { className: "relative w-full overflow-hidden", children: [
           /* @__PURE__ */ jsx(
-            IoIosArrowDown,
+            Image,
             {
-              className: `
-            duration-300
-            ${list ? "rotate-180" : ""}
-          `
+              src: image,
+              className: "h-56 w-full object-cover group-hover:scale-105 transition-all duration-500"
+            }
+          ),
+          category && /* @__PURE__ */ jsx("div", { className: "absolute top-4 start-4 bg-arch-accent text-arch-light text-xs px-3 py-1 rounded-full font-semibold shadow", children: category })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "p-6 flex flex-col gap-3 grow", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-xs text-arch-gray", children: [
+            created_at && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+              /* @__PURE__ */ jsx("span", { children: "📅" }),
+              created_at
+            ] }),
+            readTime && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+              /* @__PURE__ */ jsx("span", { children: "⏱" }),
+              readTime
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx(SectionTitle, { className: "text-lg font-bold text-arch-dark leading-5 line-clamp-2", children: titleText }),
+          /* @__PURE__ */ jsx(
+            "p",
+            {
+              className: "text-arch-gray text-sm leading-4 line-clamp-3 grow",
+              dangerouslySetInnerHTML: { __html: summaryText }
+            }
+          ),
+          viewBlogButton && /* @__PURE__ */ jsxs(
+            Link,
+            {
+              href: viewBlogButton.link + id,
+              className: "mt-2 inline-flex items-center gap-2 text-arch-accent font-semibold text-sm hover:gap-3 transition-all duration-300",
+              children: [
+                viewBlogButton.text,
+                /* @__PURE__ */ jsx("span", { className: "text-base", children: "←" })
+              ]
             }
           )
-        ] }),
-        /* @__PURE__ */ jsx(
-          "div",
-          {
-            className: `
-          grid
-          duration-300
-          ${list ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}
-        `,
-            children: /* @__PURE__ */ jsx("div", { className: "overflow-hidden", children: btn.links && btn.links.map((lnk, i) => /* @__PURE__ */ jsx(
-              Link,
-              {
-                href: lnk.link,
-                className: "block px-4 py-2 mt-2  rounded-lg text-light bg-light/20",
-                children: lnk.text
-              },
-              i
-            )) })
-          }
-        )
+        ] })
       ]
     }
   );
 };
-const DashboardSideBar = ({ data }) => {
-  const { dashboardSideBarLinks, dashboardSideBarTitle } = data;
-  const { url } = usePage();
-  const [open, setOpen] = useState(false);
-  const { locale } = usePage().props;
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx(
-      Button,
-      {
-        clickFunction: () => setOpen(!open),
-        className: `lg:hidden cursor-pointer fixed  top-32 left-1/2  -translate-x-1/2 z-50  shadow-md ${open && "opacity-0!"} `,
-        children: locale == "en" ? "Control Panel" : "لوحة التحكم"
-      }
-    ),
-    open && /* @__PURE__ */ jsx(
-      "div",
-      {
-        className: "fixed inset-0 bg-black/40 z-40 lg:hidden",
-        onClick: () => setOpen(false)
-      }
-    ),
-    /* @__PURE__ */ jsxs(
-      "aside",
-      {
-        className: `
-    pt-32
-    lg:sticky
-    lg:top-0
-    lg:h-[calc(100vh)]
-    lg:overflow-y-auto
-    lg:w-64
-    lg:shrink-0
-    max-lg:fixed
-    max-lg:top-0
-    max-lg:start-0
-    max-lg:h-[calc(100vh)]
-    max-lg:w-64
-    max-lg:overflow-y-auto
-    max-lg:z-50
-    bg-gradient-to-b 
-    from-arch-gray/95 
-    via-gray-200 
-    to-arch-gray/95
-    text-light
-    flex
-    flex-col
-    p-6
-    shadow-lg
-    transform
-    transition-transform
-    duration-300
-    ${open ? "max-lg:translate-x-0" : "max-lg:-translate-x-full max-lg:rtl:translate-x-full"}
-  `,
-        children: [
-          /* @__PURE__ */ jsx(SectionTitle, { className: "text-2xl font-bold mb-8 border-b border-arch-light pb-2 text-arch-dark", children: dashboardSideBarTitle }),
-          /* @__PURE__ */ jsx("ul", { className: "flex flex-col gap-3", children: dashboardSideBarLinks.map((btn, i) => btn.link ? /* @__PURE__ */ jsx(
-            Link,
-            {
-              href: btn.link,
-              className: `px-4 py-2 rounded-lg hover:text-arch-charcoal transition-colors font-medium text-light text-lg text-arch-dark`,
-              onClick: () => setOpen(false),
-              children: btn.text
-            },
-            i
-          ) : /* @__PURE__ */ jsx(
-            DashboardToggleLink,
-            {
-              btn
-            },
-            i
-          )) })
-        ]
-      }
-    )
-  ] });
-};
-const DeletePopUp = () => {
-  const ctx = useContext(DeleteContext);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const { locale } = usePage().props;
-  if (!ctx || !ctx) return null;
-  const close = () => {
-    ctx.setDeleteState(null);
-    setErrorMessage(null);
-  };
-  const handleDelete = async () => {
-    setLoading(true);
-    setErrorMessage(null);
-    try {
-      await axios.delete(`${ctx.deleteState?.url}` || "");
-      close();
-      router.visit(`${ctx.deleteState?.returnedUrl}` || "");
-    } catch (error) {
-      if (error.response?.status === 422) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage(locale == "en" ? "Something went wrong. Please try again." : "حدث خطأ ما. حاول مرة أخرى.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center ", children: [
-    /* @__PURE__ */ jsx(
-      "div",
-      {
-        className: "absolute inset-0 bg-black/50",
-        onClick: close
-      }
-    ),
-    /* @__PURE__ */ jsxs("div", { className: "relative bg-white rounded-xl p-6 w-[90%] max-w-md shadow-lg", children: [
-      /* @__PURE__ */ jsx("p", { className: "text-gray-800 text-lg mb-6", children: ctx.deleteState?.message }),
-      errorMessage && /* @__PURE__ */ jsx("div", { className: "mb-4 p-3 bg-red-50 border border-red-200 rounded-lg", children: /* @__PURE__ */ jsx("p", { className: "text-red-600 text-sm", children: errorMessage }) }),
-      /* @__PURE__ */ jsxs("div", { className: "flex justify-end gap-3", children: [
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            disabled: loading,
-            onClick: close,
-            className: "px-4 py-2 rounded-lg bg-gray-200 disabled:opacity-50",
-            children: locale == "en" ? "Cancel" : "الغاء"
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            onClick: handleDelete,
-            disabled: loading,
-            className: "px-4 py-2 rounded-lg bg-red-500 text-white disabled:opacity-50",
-            children: loading ? locale == "en" ? "Deleting..." : "جاري الحذف...." : locale == "en" ? "Confirm" : "تأكيد"
-          }
-        )
-      ] })
-    ] })
-  ] });
-};
-const DeleteContext = createContext(null);
-const DashboardLayout = ({ children }) => {
-  const { globalData } = usePage().props;
-  const [deleteState, setDeleteState] = useState(null);
-  return /* @__PURE__ */ jsx(DeleteContext.Provider, { value: { deleteState, setDeleteState }, children: /* @__PURE__ */ jsxs("div", { className: "w-full min-h-screen flex justify-end items-start  ", children: [
-    /* @__PURE__ */ jsx(Head, { title: "Dashboard" }),
-    deleteState != null && /* @__PURE__ */ jsx(DeletePopUp, {}),
-    /* @__PURE__ */ jsx(DashboardSideBar, { data: globalData }),
-    /* @__PURE__ */ jsx("div", { className: "w-[calc(100%-16rem)] max-lg:w-full", children })
-  ] }) });
-};
-const SearchHeader = ({ placeHolder, searchFields, onSearchModeChange }) => {
-  const { locale } = usePage().props;
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { url } = usePage();
-  const currentPath = url.split("?")[0];
-  const isFirstRender = useRef(true);
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    const trimmed = search.trim();
-    const debounce = setTimeout(() => {
-      if (trimmed !== "") {
-        onSearchModeChange?.(true);
-        router.get(
-          currentPath,
-          { search, searchFields: JSON.stringify(searchFields) },
-          {
-            preserveState: true,
-            replace: true,
-            preserveScroll: true,
-            onStart: () => setLoading(true),
-            onFinish: () => setLoading(false)
-          }
-        );
-      } else {
-        onSearchModeChange?.(false);
-        setLoading(false);
-        router.get(
-          currentPath,
-          {},
-          { preserveState: true, replace: true, preserveScroll: true }
-        );
-      }
-    }, 700);
-    return () => clearTimeout(debounce);
-  }, [search]);
-  return /* @__PURE__ */ jsx("div", { className: "mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-100", children: /* @__PURE__ */ jsxs("div", { className: "relative max-w-md", children: [
-    /* @__PURE__ */ jsx("span", { className: "absolute inset-y-0 start-0 flex items-center ps-3", children: /* @__PURE__ */ jsx(FiSearch, { className: "text-gray-400" }) }),
-    loading && /* @__PURE__ */ jsx("span", { className: "absolute inset-y-0 end-0 flex items-center pe-3", children: /* @__PURE__ */ jsxs(
-      "svg",
-      {
-        className: "animate-spin h-4 w-4 text-gray-500",
-        xmlns: "http://www.w3.org/2000/svg",
-        fill: "none",
-        viewBox: "0 0 24 24",
-        children: [
-          /* @__PURE__ */ jsx(
-            "circle",
-            {
-              className: "opacity-25",
-              cx: "12",
-              cy: "12",
-              r: "10",
-              stroke: "currentColor",
-              strokeWidth: "4"
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "path",
-            {
-              className: "opacity-75",
-              fill: "currentColor",
-              d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            }
-          )
-        ]
-      }
-    ) }),
-    /* @__PURE__ */ jsx(
-      "input",
-      {
-        type: "text",
-        value: search,
-        onChange: (e) => setSearch(e.target.value),
-        className: "block w-full ps-10 pe-10 py-2 border border-gray-300 rounded-md leading-5 bg-gray-50 focus:outline-none sm:text-sm transition duration-150 ease-in-out",
-        placeholder: placeHolder || (locale === "ar" ? "ابحث هنا..." : "Search here...")
-      }
-    )
-  ] }) });
-};
-function inferFieldType(key, richText) {
-  if (!key) {
-    return;
-  }
-  const k = key.toLowerCase();
-  if (k.includes("icon") || k.includes("image") || k.includes("logo") || k.includes("webp") || k.includes("png") || k.includes("jpg") || k.includes("svg"))
-    return "image";
-  if (k.includes("description") && richText)
-    return "richtext";
-  if (k.includes("content"))
-    return "textarea";
-  return "text";
-}
 const PageContentContext = createContext("");
 const usePageName = () => useContext(PageContentContext);
 const PageContentProvider = ({ pageName, children }) => {
@@ -387,6 +131,183 @@ const useEditorStore = create((set) => ({
   setValue: (value) => set({ value }),
   closeEditor: () => set({ open: false })
 }));
+const EditableText = ({ path, children, richtext, top, start, text, className, style }) => {
+  const openEditor = useEditorStore((s) => s.openEditor);
+  const pageName = usePageName();
+  const { locale } = usePage().props;
+  const isRTL = locale === "ar";
+  const positionStyles = {
+    top: top ?? "40%",
+    [isRTL ? "right" : "left"]: start ?? "50%",
+    position: "absolute",
+    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
+  };
+  const { auth } = usePage().props;
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
+    !richtext && children,
+    richtext && typeof children === "string" && /* @__PURE__ */ jsx("div", { dangerouslySetInnerHTML: { __html: children } }),
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
+      "button",
+      {
+        title: "Text Editing",
+        type: "button",
+        onClick: (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openEditor(pageName, path, richtext ? "richtext" : "text", text);
+        },
+        style: positionStyles,
+        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
+        children: "✏️"
+      }
+    ) : ""
+  ] });
+};
+const Label = ({ title, path, dontEdit, className }) => {
+  if (dontEdit) {
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: `w-fit ${className} mb-6 `,
+        children: /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-sm font-medium mb-4 leading-5", children: title })
+      }
+    );
+  } else
+    return /* @__PURE__ */ jsx(
+      EditableText,
+      {
+        className: `w-fit ${className} mb-6 `,
+        top: "40%",
+        start: "10%",
+        path: path || "",
+        text: title || "",
+        children: /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-sm font-medium mb-4 leading-5", children: title })
+      }
+    );
+};
+const MainTitle = ({ children, className, white, black, hero, center }) => {
+  return /* @__PURE__ */ jsx(
+    "h1",
+    {
+      className: `
+      font-bold
+      ${white ? "text-arch-card" : black && "text-arch-dark"}
+      ${hero ? "text-4xl leading-3" : "text-3xl leading-2"}
+      ${center && "text-center"}
+    ${className}
+    `,
+      children
+    }
+  );
+};
+const EditableImage = ({
+  src,
+  path,
+  className,
+  children,
+  top,
+  start,
+  zIndex,
+  style
+}) => {
+  const openEditor = useEditorStore((s) => s.openEditor);
+  const pageName = usePageName();
+  const { locale, auth } = usePage().props;
+  const isRTL = locale === "ar";
+  const positionStyles = {
+    top: top ?? "20%",
+    [isRTL ? "right" : "left"]: start ?? "50%",
+    position: "absolute",
+    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`,
+    zIndex
+  };
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
+    children,
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        title: "Edit image",
+        onClick: (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openEditor(pageName, path, "image", src);
+        },
+        style: positionStyles,
+        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
+        children: "🖼️"
+      }
+    ) : ""
+  ] });
+};
+function inferFieldType(key, richText) {
+  if (!key) {
+    return;
+  }
+  const k = key.toLowerCase();
+  if (k.includes("icon") || k.includes("image") || k.includes("logo") || k.includes("webp") || k.includes("png") || k.includes("jpg") || k.includes("svg"))
+    return "image";
+  if (k.includes("description") && richText)
+    return "richtext";
+  if (k.includes("content"))
+    return "textarea";
+  return "text";
+}
+const EditableArray = ({
+  path,
+  fields,
+  children,
+  className,
+  top,
+  start,
+  dontAddInputsFor,
+  style
+}) => {
+  const openEditor = useEditorStore((s) => s.openEditor);
+  const pageName = usePageName();
+  const { locale, auth } = usePage().props;
+  const isRTL = locale === "ar";
+  let inputs;
+  if (typeof fields === "object" && fields !== null && !Array.isArray(fields)) {
+    const entries = Object.entries(fields);
+    const filteredEntries = dontAddInputsFor ? entries.filter(([key, map]) => !dontAddInputsFor.includes(key)) : entries;
+    inputs = filteredEntries.map(([key]) => ({
+      key,
+      type: inferFieldType(key)
+    }));
+  } else {
+    inputs = [
+      {
+        key: inferFieldType(fields),
+        type: inferFieldType(fields)
+      }
+    ];
+  }
+  const array = true;
+  const positionStyles = {
+    top: top ?? "5%",
+    [isRTL ? "right" : "left"]: start ?? "10%",
+    position: "absolute",
+    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
+  };
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
+    children,
+    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
+      "button",
+      {
+        title: "Add Item",
+        type: "button",
+        onClick: () => openEditor(pageName, path, void 0, void 0, { array, inputs }),
+        className: "w-16  h-9 rounded-full shadow-lg flex items-center justify-center gap-2 text-sm\n          bg-green-600 text-white cursor-pointer hover:bg-green-700 hover:scale-105 \n          transition-transform z-1000",
+        style: positionStyles,
+        children: locale === "en" ? "➕Add" : "➕اضافة"
+      }
+    ) : ""
+  ] });
+};
 const EditableObject = ({
   path,
   fields,
@@ -451,1333 +372,6 @@ const EditableObject = ({
         className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
         style: positionStyles,
         children: "🧩"
-      }
-    ) : ""
-  ] });
-};
-const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton, anim }) => {
-  const { locale } = usePage().props;
-  const { url } = usePage();
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      className: `
-      ${url.includes("dashboard") ? "w-full" : "desc:w-[30%]    desc:grow max-desc:w-full max-desc:max-w-[calc((100%-32px)/2)] max-mob:max-w-full"}
-        bg-arch-card
-        rounded-3xl
-        overflow-hidden
-        shadow-md
-        hover:shadow-2xl
-        transition-all
-        duration-300
-        hover:-translate-y-2
-        border border-gray-100
-        group
-        flex flex-col justify-between
-        ${anim?.className ?? ""}
-      `,
-      style: anim?.style,
-      children: [
-        /* @__PURE__ */ jsxs("div", { className: "relative w-full", children: [
-          /* @__PURE__ */ jsx(
-            Image,
-            {
-              src: image,
-              className: "\r\n            h-64\r\n            w-full\r\n            object-cover\r\n            group-hover:scale-105\r\n            transition-all\r\n            duration-500\r\n          "
-            }
-          ),
-          newCourse && /* @__PURE__ */ jsx(
-            "div",
-            {
-              className: "\r\n              absolute\r\n              top-4\r\n              end-4\r\n              bg-arch-accent\r\n              text-arch-light\r\n              text-xs\r\n              px-3\r\n              py-1\r\n              rounded-full\r\n              font-semibold\r\n              shadow-lg\r\n            ",
-              children: locale == "en" ? "NEW" : "جديد"
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "p-6 w-full grow flex flex-col justify-between", children: [
-          /* @__PURE__ */ jsx(
-            SectionTitle,
-            {
-              className: "\r\n            w-full\r\n            text-xl\r\n            font-bold\r\n            text-arch-dark\r\n            mb-3\r\n          ",
-              children: name
-            }
-          ),
-          viewCourseButton && /* @__PURE__ */ jsx(
-            EditableObject,
-            {
-              className: "w-fit max-mob:w-full",
-              dontAddInputsFor: ["link"],
-              fields: viewCourseButton,
-              path: "viewCourseButton",
-              children: /* @__PURE__ */ jsx(Button, { className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
-                Link,
-                {
-                  href: viewCourseButton.link + id,
-                  children: viewCourseButton.text
-                }
-              ) })
-            }
-          )
-        ] })
-      ]
-    }
-  );
-};
-const Pagination = ({ links }) => {
-  return /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center gap-2 flex-wrap", children: links.map((link, index) => /* @__PURE__ */ jsx(
-    Link,
-    {
-      preserveScroll: true,
-      preserveState: true,
-      href: link.url || "",
-      dangerouslySetInnerHTML: { __html: link.label },
-      className: `
-                        px-4 py-2 rounded-xl text-sm font-medium transition-all
-                        ${link.active ? "bg-arch-accent text-arch-card" : "bg-arch-card text-arch-dark hover:bg-arch-light"}
-                        ${!link.url && "opacity-50 pointer-events-none"}
-                    `
-    },
-    index
-  )) });
-};
-const DashboardCourses = ({ allData }) => {
-  const { courses, links, content } = allData;
-  const [isSearching, setIsSearching] = useState(false);
-  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
-    /* @__PURE__ */ jsx(
-      SearchHeader,
-      {
-        searchFields: content.searchFields,
-        placeHolder: content.searchHeaderPlaceholder,
-        onSearchModeChange: setIsSearching
-      }
-    ),
-    !isSearching && /* @__PURE__ */ jsx(
-      Link,
-      {
-        href: content.addButton.link,
-        className: "block w-fit  mt-5 mb-10 mx-auto",
-        children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
-      }
-    ),
-    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10", children: courses.map((course, i) => /* @__PURE__ */ jsx(
-      CourseCard,
-      {
-        viewCourseButton: content.viewCourseButton,
-        ...course
-      },
-      course.id
-    )) }),
-    /* @__PURE__ */ jsx(Pagination, { links })
-  ] }) });
-};
-const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: DashboardCourses
-}, Symbol.toStringTag, { value: "Module" }));
-let editorPromise = null;
-function SharedCkEditorLoader() {
-  if (!editorPromise) {
-    editorPromise = import("./assets/CustomizedCkEditor-DswKX_vV.js").then(
-      (mod) => mod.default
-    );
-  }
-  return editorPromise;
-}
-let cachedEditor = null;
-let loadingPromise = null;
-function useSharedCkEditor() {
-  const [Editor, setEditor] = useState(() => cachedEditor);
-  useEffect(() => {
-    if (cachedEditor) {
-      setEditor(() => cachedEditor);
-      return;
-    }
-    if (!loadingPromise) {
-      loadingPromise = SharedCkEditorLoader().then((editor) => {
-        cachedEditor = editor;
-        return editor;
-      });
-    }
-    loadingPromise.then((editor) => {
-      setEditor(() => editor);
-    });
-  }, []);
-  return Editor;
-}
-function LoadingSpinner() {
-  return /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-50000000000000000000 flex items-center justify-center bg-black/50 backdrop-blur-sm", children: /* @__PURE__ */ jsx(
-    "div",
-    {
-      className: "\r\n          w-12 h-12\r\n          border-4\r\n          border-arch-light\r\n          border-t-transparent\r\n          rounded-full\r\n          animate-spin\r\n          shadow-2xl\r\n        "
-    }
-  ) });
-}
-const ImageInput = ({ onChange, name, defaultValue }) => {
-  const [preview, setPreview] = useState(defaultValue instanceof File ? URL.createObjectURL(defaultValue) : defaultValue || null);
-  const { locale } = usePage().props;
-  const handleRemove = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setPreview(null);
-    onChange(null);
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "relative", children: [
-    /* @__PURE__ */ jsxs("label", { className: "cursor-pointer w-full ", children: [
-      /* @__PURE__ */ jsx(
-        "input",
-        {
-          name,
-          type: "file",
-          hidden: true,
-          accept: "image/*",
-          onChange: (e) => {
-            if (e.target.files)
-              setPreview(URL.createObjectURL(e.target.files[0]));
-            onChange(e.target.files?.[0] || null);
-          }
-        }
-      ),
-      /* @__PURE__ */ jsx("div", { className: "w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-secondary-500 transition ", children: preview ? /* @__PURE__ */ jsx(
-        "img",
-        {
-          src: preview,
-          className: "w-full h-48 object-cover rounded-md"
-        }
-      ) : /* @__PURE__ */ jsx("span", { className: "text-gray-500 ", children: locale == "en" ? "Click to upload image" : "أضغط لتحميل صورة" }) })
-    ] }),
-    preview && /* @__PURE__ */ jsx(
-      "button",
-      {
-        type: "button",
-        onClick: handleRemove,
-        className: "absolute cursor-pointer top-1 end-1 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-700 transition z-10",
-        title: locale == "en" ? "Remove image" : "حذف الصورة",
-        children: /* @__PURE__ */ jsx(FiTrash2, { size: 14 })
-      }
-    )
-  ] });
-};
-const VideoInput = ({ onChange, name, defaultValue }) => {
-  const [preview, setPreview] = useState(
-    defaultValue instanceof File ? URL.createObjectURL(defaultValue) : defaultValue || null
-  );
-  const { locale } = usePage().props;
-  const handleRemove = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setPreview(null);
-    onChange(null);
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "relative", children: [
-    /* @__PURE__ */ jsxs("label", { className: "cursor-pointer w-full", children: [
-      /* @__PURE__ */ jsx(
-        "input",
-        {
-          name,
-          type: "file",
-          hidden: true,
-          accept: "video/mp4,video/webm,video/mov,video/avi",
-          onChange: (e) => {
-            if (e.target.files?.[0]) {
-              setPreview(URL.createObjectURL(e.target.files[0]));
-              onChange(e.target.files[0]);
-            }
-          }
-        }
-      ),
-      /* @__PURE__ */ jsx("div", { className: "w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-secondary-500 transition", children: preview ? /* @__PURE__ */ jsx(
-        "video",
-        {
-          src: preview,
-          className: "w-full h-48 object-cover rounded-md",
-          controls: true,
-          muted: true
-        }
-      ) : /* @__PURE__ */ jsx("span", { className: "text-gray-500", children: locale == "en" ? "Click to upload video" : "أضغط لتحميل فيديو" }) })
-    ] }),
-    preview && /* @__PURE__ */ jsx(
-      "button",
-      {
-        type: "button",
-        onClick: handleRemove,
-        className: "absolute top-2 end-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-700 transition z-10",
-        title: locale == "en" ? "Remove video" : "حذف الفيديو",
-        children: /* @__PURE__ */ jsx(FiTrash2, { size: 14 })
-      }
-    )
-  ] });
-};
-function CustomSelect({
-  pickOne,
-  choices,
-  viewedOption,
-  selectedOption,
-  onChange,
-  preSelected = []
-}) {
-  const { locale } = usePage().props;
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState([]);
-  const initialized = useRef(false);
-  const ref = useRef(null);
-  useEffect(() => {
-    if (!initialized.current) {
-      if (Array.isArray(preSelected)) {
-        setSelected(
-          preSelected.map((choice) => {
-            if (typeof choice === "object" && choice !== null) {
-              return {
-                [selectedOption]: String(choice[selectedOption])
-              };
-            }
-            return {
-              [selectedOption]: String(choice)
-            };
-          })
-        );
-      } else if (preSelected) {
-        setSelected([
-          {
-            [selectedOption]: String(preSelected[selectedOption])
-          }
-        ]);
-      }
-      initialized.current = true;
-    }
-  }, [preSelected]);
-  const toggleOption = (choice) => {
-    const value = String(choice[selectedOption]);
-    let newSelected;
-    const exists = selected.some(
-      (item) => String(item[selectedOption]) === value
-    );
-    if (pickOne) {
-      newSelected = exists ? [] : [{ [selectedOption]: value }];
-      setOpen(false);
-    } else {
-      if (exists) {
-        newSelected = selected.filter(
-          (item) => String(item[selectedOption]) !== value
-        );
-      } else {
-        newSelected = [
-          ...selected,
-          { [selectedOption]: value }
-        ];
-      }
-    }
-    setSelected(newSelected);
-    onChange(newSelected);
-  };
-  useEffect(() => {
-    const close = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, []);
-  const getSelectedLabel = () => {
-    if (pickOne && selected.length > 0) {
-      const currentValue = String(
-        selected[0][selectedOption]
-      );
-      const foundChoice = choices.find(
-        (choice) => String(choice[selectedOption]) === currentValue
-      );
-      return foundChoice?.[viewedOption] || (locale === "en" ? "Select option" : "اختر خيار");
-    }
-    if (selected.length > 0) {
-      return `${selected.length} ${locale === "en" ? "options selected" : "خيارات مختارة"}`;
-    }
-    return locale === "en" ? "Select options" : "اختر الخيارات";
-  };
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      ref,
-      className: "relative w-full",
-      children: [
-        /* @__PURE__ */ jsxs(
-          "button",
-          {
-            type: "button",
-            onClick: () => setOpen((prev) => !prev),
-            className: "w-full border rounded-lg px-4 py-3 bg-white cursor-pointer flex justify-between items-center text-sm sm:text-base",
-            children: [
-              /* @__PURE__ */ jsx("span", { children: getSelectedLabel() }),
-              /* @__PURE__ */ jsx("span", { className: "text-gray-500", children: "▼" })
-            ]
-          }
-        ),
-        open && /* @__PURE__ */ jsxs("div", { className: "absolute left-0 top-full mt-2 w-full bg-white border rounded-lg shadow-lg z-10 max-h-56 overflow-y-auto", children: [
-          choices.map((choice, i) => {
-            const value = String(
-              choice[selectedOption]
-            );
-            const active = selected.some(
-              (item) => String(item[selectedOption]) === value
-            );
-            return /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => toggleOption(choice),
-                className: `w-full flex justify-between items-center px-4 py-3 text-sm sm:text-base hover:bg-gray-100 transition ${active ? "bg-gray-100 font-medium" : ""}`,
-                children: [
-                  /* @__PURE__ */ jsx("span", { children: String(choice[viewedOption]) }),
-                  active && /* @__PURE__ */ jsx("span", { children: "✔" })
-                ]
-              },
-              i
-            );
-          }),
-          choices.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 py-3 text-sm text-gray-500", children: locale === "en" ? "No options found" : "لا يوجد خيارات" })
-        ] })
-      ]
-    }
-  );
-}
-const RichTextInput = ({ Editor, name, value, onChange }) => {
-  const [isUploading, setIsUploading] = useState(false);
-  const [richTextValue, setRichTextValue] = useState(value || "");
-  useEffect(() => {
-    setRichTextValue(value || "");
-  }, [value]);
-  const handleChange = (_event, editor) => {
-    const data = editor.getData();
-    setRichTextValue(data);
-    onChange(data);
-  };
-  if (!Editor) {
-    return null;
-  }
-  return /* @__PURE__ */ jsxs("div", { children: [
-    /* @__PURE__ */ jsx(
-      Editor,
-      {
-        value: richTextValue,
-        onChange: handleChange,
-        setIsUploading,
-        onUploadStart: () => setIsUploading(true),
-        onUploadComplete: () => setIsUploading(false)
-      }
-    ),
-    /* @__PURE__ */ jsx("textarea", { hidden: true, name, value: richTextValue, readOnly: true }),
-    isUploading && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center text-white text-xl z-50", children: "Uploading File..." })
-  ] });
-};
-function ObjectToFormData(obj, formData = new FormData(), parentKey = "") {
-  if (obj === null || obj === void 0) {
-    if (parentKey) formData.append(parentKey, "");
-    return formData;
-  }
-  if (obj instanceof File) {
-    formData.append(parentKey, obj);
-    return formData;
-  }
-  if (Array.isArray(obj)) {
-    if (obj.length === 0) {
-      formData.append(`${parentKey}`, "");
-    } else {
-      obj.forEach((item, index) => {
-        ObjectToFormData(item, formData, `${parentKey}[${index}]`);
-      });
-    }
-    return formData;
-  }
-  if (typeof obj === "object") {
-    Object.keys(obj).forEach((key) => {
-      const formKey = parentKey ? `${parentKey}[${key}]` : key;
-      ObjectToFormData(obj[key], formData, formKey);
-    });
-    return formData;
-  }
-  formData.append(parentKey, String(obj));
-  return formData;
-}
-const JsonTextarea = ({ value, onChange }) => {
-  const [isInvalid, setIsInvalid] = useState(false);
-  const handleChange = (e) => {
-    const val = e.target.value;
-    onChange(val);
-    try {
-      if (val) JSON.parse(val);
-      setIsInvalid(false);
-    } catch {
-      setIsInvalid(true);
-    }
-  };
-  return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-    /* @__PURE__ */ jsx(
-      "textarea",
-      {
-        value,
-        onChange: handleChange,
-        className: `border p-2 rounded outline-none font-mono text-sm resize-y w-full  ${isInvalid ? "border-red-500 bg-red-50" : ""}`,
-        dir: "ltr",
-        placeholder: '{\n  "@context": "http://schema.org",\n  "@type": "LocalBusiness"\n}'
-      }
-    ),
-    isInvalid && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs", children: "Invalid Json" })
-  ] });
-};
-function DynamicForm({
-  initialData = {},
-  fields,
-  submitUrl,
-  deleteUrl,
-  returnUrl = "",
-  itemName = "Item",
-  isEdit = false
-}) {
-  const { locale } = usePage().props;
-  const deleteContext = useContext(DeleteContext);
-  const Editor = useSharedCkEditor();
-  const setupInitialState = () => {
-    let state = {};
-    fields.forEach((field) => {
-      if (field.type === "spatie" || field.type === "spatie-richtext" || field.type === "spatie-file") {
-        state[field.name] = {
-          ar: initialData?.[field.name]?.ar || "",
-          en: initialData?.[field.name]?.en || ""
-        };
-      } else if (field.type === "spatie-json") {
-        state[field.name] = {
-          ar: initialData?.[field.name]?.ar ? typeof initialData[field.name].ar === "object" ? JSON.stringify(initialData[field.name].ar, null, 2) : initialData[field.name].ar : "",
-          en: initialData?.[field.name]?.en ? typeof initialData[field.name].en === "object" ? JSON.stringify(initialData[field.name].en, null, 2) : initialData[field.name].en : ""
-        };
-      } else if (field.type === "json") {
-        state[field.name] = initialData?.[field.name] ? typeof initialData[field.name] === "object" ? JSON.stringify(initialData[field.name], null, 2) : initialData[field.name] : "";
-      } else if (field.type === "repeater") {
-        state[field.name] = (initialData?.[field.name] || []).map((item) => {
-          const converted = { ...item };
-          field.repeaterFields?.forEach((subField) => {
-            if (subField.type === "spatie-json") {
-              converted[subField.name] = {
-                ar: item[subField.name]?.ar ? typeof item[subField.name].ar === "object" ? JSON.stringify(item[subField.name].ar, null, 2) : item[subField.name].ar : "",
-                en: item[subField.name]?.en ? typeof item[subField.name].en === "object" ? JSON.stringify(item[subField.name].en, null, 2) : item[subField.name].en : ""
-              };
-            } else if (subField.type === "json") {
-              converted[subField.name] = item[subField.name] ? typeof item[subField.name] === "object" ? JSON.stringify(item[subField.name], null, 2) : item[subField.name] : "";
-            }
-          });
-          return converted;
-        });
-      } else if (field.type === "select") {
-        if (initialData?.[field.name] !== void 0) {
-          state[field.name] = Array.isArray(initialData?.[field.name]) ? initialData?.[field.name] : { [field.selectValueOption]: initialData?.[field.name] };
-        } else {
-          field.selectPickOne ? "" : [];
-        }
-      } else {
-        state[field.name] = initialData?.[field.name] || "";
-      }
-    });
-    return state;
-  };
-  const { data, setData } = useForm(setupInitialState());
-  const [processing, setProcessing] = useState(false);
-  const [errors, setErrors] = useState({});
-  const getError = (fieldName) => {
-    if (errors[fieldName]) {
-      return Array.isArray(errors[fieldName]) ? errors[fieldName][0] : errors[fieldName];
-    }
-    const nestedError = Object.keys(errors).find((key) => key.startsWith(`${fieldName}.`));
-    if (nestedError) {
-      return Array.isArray(errors[nestedError]) ? errors[nestedError][0] : errors[nestedError];
-    }
-    return void 0;
-  };
-  const handleNumberInput = (value) => value.replace(/\D/g, "");
-  const getSpatieError = (fieldName, lang) => {
-    const key = `${fieldName}.${lang}`;
-    if (errors[key]) {
-      return Array.isArray(errors[key]) ? errors[key][0] : errors[key];
-    }
-    return void 0;
-  };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setProcessing(true);
-    setErrors({});
-    try {
-      const formData = ObjectToFormData(data);
-      if (isEdit) {
-        formData.append("_method", "PUT");
-        await axios.post("/" + locale + submitUrl, formData, {
-          headers: { "Content-Type": "multipart/form-data" }
-        });
-      } else {
-        await axios.post("/" + locale + submitUrl, formData, {
-          headers: { "Content-Type": "multipart/form-data" }
-        });
-      }
-      router.visit(returnUrl);
-    } catch (error) {
-      if (error.response?.status === 422) {
-        setErrors(error.response.data.errors);
-      } else {
-        console.error("Server Error:", error);
-      }
-    } finally {
-      setProcessing(false);
-    }
-  };
-  const handleSpatieChange = (fieldName, lang, value) => {
-    setData(fieldName, { ...data[fieldName], [lang]: value });
-  };
-  const addRepeaterItem = (repeaterName, repeaterFields) => {
-    const newItem = {};
-    repeaterFields.forEach((f) => {
-      if (f.type === "spatie" || f.type === "spatie-richtext") {
-        newItem[f.name] = { ar: "", en: "" };
-      } else if (f.type === "spatie-json") {
-        newItem[f.name] = { ar: "", en: "" };
-      } else if (f.type === "json") {
-        newItem[f.name] = "";
-      } else if (f.type === "select") {
-        newItem[f.name] = f.selectPickOne ? "" : [];
-      } else {
-        newItem[f.name] = "";
-      }
-    });
-    setData(repeaterName, [...data[repeaterName], newItem]);
-  };
-  const updateRepeaterItem = (repeaterName, index, fieldName, value) => {
-    const newRepeaterArray = [...data[repeaterName]];
-    newRepeaterArray[index][fieldName] = value;
-    setData(repeaterName, newRepeaterArray);
-  };
-  const updateRepeaterSpatieItem = (repeaterName, index, fieldName, lang, value) => {
-    const newRepeaterArray = [...data[repeaterName]];
-    newRepeaterArray[index][fieldName] = { ...newRepeaterArray[index][fieldName], [lang]: value };
-    setData(repeaterName, newRepeaterArray);
-  };
-  const removeRepeaterItem = (repeaterName, index) => {
-    const newRepeaterArray = [...data[repeaterName]];
-    newRepeaterArray.splice(index, 1);
-    setData(repeaterName, newRepeaterArray);
-  };
-  const handleDeleteClick = () => {
-    if (deleteContext && deleteContext.setDeleteState && deleteUrl) {
-      deleteContext.setDeleteState({
-        message: locale == "ar" ? `هل أنت متأكد من رغبتك في حذف ${itemName}؟` : `Are you sure you want to delete this ${itemName}?`,
-        url: "/" + locale + deleteUrl,
-        returnedUrl: returnUrl
-      });
-    }
-  };
-  if (!Editor || processing)
-    return /* @__PURE__ */ jsx(LoadingSpinner, {});
-  else
-    return /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsxs("form", { onSubmit: handleSubmit, className: "rounded-lg shadow-sm space-y-8 p-4", children: [
-      /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6", children: fields.map((field, index) => {
-        if (field.type === "repeater") {
-          return /* @__PURE__ */ jsxs("div", { className: "md:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50", children: [
-            /* @__PURE__ */ jsx("h3", { className: "font-bold text-lg text-gray-800 mb-4", children: field.label }),
-            data[field.name]?.map((item, itemIndex) => /* @__PURE__ */ jsxs("div", { className: "relative bg-white p-4 rounded border border-gray-300 mb-4 shadow-sm", children: [
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: () => removeRepeaterItem(field.name, itemIndex),
-                  className: "absolute top-4 end-4 text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full",
-                  title: locale == "ar" ? "حذف هذا القسم" : "Delete This Section",
-                  children: /* @__PURE__ */ jsx(FiTrash2, {})
-                }
-              ),
-              /* @__PURE__ */ jsx("h4", { className: "font-semibold mb-4 text-gray-600", children: (locale == "ar" ? "القسم رقم #" : "Section number #") + (itemIndex + 1) }),
-              /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: field.repeaterFields?.map((subField, subIndex) => /* @__PURE__ */ jsxs("div", { className: `flex flex-col ${subField.fullWidth || subField.type.includes("richtext") ? "md:col-span-2" : ""}`, children: [
-                /* @__PURE__ */ jsx("label", { className: "mb-1 text-sm font-medium text-gray-700", children: subField.label }),
-                subField.type === "text" && /* @__PURE__ */ jsx(
-                  "input",
-                  {
-                    type: "text",
-                    value: item[subField.name] || "",
-                    onChange: (e) => updateRepeaterItem(field.name, itemIndex, subField.name, e.target.value),
-                    className: "border p-2 rounded outline-none"
-                  }
-                ),
-                subField.type === "number" && /* @__PURE__ */ jsx(
-                  "input",
-                  {
-                    type: "text",
-                    inputMode: "numeric",
-                    value: item[subField.name] || "",
-                    onChange: (e) => updateRepeaterItem(field.name, itemIndex, subField.name, handleNumberInput(e.target.value)),
-                    className: "border p-2 rounded outline-none"
-                  }
-                ),
-                subField.type === "textarea" && /* @__PURE__ */ jsx(
-                  "textarea",
-                  {
-                    value: item[subField.name] || "",
-                    onChange: (e) => updateRepeaterItem(field.name, itemIndex, subField.name, e.target.value),
-                    className: "border p-2 rounded resize-none outline-none h-24"
-                  }
-                ),
-                subField.type === "file" && /* @__PURE__ */ jsx(
-                  ImageInput,
-                  {
-                    defaultValue: item[subField.name],
-                    onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val)
-                  }
-                ),
-                subField.type === "video" && /* @__PURE__ */ jsx(
-                  VideoInput,
-                  {
-                    defaultValue: item[subField.name],
-                    onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val)
-                  }
-                ),
-                subField.type === "spatie-file" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة عربي)" : "(Arabic Image)" }),
-                    /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                      /* @__PURE__ */ jsx(
-                        ImageInput,
-                        {
-                          defaultValue: item[subField.name]?.ar || "",
-                          onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", val)
-                        }
-                      ),
-                      getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة إنجليزي)" : "(English Image)" }),
-                    /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                      /* @__PURE__ */ jsx(
-                        ImageInput,
-                        {
-                          defaultValue: item[subField.name]?.en || "",
-                          onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", val)
-                        }
-                      ),
-                      getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
-                    ] })
-                  ] })
-                ] }),
-                subField.type === "select" && subField.selectChoices && subField.selectViewedOption && subField.selectValueOption && /* @__PURE__ */ jsx(
-                  CustomSelect,
-                  {
-                    choices: subField.selectChoices,
-                    viewedOption: subField.selectViewedOption,
-                    selectedOption: subField.selectValueOption,
-                    pickOne: subField.selectPickOne,
-                    preSelected: item[subField.name] ? item[subField.name] : [],
-                    onChange: (val) => {
-                      const formattedValue = subField.selectPickOne ? val.length > 0 ? val[0] : "" : val;
-                      updateRepeaterItem(field.name, itemIndex, subField.name, formattedValue);
-                    }
-                  }
-                ),
-                subField.type === "json" && /* @__PURE__ */ jsx(
-                  JsonTextarea,
-                  {
-                    value: item[subField.name] || "",
-                    onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val)
-                  }
-                ),
-                subField.type === "spatie-json" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mt-1", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "ar" ? "(عربي)" : "(Arabic)" }),
-                    /* @__PURE__ */ jsx(
-                      JsonTextarea,
-                      {
-                        value: item[subField.name]?.ar || "",
-                        onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", val)
-                      }
-                    ),
-                    getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "ar" ? "(إنجليزي)" : "(English)" }),
-                    /* @__PURE__ */ jsx(
-                      JsonTextarea,
-                      {
-                        value: item[subField.name]?.en || "",
-                        onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", val)
-                      }
-                    ),
-                    getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
-                  ] })
-                ] }),
-                subField.type === "spatie" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
-                  /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                    /* @__PURE__ */ jsx(
-                      "input",
-                      {
-                        type: "text",
-                        placeholder: locale === "ar" ? `${subField.label} (عربي)` : `${subField.label} (Arabic)`,
-                        value: item[subField.name]?.ar || "",
-                        onChange: (e) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", e.target.value),
-                        className: "border p-2 rounded w-full dir-rtl outline-none"
-                      }
-                    ),
-                    getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                    /* @__PURE__ */ jsx(
-                      "input",
-                      {
-                        type: "text",
-                        placeholder: locale === "ar" ? `${subField.label} (أنجليزي)` : `${subField.label} (English)`,
-                        value: item[subField.name]?.en || "",
-                        onChange: (e) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", e.target.value),
-                        className: "border p-2 rounded w-full dir-ltr outline-none"
-                      }
-                    ),
-                    getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
-                  ] })
-                ] }),
-                subField.type === "richtext" && /* @__PURE__ */ jsx(
-                  RichTextInput,
-                  {
-                    Editor,
-                    name: `${field.name}_${itemIndex}_${subField.name}`,
-                    onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val),
-                    value: item[subField.name] || ""
-                  }
-                ),
-                subField.type === "spatie-richtext" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mt-1", children: [
-                  /* @__PURE__ */ jsxs("div", { children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "ar" ? "(عربي)" : "(Arabic)" }),
-                    /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                      /* @__PURE__ */ jsx(
-                        RichTextInput,
-                        {
-                          Editor,
-                          name: `${field.name}_${itemIndex}_${subField.name}_ar`,
-                          onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", val),
-                          value: item[subField.name]?.ar || ""
-                        }
-                      ),
-                      getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "en" ? "(English)" : "(أنكليزي)" }),
-                    /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                      /* @__PURE__ */ jsx(
-                        RichTextInput,
-                        {
-                          Editor,
-                          name: `${field.name}_${itemIndex}_${subField.name}_en`,
-                          onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", val),
-                          value: item[subField.name]?.en || ""
-                        }
-                      ),
-                      getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
-                    ] })
-                  ] })
-                ] }),
-                subField.type != "spatie" && subField.type != "spatie-richtext" && subField.type != "spatie-file" && subField.type != "spatie-json" && getError(`${field.name}.${itemIndex}.${subField.name}`) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getError(`${field.name}.${itemIndex}.${subField.name}`) })
-              ] }, subIndex)) })
-            ] }, itemIndex)),
-            getError(field.name) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1 block", children: getError(field.name) }),
-            (!field.maxItems || data[field.name]?.length < field.maxItems) && /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => addRepeaterItem(field.name, field.repeaterFields || []),
-                className: "flex items-center gap-2 bg-dark text-white px-4 py-2 rounded hover:bg-arch-accent/90 bg-arch-accent cursor-pointer transition max-mob:mb-4 mt-5",
-                children: [
-                  /* @__PURE__ */ jsx(FiPlus, {}),
-                  " ",
-                  locale === "ar" ? `إضافة ${field.itemLabel || "قسم"}` : `Add ${field.itemLabel || "Section"}`
-                ]
-              }
-            )
-          ] }, index);
-        }
-        return /* @__PURE__ */ jsxs("div", { className: `flex flex-col ${field.fullWidth || field.type === "spatie-richtext" || field.type === "richtext" ? "md:col-span-2" : ""}`, children: [
-          /* @__PURE__ */ jsx("label", { className: "mb-2 font-semibold text-gray-700", children: field.label }),
-          field.type === "text" && /* @__PURE__ */ jsx(
-            "input",
-            {
-              type: "text",
-              value: data[field.name],
-              onChange: (e) => setData(field.name, e.target.value),
-              className: "border p-2 rounded outline-none"
-            }
-          ),
-          field.type === "number" && /* @__PURE__ */ jsx(
-            "input",
-            {
-              type: "text",
-              inputMode: "numeric",
-              value: data[field.name],
-              onChange: (e) => setData(field.name, handleNumberInput(e.target.value)),
-              className: "border p-2 rounded outline-none"
-            }
-          ),
-          field.type === "textarea" && /* @__PURE__ */ jsx(
-            "textarea",
-            {
-              value: data[field.name],
-              onChange: (e) => setData(field.name, e.target.value),
-              className: "border p-2 rounded outline-none h-24 resize-none"
-            }
-          ),
-          field.type === "select" && field.selectChoices && field.selectViewedOption && field.selectValueOption && /* @__PURE__ */ jsx(
-            CustomSelect,
-            {
-              choices: field.selectChoices,
-              viewedOption: field.selectViewedOption,
-              selectedOption: field.selectValueOption,
-              pickOne: field.selectPickOne,
-              preSelected: data[field.name] ? data[field.name] : [],
-              onChange: (val) => {
-                const formattedValue = field.selectPickOne ? val.length > 0 ? val[0] : "" : val;
-                setData(field.name, formattedValue);
-              }
-            }
-          ),
-          field.type === "spatie" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
-            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-              /* @__PURE__ */ jsx(
-                "input",
-                {
-                  type: "text",
-                  placeholder: locale === "ar" ? `${field.label} (عربي)` : `${field.label} (Arabic)`,
-                  value: data[field.name]?.ar || "",
-                  onChange: (e) => handleSpatieChange(field.name, "ar", e.target.value),
-                  className: "border p-2 rounded w-full dir-rtl outline-none"
-                }
-              ),
-              getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-              /* @__PURE__ */ jsx(
-                "input",
-                {
-                  type: "text",
-                  placeholder: locale === "ar" ? `${field.label} (إنجليزي)` : `${field.label} (English)`,
-                  value: data[field.name]?.en || "",
-                  onChange: (e) => handleSpatieChange(field.name, "en", e.target.value),
-                  className: "border p-2 rounded w-full dir-ltr outline-none"
-                }
-              ),
-              getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
-            ] })
-          ] }),
-          field.type === "file" && /* @__PURE__ */ jsx(
-            ImageInput,
-            {
-              defaultValue: data[field.name],
-              onChange: (val) => setData(field.name, val)
-            }
-          ),
-          field.type === "video" && /* @__PURE__ */ jsx(
-            VideoInput,
-            {
-              defaultValue: data[field.name],
-              onChange: (val) => setData(field.name, val)
-            }
-          ),
-          field.type === "spatie-file" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة عربي)" : "(Arabic Image)" }),
-              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                /* @__PURE__ */ jsx(
-                  ImageInput,
-                  {
-                    defaultValue: data[field.name]?.ar || "",
-                    onChange: (val) => handleSpatieChange(field.name, "ar", val)
-                  }
-                ),
-                getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة إنجليزي)" : "(English Image)" }),
-              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                /* @__PURE__ */ jsx(
-                  ImageInput,
-                  {
-                    defaultValue: data[field.name]?.en || "",
-                    onChange: (val) => handleSpatieChange(field.name, "en", val)
-                  }
-                ),
-                getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
-              ] })
-            ] })
-          ] }),
-          field.type === "richtext" && /* @__PURE__ */ jsx(
-            RichTextInput,
-            {
-              Editor,
-              name: field.name,
-              onChange: (val) => setData(field.name, val),
-              value: data[field.name] || ""
-            }
-          ),
-          field.type === "json" && /* @__PURE__ */ jsx(
-            JsonTextarea,
-            {
-              value: data[field.name] || "",
-              onChange: (val) => setData(field.name, val)
-            }
-          ),
-          field.type === "spatie-json" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? "(عربي)" : "(Arabic)" }),
-              /* @__PURE__ */ jsx(
-                JsonTextarea,
-                {
-                  value: data[field.name]?.ar || "",
-                  onChange: (val) => handleSpatieChange(field.name, "ar", val)
-                }
-              ),
-              getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? "(إنجليزي)" : "(English)" }),
-              /* @__PURE__ */ jsx(
-                JsonTextarea,
-                {
-                  value: data[field.name]?.en || "",
-                  onChange: (val) => handleSpatieChange(field.name, "en", val)
-                }
-              ),
-              getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
-            ] })
-          ] }),
-          field.type === "spatie-richtext" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? `(عربي)` : `(Arabic)` }),
-              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                /* @__PURE__ */ jsx(
-                  RichTextInput,
-                  {
-                    Editor,
-                    name: `${field.name}_ar`,
-                    onChange: (val) => handleSpatieChange(field.name, "ar", val),
-                    value: data[field.name]?.ar || ""
-                  }
-                ),
-                getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? `(إنجليزي)` : `(English)` }),
-              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
-                /* @__PURE__ */ jsx(
-                  RichTextInput,
-                  {
-                    Editor,
-                    name: `${field.name}_en`,
-                    onChange: (val) => handleSpatieChange(field.name, "en", val),
-                    value: data[field.name]?.en || ""
-                  }
-                ),
-                getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
-              ] })
-            ] })
-          ] }),
-          field.type != "spatie" && field.type != "spatie-richtext" && field.type != "spatie-file" && field.type != "spatie-json" && getError(field.name) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getError(field.name) })
-        ] }, index);
-      }) }),
-      /* @__PURE__ */ jsxs("div", { className: `flex  ${isEdit ? "justify-between" : "justify-center"} items-center mt-8 border-t pt-4`, children: [
-        isEdit && deleteUrl ? /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            onClick: handleDeleteClick,
-            className: "bg-red-50 text-red-600 px-6 py-3 rounded-lg font-bold hover:bg-red-600 hover:text-white transition-colors border border-red-200 duration-200",
-            children: locale == "en" ? `Delete ${itemName}` : `حذف ${itemName}`
-          }
-        ) : /* @__PURE__ */ jsx("div", {}),
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            disabled: processing,
-            className: "bg-arch-dark hover:bg-arch-charcoal duration-300 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50",
-            type: "submit",
-            children: isEdit ? locale === "en" ? `Update Data` : `تحديث البيانات` : locale === "en" ? `Send Data` : `إرسال البيانات`
-          }
-        )
-      ] })
-    ] }) });
-}
-const DashboardCoursesCrud = ({ allData }) => {
-  const { isEdit, content, course } = allData;
-  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: /* @__PURE__ */ jsx(
-    DynamicForm,
-    {
-      deleteUrl: isEdit ? content.submitUrl + "/" + course.id : void 0,
-      initialData: isEdit ? course : void 0,
-      fields: content.inputs,
-      submitUrl: isEdit ? content.submitUrl + "/" + course.id : content.submitUrl,
-      returnUrl: content.submitUrl,
-      itemName: content.itemName,
-      isEdit
-    }
-  ) }) });
-};
-const __vite_glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: DashboardCoursesCrud
-}, Symbol.toStringTag, { value: "Module" }));
-const Layer = ({ className }) => {
-  return /* @__PURE__ */ jsx("div", { className: `  absolute  ${className}` });
-};
-const ProjectCard = ({ description, images, name, created_at, isActive, onCLick, id }) => {
-  const project = {
-    name,
-    description,
-    images,
-    created_at
-  };
-  const goToProjectEditPage = (id2) => {
-    router.visit(`/dashboard/projects/${id2}`);
-  };
-  const { url } = usePage();
-  const isDashboard = url.includes("dashboard");
-  return /* @__PURE__ */ jsxs("div", { onClick: () => isDashboard ? goToProjectEditPage(id) : onCLick && onCLick({ ...project }), className: `group relative rounded-lg overflow-hidden  
-      ${isActive ? "scale-100  " : "scale-90"} cursor-pointer duration-300   `, children: [
-    /* @__PURE__ */ jsx(
-      Image,
-      {
-        src: images[0].image,
-        className: "w-full h-[28rem] max-mob:h-[22rem] object-cover group-hover:scale-105 duration-500 "
-      }
-    ),
-    /* @__PURE__ */ jsx(
-      Layer,
-      {
-        className: "bg-gradient-to-t from-black/90 via-black/20 to-transparent top-0 left-0 w-full h-full"
-      }
-    ),
-    /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 start-3 z-10 max-w-[calc(100%-0.75rem)] ", children: [
-      /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: "text-yellow-500 text-sm",
-          children: created_at
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        SectionTitle,
-        {
-          className: "text-arch-light text-xl leading-3 font-bold",
-          children: name
-        }
-      )
-    ] })
-  ] });
-};
-const DashboardProjects = ({ allData }) => {
-  const { projects, links, content } = allData;
-  const [isSearching, setIsSearching] = useState(false);
-  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
-    /* @__PURE__ */ jsx(
-      SearchHeader,
-      {
-        searchFields: content.searchFields,
-        placeHolder: content.searchHeaderPlaceholder,
-        onSearchModeChange: setIsSearching
-      }
-    ),
-    !isSearching && /* @__PURE__ */ jsx(
-      Link,
-      {
-        href: content.addButton.link,
-        className: "block w-fit  mt-5 mb-10 mx-auto",
-        children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
-      }
-    ),
-    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10", children: projects.map((project, i) => /* @__PURE__ */ createElement(ProjectCard, { ...project, key: i })) }),
-    /* @__PURE__ */ jsx(Pagination, { links })
-  ] }) });
-};
-const __vite_glob_0_2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: DashboardProjects
-}, Symbol.toStringTag, { value: "Module" }));
-const DashboardProjectsCrud = ({ allData }) => {
-  const { isEdit, content, project } = allData;
-  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: /* @__PURE__ */ jsx(
-    DynamicForm,
-    {
-      deleteUrl: isEdit ? content.submitUrl + "/" + project.id : void 0,
-      initialData: isEdit ? project : void 0,
-      fields: content.inputs,
-      submitUrl: isEdit ? content.submitUrl + "/" + project.id : content.submitUrl,
-      returnUrl: content.submitUrl,
-      itemName: content.itemName,
-      isEdit
-    }
-  ) }) });
-};
-const __vite_glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: DashboardProjectsCrud
-}, Symbol.toStringTag, { value: "Module" }));
-const MainTitle = ({ children, className, white, black, hero, center }) => {
-  return /* @__PURE__ */ jsx(
-    "h1",
-    {
-      className: `
-      font-bold
-      ${white ? "text-arch-card" : black && "text-arch-dark"}
-      ${hero ? "text-4xl leading-3" : "text-3xl leading-2"}
-      ${center && "text-center"}
-    ${className}
-    `,
-      children
-    }
-  );
-};
-const EditableText = ({ path, children, richtext, top, start, text, className, style }) => {
-  const openEditor = useEditorStore((s) => s.openEditor);
-  const pageName = usePageName();
-  const { locale } = usePage().props;
-  const isRTL = locale === "ar";
-  const positionStyles = {
-    top: top ?? "40%",
-    [isRTL ? "right" : "left"]: start ?? "50%",
-    position: "absolute",
-    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
-  };
-  const { auth } = usePage().props;
-  const { url } = usePage();
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
-    !richtext && children,
-    richtext && typeof children === "string" && /* @__PURE__ */ jsx("div", { dangerouslySetInnerHTML: { __html: children } }),
-    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
-      "button",
-      {
-        title: "Text Editing",
-        type: "button",
-        onClick: (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openEditor(pageName, path, richtext ? "richtext" : "text", text);
-        },
-        style: positionStyles,
-        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
-        children: "✏️"
-      }
-    ) : ""
-  ] });
-};
-const Label = ({ title, path, dontEdit, className }) => {
-  if (dontEdit) {
-    return /* @__PURE__ */ jsx(
-      "div",
-      {
-        className: `w-fit ${className} mb-6 `,
-        children: /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-sm font-medium mb-4 leading-5", children: title })
-      }
-    );
-  } else
-    return /* @__PURE__ */ jsx(
-      EditableText,
-      {
-        className: `w-fit ${className} mb-6 `,
-        top: "40%",
-        start: "10%",
-        path: path || "",
-        text: title || "",
-        children: /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-sm font-medium mb-4 leading-5", children: title })
-      }
-    );
-};
-const EditableImage = ({
-  src,
-  path,
-  className,
-  children,
-  top,
-  start,
-  zIndex,
-  style
-}) => {
-  const openEditor = useEditorStore((s) => s.openEditor);
-  const pageName = usePageName();
-  const { locale, auth } = usePage().props;
-  const isRTL = locale === "ar";
-  const positionStyles = {
-    top: top ?? "20%",
-    [isRTL ? "right" : "left"]: start ?? "50%",
-    position: "absolute",
-    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`,
-    zIndex
-  };
-  const { url } = usePage();
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
-    children,
-    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
-      "button",
-      {
-        type: "button",
-        title: "Edit image",
-        onClick: (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openEditor(pageName, path, "image", src);
-        },
-        style: positionStyles,
-        className: "w-7 h-7 bg-gray-500/80 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-300 z-1000 text-sm",
-        children: "🖼️"
-      }
-    ) : ""
-  ] });
-};
-const EditableArray = ({
-  path,
-  fields,
-  children,
-  className,
-  top,
-  start,
-  dontAddInputsFor,
-  style
-}) => {
-  const openEditor = useEditorStore((s) => s.openEditor);
-  const pageName = usePageName();
-  const { locale, auth } = usePage().props;
-  const isRTL = locale === "ar";
-  let inputs;
-  if (typeof fields === "object" && fields !== null && !Array.isArray(fields)) {
-    const entries = Object.entries(fields);
-    const filteredEntries = dontAddInputsFor ? entries.filter(([key, map]) => !dontAddInputsFor.includes(key)) : entries;
-    inputs = filteredEntries.map(([key]) => ({
-      key,
-      type: inferFieldType(key)
-    }));
-  } else {
-    inputs = [
-      {
-        key: inferFieldType(fields),
-        type: inferFieldType(fields)
-      }
-    ];
-  }
-  const array = true;
-  const positionStyles = {
-    top: top ?? "5%",
-    [isRTL ? "right" : "left"]: start ?? "10%",
-    position: "absolute",
-    transform: `translate(${isRTL ? "50%" : "-50%"}, -50%)`
-  };
-  const { url } = usePage();
-  return /* @__PURE__ */ jsxs("div", { className: `relative ${className}`, style, children: [
-    children,
-    auth && !url.includes("dashboard") ? /* @__PURE__ */ jsx(
-      "button",
-      {
-        title: "Add Item",
-        type: "button",
-        onClick: () => openEditor(pageName, path, void 0, void 0, { array, inputs }),
-        className: "w-16  h-9 rounded-full shadow-lg flex items-center justify-center gap-2 text-sm\n          bg-green-600 text-white cursor-pointer hover:bg-green-700 hover:scale-105 \n          transition-transform z-1000",
-        style: positionStyles,
-        children: locale === "en" ? "➕Add" : "➕اضافة"
       }
     ) : ""
   ] });
@@ -1929,6 +523,49 @@ const Bars = ({ list, showList }) => {
     )
   ] });
 };
+const Button = ({
+  disable,
+  className,
+  children,
+  clickFunction,
+  icon,
+  transparent,
+  border,
+  black,
+  dontAddPadding,
+  dontAddHoverEffect,
+  dontAddShadow
+}) => {
+  return /* @__PURE__ */ jsxs(
+    "button",
+    {
+      disabled: disable,
+      className: `
+        ${!dontAddHoverEffect && "hover:scale-105"}
+        ${!dontAddShadow && "shadow-md"}
+        text-[18px]
+        font-semibold
+        cursor-pointer
+        duration-300
+        active:scale-90
+        disabled:opacity-60 disabled:cursor-not-allowed
+      flex items-center justify-center 
+      rounded-md
+      ${!dontAddPadding && "px-5 py-2"}
+      ${black ? "text-arch-dark" : "text-arch-light"}
+      ${border && "border-1 border-arch-accent"}
+      ${icon && "gap-2"}
+      ${transparent ? "bg-transparent" : "bg-arch-accent"}
+      ${className || ""}
+    `,
+      onClick: clickFunction,
+      children: [
+        children,
+        icon && /* @__PURE__ */ jsx(Image, { className: "w-5 shrink-0 object-contain icon", src: icon })
+      ]
+    }
+  );
+};
 const NavBarLinks = ({ mainLinks, navBarWhatsApp, className, closeList, navBarLogo }) => {
   const { component } = usePage();
   const scrollToSection = (id, e) => {
@@ -1947,7 +584,24 @@ const NavBarLinks = ({ mainLinks, navBarWhatsApp, className, closeList, navBarLo
         children: /* @__PURE__ */ jsx(Link, { href: navBarLogo.link, children: /* @__PURE__ */ jsx(Image, { className: ` w-[4.5rem] block  object-contain mb-10 mx-auto `, src: navBarLogo.icon }) })
       }
     ),
-    mainLinks.map((navBarLink, i) => /* @__PURE__ */ jsx(
+    mainLinks.map((navBarLink, i) => navBarLink.link ? /* @__PURE__ */ jsx(
+      Link,
+      {
+        href: navBarLink.link,
+        className: `
+              underline-offset-8
+              hover:underline
+              text-arch-dark
+              duration-300
+              max-desc:block 
+              max-desc:mx-auto 
+              max-desc:w-fit
+              max-desc:my-4
+              `,
+        children: /* @__PURE__ */ jsx(EditableText, { start: "80%", text: navBarLink.text, path: `mainLinks.${i}.text`, children: navBarLink.text })
+      },
+      i
+    ) : /* @__PURE__ */ jsx(
       "a",
       {
         onClick: (e) => component != "Home" && scrollToSection(navBarLink.id, e),
@@ -2049,8 +703,9 @@ const NavBarWhatsAppAndLanguageChanger = ({
     )
   ] });
 };
-const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp }) => {
+const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp, headTitle }) => {
   const [list, setList] = useState(false);
+  const { auth } = usePage().props;
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(
       "div",
@@ -2071,7 +726,29 @@ const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp }) => {
             px-5
             `,
         children: [
-          /* @__PURE__ */ jsx(
+          auth ? /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx(
+              EditableObject,
+              {
+                start: "60%",
+                top: "40%",
+                path: "navBarLogo",
+                fields: navBarLogo,
+                children: /* @__PURE__ */ jsx(Link, { href: navBarLogo.link, children: /* @__PURE__ */ jsx(Image, { className: ` w-[4.5rem] block  object-contain `, src: navBarLogo.icon }) })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              EditableText,
+              {
+                path: "headTitle",
+                text: headTitle,
+                children: /* @__PURE__ */ jsxs("span", { className: "text-sm font-bold  block", children: [
+                  " ",
+                  headTitle
+                ] })
+              }
+            )
+          ] }) : /* @__PURE__ */ jsx(
             EditableObject,
             {
               start: "60%",
@@ -2157,6 +834,73 @@ const SuccessNotification = ({
     }
   ) });
 };
+const RichTextInput = ({ Editor, name, value, onChange }) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const [richTextValue, setRichTextValue] = useState(value || "");
+  useEffect(() => {
+    setRichTextValue(value || "");
+  }, [value]);
+  const handleChange = (_event, editor) => {
+    const data = editor.getData();
+    setRichTextValue(data);
+    onChange(data);
+  };
+  if (!Editor) {
+    return null;
+  }
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx(
+      Editor,
+      {
+        value: richTextValue,
+        onChange: handleChange,
+        setIsUploading,
+        onUploadStart: () => setIsUploading(true),
+        onUploadComplete: () => setIsUploading(false)
+      }
+    ),
+    /* @__PURE__ */ jsx("textarea", { hidden: true, name, value: richTextValue, readOnly: true }),
+    isUploading && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center text-white text-xl z-50", children: "Uploading File..." })
+  ] });
+};
+let editorPromise = null;
+function SharedCkEditorLoader() {
+  if (!editorPromise) {
+    editorPromise = import("./assets/CustomizedCkEditor-DswKX_vV.js").then(
+      (mod) => mod.default
+    );
+  }
+  return editorPromise;
+}
+let cachedEditor = null;
+let loadingPromise = null;
+function useSharedCkEditor() {
+  const [Editor, setEditor] = useState(() => cachedEditor);
+  useEffect(() => {
+    if (cachedEditor) {
+      setEditor(() => cachedEditor);
+      return;
+    }
+    if (!loadingPromise) {
+      loadingPromise = SharedCkEditorLoader().then((editor) => {
+        cachedEditor = editor;
+        return editor;
+      });
+    }
+    loadingPromise.then((editor) => {
+      setEditor(() => editor);
+    });
+  }, []);
+  return Editor;
+}
+function LoadingSpinner() {
+  return /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-50000000000000000000 flex items-center justify-center bg-black/50 backdrop-blur-sm", children: /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: "\r\n          w-12 h-12\r\n          border-4\r\n          border-arch-light\r\n          border-t-transparent\r\n          rounded-full\r\n          animate-spin\r\n          shadow-2xl\r\n        "
+    }
+  ) });
+}
 const EditorModal = () => {
   const {
     deletable,
@@ -2528,8 +1272,8 @@ const ProjectLayout = ({ children }) => {
     if (variant === "fadeUp") {
       return `${inView ? "viewEndEffect" : "viewStartEffect"} ${base}`;
     }
-    const startOverride = variant === "fadeDown" ? "opacity-0 translate-y-10" : variant === "fadeLeft" ? "opacity-0 translate-x-10" : variant === "fadeRight" ? "opacity-0 -translate-x-10" : variant === "zoom" ? "opacity-0 scale-[0.98]" : variant === "blur" ? "opacity-0 blur-sm" : "";
-    const endOverride = variant === "fadeDown" || variant === "fadeLeft" || variant === "fadeRight" ? "opacity-100 translate-x-0 translate-y-0" : variant === "zoom" ? "opacity-100 scale-100" : variant === "blur" ? "opacity-100 blur-0" : "";
+    const startOverride = variant === "fadeDown" ? "opacity-0 translate-y-[-40px]" : variant === "fadeLeft" ? "opacity-0 translate-x-[60px]" : variant === "fadeRight" ? "opacity-0 translate-x-[-60px]" : variant === "zoom" ? "opacity-0 scale-[0.94]" : variant === "blur" ? "opacity-0 blur-md scale-[0.98]" : "";
+    const endOverride = variant === "fadeDown" || variant === "fadeLeft" || variant === "fadeRight" ? "opacity-100 translate-x-0 translate-y-0" : variant === "zoom" ? "opacity-100 scale-100" : variant === "blur" ? "opacity-100 blur-0 scale-100" : "";
     return `${inView ? endOverride : startOverride} ${base}`;
   };
   const animProps = (inView, opts = {}) => {
@@ -2537,8 +1281,9 @@ const ProjectLayout = ({ children }) => {
     return {
       className: `a-props ${getAnimClass(inView, opts)}`,
       style: {
-        transitionDelay: `${delay}ms`,
-        transitionDuration: `${duration}ms`
+        transitionDelay: inView ? `${delay}ms` : "0ms",
+        transitionDuration: `${duration}ms`,
+        willChange: "transform, opacity"
       }
     };
   };
@@ -2546,7 +1291,8 @@ const ProjectLayout = ({ children }) => {
     navBarLang: globalData.navBarLang,
     mainLinks: globalData.mainLinks,
     navBarLogo: globalData.navBarLogo,
-    navBarWhatsApp: globalData.navBarWhatsApp
+    navBarWhatsApp: globalData.navBarWhatsApp,
+    headTitle: globalData.headTitle
   };
   const footer = {
     contactInformations: globalData.contactInformations,
@@ -2566,7 +1312,7 @@ const ProjectLayout = ({ children }) => {
       children: [
         message && /* @__PURE__ */ jsx(SuccessNotification, { message, setMessage }),
         /* @__PURE__ */ jsxs(Head, { children: [
-          /* @__PURE__ */ jsx("link", { rel: "icon", type: "image", href: "/storage/images/logo.png" }),
+          /* @__PURE__ */ jsx("link", { rel: "icon", type: "image", href: navProps.navBarLogo.icon }),
           /* @__PURE__ */ jsx("title", { children: globalData.headTitle })
         ] }),
         /* @__PURE__ */ jsx(EditorModal, {}),
@@ -2596,6 +1342,2013 @@ const ProjectLayout = ({ children }) => {
     }
   ) }) }) });
 };
+const BlogDetailsPage = ({ allData }) => {
+  const { data, blog, moreBlogs } = allData;
+  const { locale } = usePage().props;
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const anim = useContext(Animations);
+  const pCard = anim?.animProps(inView, { delay: 0, duration: 900, variant: "zoom" });
+  const pLeft = anim?.animProps(inView, { delay: 100, duration: 850, variant: "fadeUp" });
+  const pMore = anim?.animProps(inView, { delay: 0, duration: 850, variant: "fadeUp" });
+  const titleText = blog.title?.[locale] ?? "";
+  const contentText = blog.content?.[locale] ?? "";
+  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: "BlogsPage", children: /* @__PURE__ */ jsxs("div", { ref, className: "pb-20 pt-32 relative bg-arch-accent/10 min-h-screen", children: [
+    blog.heroImage && /* @__PURE__ */ jsx(
+      Image,
+      {
+        className: "w-full h-[60vh] object-cover absolute inset-0 opacity-30",
+        src: blog.heroImage
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "relative z-10 px-largeSaveSpace max-desc:px-mobSaveSpace", children: [
+      /* @__PURE__ */ jsxs(
+        "div",
+        {
+          className: `bg-arch-card rounded-3xl overflow-hidden shadow-xl max-w-4xl mx-auto ${pCard?.className ?? ""}`,
+          style: pCard?.style,
+          children: [
+            /* @__PURE__ */ jsx(
+              Image,
+              {
+                src: blog.image,
+                className: "w-full aspect-[2] object-cover"
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: `p-10 max-mob:p-6 ${pLeft?.className ?? ""}`, style: pLeft?.style, children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-4 mb-6 text-sm text-arch-gray", children: [
+                blog.category && /* @__PURE__ */ jsx("span", { className: "bg-arch-accent/10 text-arch-accent px-3 py-1 rounded-full font-semibold text-xs", children: blog.category }),
+                blog.created_at && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+                  "📅 ",
+                  blog.created_at
+                ] }),
+                blog.readTime && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
+                  "⏱ ",
+                  blog.readTime
+                ] })
+              ] }),
+              /* @__PURE__ */ jsx(MainTitle, { black: true, className: "mb-6 leading-4", children: titleText }),
+              /* @__PURE__ */ jsx("div", { className: "w-16 h-1 bg-arch-accent rounded-full mb-8" }),
+              /* @__PURE__ */ jsx(
+                "div",
+                {
+                  className: "text-arch-charcoal leading-4 text-lg prose max-w-none",
+                  dangerouslySetInnerHTML: { __html: contentText }
+                }
+              )
+            ] })
+          ]
+        }
+      ),
+      moreBlogs?.blogs?.length > 0 && /* @__PURE__ */ jsxs("div", { className: "mt-24", children: [
+        /* @__PURE__ */ jsxs("div", { className: `mb-14 ${pMore?.className ?? ""}`, style: pMore?.style, children: [
+          /* @__PURE__ */ jsx(Label, { title: data.showMoreLabel, path: "showMoreLabel" }),
+          /* @__PURE__ */ jsx(
+            EditableText,
+            {
+              text: data.showMoreTitle,
+              path: "showMoreTitle",
+              className: "w-fit",
+              children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: data.showMoreTitle })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "w-full flex flex-wrap justify-center gap-8", children: moreBlogs.blogs.map((b, index) => {
+          const pBlog = anim?.animProps(inView, {
+            delay: 100 + index * 100,
+            duration: 850,
+            variant: index % 2 === 0 ? "fadeUp" : "fadeDown"
+          });
+          return /* @__PURE__ */ jsx(
+            BlogCard,
+            {
+              ...b,
+              anim: pBlog,
+              viewBlogButton: data.viewBlogButton
+            },
+            b.id
+          );
+        }) })
+      ] })
+    ] })
+  ] }) });
+};
+const __vite_glob_0_0 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: BlogDetailsPage
+}, Symbol.toStringTag, { value: "Module" }));
+const Hero = ({
+  heroBackground,
+  heroProjectsButton,
+  heroCoursesButton,
+  heroDescription,
+  heroProfileImage,
+  heroTitle
+}) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.2
+  });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeLeft" });
+  const pDesc = anim?.animProps(inView, { delay: 150, duration: 850, variant: "fadeLeft" });
+  const pBtnsWrap = anim?.animProps(inView, { delay: 300, duration: 750, variant: "blur" });
+  const pBtn1 = anim?.animProps(inView, { delay: 350, duration: 700, variant: "fadeLeft" });
+  const pBtn2 = anim?.animProps(inView, { delay: 450, duration: 700, variant: "fadeLeft" });
+  const pImg = anim?.animProps(inView, { delay: 250, duration: 900, variant: "fadeRight" });
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref,
+      className: "w-full min-h-screen relative overflow-hidden px-largeSaveSpace max-desc:px-mobSaveSpace flex justify-center items-center  pt-32 max-desc:pt-40 pb-10",
+      children: [
+        heroBackground && /* @__PURE__ */ jsxs(
+          EditableImage,
+          {
+            start: "40%",
+            top: "8rem",
+            className: "absolute! top-0 start-0 w-full h-full",
+            src: heroBackground,
+            path: "heroBackground",
+            children: [
+              /* @__PURE__ */ jsx(
+                Image,
+                {
+                  className: "absolute w-full h-full top-0 left-0 object-cover",
+                  src: heroBackground
+                }
+              ),
+              /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0  bg-gradient-to-br from-arch-dark/35  to-arch-charcoal/50" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: "w-full flex justify-between items-center max-desc:items-start gap-10 max-desc:gap-5 max-desc:flex-col ",
+            children: [
+              /* @__PURE__ */ jsxs(
+                "div",
+                {
+                  className: "desc:max-w-xl  w-full",
+                  children: [
+                    heroTitle && /* @__PURE__ */ jsx(
+                      EditableText,
+                      {
+                        top: "30%",
+                        start: "10%",
+                        text: heroTitle,
+                        path: "heroTitle",
+                        className: pTitle?.className,
+                        style: pTitle?.style,
+                        children: /* @__PURE__ */ jsx(
+                          MainTitle,
+                          {
+                            hero: true,
+                            className: "mb-4",
+                            white: true,
+                            children: heroTitle
+                          }
+                        )
+                      }
+                    ),
+                    heroDescription && /* @__PURE__ */ jsx(
+                      EditableText,
+                      {
+                        start: "10%",
+                        top: "40%",
+                        text: heroDescription,
+                        path: "heroDescription",
+                        className: `text-arch-light/90 text-lg leading-4 ${pDesc?.className ?? ""}`,
+                        style: pDesc?.style,
+                        richtext: true,
+                        children: heroDescription
+                      }
+                    ),
+                    /* @__PURE__ */ jsxs(
+                      "div",
+                      {
+                        className: `flex max-mob:flex-col items-center max-desc:justify-center gap-4 mt-6 ${pBtnsWrap?.className ?? ""}`,
+                        style: pBtnsWrap?.style,
+                        children: [
+                          heroProjectsButton && /* @__PURE__ */ jsx(
+                            EditableObject,
+                            {
+                              dontAddInputsFor: ["id"],
+                              className: `max-mob:w-full ${pBtn1?.className ?? ""}`,
+                              style: pBtn1?.style,
+                              fields: heroProjectsButton,
+                              path: "heroProjectsButton",
+                              children: /* @__PURE__ */ jsx("a", { href: heroProjectsButton.id, className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
+                                Button,
+                                {
+                                  className: "max-mob:w-full",
+                                  children: heroProjectsButton.text
+                                }
+                              ) })
+                            }
+                          ),
+                          heroCoursesButton && /* @__PURE__ */ jsx(
+                            EditableObject,
+                            {
+                              dontAddInputsFor: ["id"],
+                              className: `max-mob:w-full ${pBtn2?.className ?? ""}`,
+                              style: pBtn2?.style,
+                              fields: heroCoursesButton,
+                              path: "heroCoursesButton",
+                              children: /* @__PURE__ */ jsx("a", { href: heroCoursesButton.id, className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
+                                Button,
+                                {
+                                  className: "max-mob:w-full",
+                                  children: heroCoursesButton.text,
+                                  border: true
+                                }
+                              ) })
+                            }
+                          )
+                        ]
+                      }
+                    )
+                  ]
+                }
+              ),
+              heroProfileImage && /* @__PURE__ */ jsx(
+                EditableImage,
+                {
+                  className: `max-w-sm w-full max-desc:self-center rounded-lg overflow-hidden ${pImg?.className ?? ""}`,
+                  style: pImg?.style,
+                  src: heroProfileImage,
+                  path: "heroProfileImage",
+                  children: /* @__PURE__ */ jsx(
+                    Image,
+                    {
+                      className: "w-full",
+                      src: heroProfileImage
+                    }
+                  )
+                }
+              )
+            ]
+          }
+        )
+      ]
+    }
+  );
+};
+const Pagination = ({ links }) => {
+  return /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center gap-2 flex-wrap", children: links.map((link, index) => /* @__PURE__ */ jsx(
+    Link,
+    {
+      preserveScroll: true,
+      preserveState: true,
+      href: link.url || "",
+      dangerouslySetInnerHTML: { __html: link.label },
+      className: `
+                        px-4 py-2 rounded-xl text-sm font-medium transition-all
+                        ${link.active ? "bg-arch-accent text-arch-card" : "bg-arch-card text-arch-dark hover:bg-arch-light"}
+                        ${!link.url && "opacity-50 pointer-events-none"}
+                    `
+    },
+    index
+  )) });
+};
+const BlogsPage = ({ allData }) => {
+  const { data, blogs, links } = allData;
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const anim = useContext(Animations);
+  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeUp" });
+  const hero = {
+    heroBackground: data.heroBackground,
+    heroTitle: data.heroTitle,
+    heroDescription: data.heroDescription
+  };
+  return /* @__PURE__ */ jsx(PageContentProvider, { pageName: "BlogsPage", children: /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx(Hero, { ...hero }),
+    /* @__PURE__ */ jsxs("div", { ref, className: "py-20 px-largeSaveSpace max-desc:px-mobSaveSpace bg-arch-accent/10", children: [
+      /* @__PURE__ */ jsxs("div", { className: "mb-14", children: [
+        /* @__PURE__ */ jsx(Label, { path: "blogsLabel", title: data.blogsLabel }),
+        /* @__PURE__ */ jsx(
+          EditableText,
+          {
+            path: "blogsTitle",
+            text: data.blogsTitle,
+            className: `w-fit ${pTitle?.className ?? ""}`,
+            style: pTitle?.style,
+            children: /* @__PURE__ */ jsx(MainTitle, { black: true, children: data.blogsTitle })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "w-full flex flex-wrap justify-center gap-8", children: blogs.map((blog, index) => {
+        const pCard = anim?.animProps(inView, {
+          delay: 140 + index % 6 * 90,
+          duration: 850,
+          variant: index % 2 === 0 ? "fadeUp" : "fadeDown"
+        });
+        return /* @__PURE__ */ jsx(
+          BlogCard,
+          {
+            ...blog,
+            anim: pCard,
+            viewBlogButton: data.viewBlogButton
+          },
+          blog.id
+        );
+      }) }),
+      /* @__PURE__ */ jsx("div", { className: "mt-14 flex justify-center", children: /* @__PURE__ */ jsx(Pagination, { links }) })
+    ] })
+  ] }) });
+};
+const __vite_glob_0_1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: BlogsPage
+}, Symbol.toStringTag, { value: "Module" }));
+const DashboardToggleLink = ({ btn }) => {
+  const [list, setList] = useState(false);
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      onClick: () => setList((prev) => !prev),
+      className: `
+        cursor-pointer
+        rounded-lg
+        font-medium
+        text-light
+        text-lg
+        
+      `,
+      children: [
+        /* @__PURE__ */ jsxs("span", { className: `flex justify-between items-center w-full px-4 py-2 hover:bg-primary 
+        rounded-lg duration-300`, children: [
+          btn.text,
+          /* @__PURE__ */ jsx(
+            IoIosArrowDown,
+            {
+              className: `
+            duration-300
+            ${list ? "rotate-180" : ""}
+          `
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: `
+          grid
+          duration-300
+          ${list ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}
+        `,
+            children: /* @__PURE__ */ jsx("div", { className: "overflow-hidden", children: btn.links && btn.links.map((lnk, i) => /* @__PURE__ */ jsx(
+              Link,
+              {
+                href: lnk.link,
+                className: "block px-4 py-2 mt-2  rounded-lg text-light bg-light/20",
+                children: lnk.text
+              },
+              i
+            )) })
+          }
+        )
+      ]
+    }
+  );
+};
+const DashboardSideBar = ({ data }) => {
+  const { dashboardSideBarLinks, dashboardSideBarTitle } = data;
+  const { url } = usePage();
+  const [open, setOpen] = useState(false);
+  const { locale } = usePage().props;
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
+      Button,
+      {
+        clickFunction: () => setOpen(!open),
+        className: `lg:hidden cursor-pointer fixed  top-32 left-1/2  -translate-x-1/2 z-50  shadow-md ${open && "opacity-0!"} `,
+        children: locale == "en" ? "Control Panel" : "لوحة التحكم"
+      }
+    ),
+    open && /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "fixed inset-0 bg-black/40 z-40 lg:hidden",
+        onClick: () => setOpen(false)
+      }
+    ),
+    /* @__PURE__ */ jsxs(
+      "aside",
+      {
+        className: `
+    pt-32
+    lg:sticky
+    lg:top-0
+    lg:h-[calc(100vh)]
+    lg:overflow-y-auto
+    lg:w-64
+    lg:shrink-0
+    max-lg:fixed
+    max-lg:top-0
+    max-lg:start-0
+    max-lg:h-[calc(100vh)]
+    max-lg:w-64
+    max-lg:overflow-y-auto
+    max-lg:z-50
+    bg-gradient-to-b 
+    from-arch-gray/95 
+    via-gray-200 
+    to-arch-gray/95
+    text-light
+    flex
+    flex-col
+    p-6
+    shadow-lg
+    transform
+    transition-transform
+    duration-300
+    ${open ? "max-lg:translate-x-0" : "max-lg:-translate-x-full max-lg:rtl:translate-x-full"}
+  `,
+        children: [
+          /* @__PURE__ */ jsx(SectionTitle, { className: "text-2xl font-bold mb-8 border-b border-arch-light pb-2 text-arch-dark", children: dashboardSideBarTitle }),
+          /* @__PURE__ */ jsx("ul", { className: "flex flex-col gap-3", children: dashboardSideBarLinks.map((btn, i) => btn.link ? /* @__PURE__ */ jsx(
+            Link,
+            {
+              href: btn.link,
+              className: `px-4 py-2 rounded-lg hover:text-arch-charcoal transition-colors font-medium text-light text-lg text-arch-dark`,
+              onClick: () => setOpen(false),
+              children: btn.text
+            },
+            i
+          ) : /* @__PURE__ */ jsx(
+            DashboardToggleLink,
+            {
+              btn
+            },
+            i
+          )) })
+        ]
+      }
+    )
+  ] });
+};
+const DeletePopUp = () => {
+  const ctx = useContext(DeleteContext);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const { locale } = usePage().props;
+  if (!ctx || !ctx) return null;
+  const close = () => {
+    ctx.setDeleteState(null);
+    setErrorMessage(null);
+  };
+  const handleDelete = async () => {
+    setLoading(true);
+    setErrorMessage(null);
+    try {
+      await axios.delete(`${ctx.deleteState?.url}` || "");
+      close();
+      router.visit(`${ctx.deleteState?.returnedUrl}` || "");
+    } catch (error) {
+      if (error.response?.status === 422) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage(locale == "en" ? "Something went wrong. Please try again." : "حدث خطأ ما. حاول مرة أخرى.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center ", children: [
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "absolute inset-0 bg-black/50",
+        onClick: close
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "relative bg-white rounded-xl p-6 w-[90%] max-w-md shadow-lg", children: [
+      /* @__PURE__ */ jsx("p", { className: "text-gray-800 text-lg mb-6", children: ctx.deleteState?.message }),
+      errorMessage && /* @__PURE__ */ jsx("div", { className: "mb-4 p-3 bg-red-50 border border-red-200 rounded-lg", children: /* @__PURE__ */ jsx("p", { className: "text-red-600 text-sm", children: errorMessage }) }),
+      /* @__PURE__ */ jsxs("div", { className: "flex justify-end gap-3", children: [
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            disabled: loading,
+            onClick: close,
+            className: "px-4 py-2 rounded-lg bg-gray-200 disabled:opacity-50",
+            children: locale == "en" ? "Cancel" : "الغاء"
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: handleDelete,
+            disabled: loading,
+            className: "px-4 py-2 rounded-lg bg-red-500 text-white disabled:opacity-50",
+            children: loading ? locale == "en" ? "Deleting..." : "جاري الحذف...." : locale == "en" ? "Confirm" : "تأكيد"
+          }
+        )
+      ] })
+    ] })
+  ] });
+};
+const DeleteContext = createContext(null);
+const DashboardLayout = ({ children }) => {
+  const { globalData } = usePage().props;
+  const [deleteState, setDeleteState] = useState(null);
+  return /* @__PURE__ */ jsx(DeleteContext.Provider, { value: { deleteState, setDeleteState }, children: /* @__PURE__ */ jsxs("div", { className: "w-full min-h-screen flex justify-end items-start  ", children: [
+    /* @__PURE__ */ jsx(Head, { title: "Dashboard" }),
+    deleteState != null && /* @__PURE__ */ jsx(DeletePopUp, {}),
+    /* @__PURE__ */ jsx(DashboardSideBar, { data: globalData }),
+    /* @__PURE__ */ jsx("div", { className: "w-[calc(100%-16rem)] max-lg:w-full", children })
+  ] }) });
+};
+const SearchHeader = ({ placeHolder, searchFields, onSearchModeChange }) => {
+  const { locale } = usePage().props;
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { url } = usePage();
+  const currentPath = url.split("?")[0];
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const trimmed = search.trim();
+    const debounce = setTimeout(() => {
+      if (trimmed !== "") {
+        onSearchModeChange?.(true);
+        router.get(
+          currentPath,
+          { search, searchFields: JSON.stringify(searchFields) },
+          {
+            preserveState: true,
+            replace: true,
+            preserveScroll: true,
+            onStart: () => setLoading(true),
+            onFinish: () => setLoading(false)
+          }
+        );
+      } else {
+        onSearchModeChange?.(false);
+        setLoading(false);
+        router.get(
+          currentPath,
+          {},
+          { preserveState: true, replace: true, preserveScroll: true }
+        );
+      }
+    }, 700);
+    return () => clearTimeout(debounce);
+  }, [search]);
+  return /* @__PURE__ */ jsx("div", { className: "mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-100", children: /* @__PURE__ */ jsxs("div", { className: "relative max-w-md", children: [
+    /* @__PURE__ */ jsx("span", { className: "absolute inset-y-0 start-0 flex items-center ps-3", children: /* @__PURE__ */ jsx(FiSearch, { className: "text-gray-400" }) }),
+    loading && /* @__PURE__ */ jsx("span", { className: "absolute inset-y-0 end-0 flex items-center pe-3", children: /* @__PURE__ */ jsxs(
+      "svg",
+      {
+        className: "animate-spin h-4 w-4 text-gray-500",
+        xmlns: "http://www.w3.org/2000/svg",
+        fill: "none",
+        viewBox: "0 0 24 24",
+        children: [
+          /* @__PURE__ */ jsx(
+            "circle",
+            {
+              className: "opacity-25",
+              cx: "12",
+              cy: "12",
+              r: "10",
+              stroke: "currentColor",
+              strokeWidth: "4"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "path",
+            {
+              className: "opacity-75",
+              fill: "currentColor",
+              d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            }
+          )
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsx(
+      "input",
+      {
+        type: "text",
+        value: search,
+        onChange: (e) => setSearch(e.target.value),
+        className: "block w-full ps-10 pe-10 py-2 border border-gray-300 rounded-md leading-5 bg-gray-50 focus:outline-none sm:text-sm transition duration-150 ease-in-out",
+        placeholder: placeHolder || (locale === "ar" ? "ابحث هنا..." : "Search here...")
+      }
+    )
+  ] }) });
+};
+const DashboardBlogs = ({ allData }) => {
+  const { blogs, links, content } = allData;
+  const [isSearching, setIsSearching] = useState(false);
+  const { locale } = usePage().props;
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
+    /* @__PURE__ */ jsx(
+      SearchHeader,
+      {
+        searchFields: content.searchFields,
+        placeHolder: content.searchHeaderPlaceholder,
+        onSearchModeChange: setIsSearching
+      }
+    ),
+    !isSearching && /* @__PURE__ */ jsx(
+      Link,
+      {
+        href: content.addButton.link,
+        className: "block w-fit mt-5 mb-10 mx-auto",
+        children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3 gap-6 mb-10", children: blogs.map((blog) => {
+      const titleText = typeof blog.title === "object" ? blog.title[locale] : blog.title;
+      return /* @__PURE__ */ jsxs(
+        Link,
+        {
+          href: `/${locale}/dashboard/blogs/${blog.id}/edit`,
+          className: "bg-arch-card rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group flex flex-col",
+          children: [
+            /* @__PURE__ */ jsxs("div", { className: "relative overflow-hidden", children: [
+              /* @__PURE__ */ jsx(
+                Image,
+                {
+                  src: blog.image,
+                  className: "w-full h-48 object-cover group-hover:scale-105 transition-all duration-500"
+                }
+              ),
+              blog.category && /* @__PURE__ */ jsx("span", { className: "absolute top-3 start-3 bg-arch-accent text-arch-light text-xs px-3 py-1 rounded-full font-semibold", children: blog.category }),
+              blog.published === false && /* @__PURE__ */ jsx("span", { className: "absolute top-3 end-3 bg-gray-700 text-white text-xs px-3 py-1 rounded-full font-semibold", children: locale === "ar" ? "مسودة" : "Draft" })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "p-4 flex flex-col gap-2 grow", children: [
+              /* @__PURE__ */ jsx("p", { className: "text-xs text-arch-gray", children: blog.created_at }),
+              /* @__PURE__ */ jsx("h3", { className: "font-bold text-arch-dark text-base leading-5 line-clamp-2", children: titleText })
+            ] })
+          ]
+        },
+        blog.id
+      );
+    }) }),
+    /* @__PURE__ */ jsx(Pagination, { links })
+  ] }) });
+};
+const __vite_glob_0_2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardBlogs
+}, Symbol.toStringTag, { value: "Module" }));
+const ImageInput = ({ onChange, name, defaultValue }) => {
+  const [preview, setPreview] = useState(defaultValue instanceof File ? URL.createObjectURL(defaultValue) : defaultValue || null);
+  const { locale } = usePage().props;
+  const handleRemove = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPreview(null);
+    onChange(null);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+    /* @__PURE__ */ jsxs("label", { className: "cursor-pointer w-full ", children: [
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          name,
+          type: "file",
+          hidden: true,
+          accept: "image/*",
+          onChange: (e) => {
+            if (e.target.files)
+              setPreview(URL.createObjectURL(e.target.files[0]));
+            onChange(e.target.files?.[0] || null);
+          }
+        }
+      ),
+      /* @__PURE__ */ jsx("div", { className: "w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-secondary-500 transition ", children: preview ? /* @__PURE__ */ jsx(
+        "img",
+        {
+          src: preview,
+          className: "w-full h-48 object-cover rounded-md"
+        }
+      ) : /* @__PURE__ */ jsx("span", { className: "text-gray-500 ", children: locale == "en" ? "Click to upload image" : "أضغط لتحميل صورة" }) })
+    ] }),
+    preview && /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        onClick: handleRemove,
+        className: "absolute cursor-pointer top-1 end-1 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-700 transition z-10",
+        title: locale == "en" ? "Remove image" : "حذف الصورة",
+        children: /* @__PURE__ */ jsx(FiTrash2, { size: 14 })
+      }
+    )
+  ] });
+};
+function CustomSelect({
+  pickOne,
+  choices,
+  viewedOption,
+  selectedOption,
+  onChange,
+  preSelected = []
+}) {
+  const { locale } = usePage().props;
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState([]);
+  const initialized = useRef(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!initialized.current) {
+      if (Array.isArray(preSelected)) {
+        setSelected(
+          preSelected.map((choice) => {
+            if (typeof choice === "object" && choice !== null) {
+              return {
+                [selectedOption]: String(choice[selectedOption])
+              };
+            }
+            return {
+              [selectedOption]: String(choice)
+            };
+          })
+        );
+      } else if (preSelected) {
+        setSelected([
+          {
+            [selectedOption]: String(preSelected[selectedOption])
+          }
+        ]);
+      }
+      initialized.current = true;
+    }
+  }, [preSelected]);
+  const toggleOption = (choice) => {
+    const value = String(choice[selectedOption]);
+    let newSelected;
+    const exists = selected.some(
+      (item) => String(item[selectedOption]) === value
+    );
+    if (pickOne) {
+      newSelected = exists ? [] : [{ [selectedOption]: value }];
+      setOpen(false);
+    } else {
+      if (exists) {
+        newSelected = selected.filter(
+          (item) => String(item[selectedOption]) !== value
+        );
+      } else {
+        newSelected = [
+          ...selected,
+          { [selectedOption]: value }
+        ];
+      }
+    }
+    setSelected(newSelected);
+    onChange(newSelected);
+  };
+  useEffect(() => {
+    const close = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+  const getSelectedLabel = () => {
+    if (pickOne && selected.length > 0) {
+      const currentValue = String(
+        selected[0][selectedOption]
+      );
+      const foundChoice = choices.find(
+        (choice) => String(choice[selectedOption]) === currentValue
+      );
+      return foundChoice?.[viewedOption] || (locale === "en" ? "Select option" : "اختر خيار");
+    }
+    if (selected.length > 0) {
+      return `${selected.length} ${locale === "en" ? "options selected" : "خيارات مختارة"}`;
+    }
+    return locale === "en" ? "Select options" : "اختر الخيارات";
+  };
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      ref,
+      className: "relative w-full",
+      children: [
+        /* @__PURE__ */ jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => setOpen((prev) => !prev),
+            className: "w-full border rounded-lg px-4 py-3 bg-white cursor-pointer flex justify-between items-center text-sm sm:text-base",
+            children: [
+              /* @__PURE__ */ jsx("span", { children: getSelectedLabel() }),
+              /* @__PURE__ */ jsx("span", { className: "text-gray-500", children: "▼" })
+            ]
+          }
+        ),
+        open && /* @__PURE__ */ jsxs("div", { className: "absolute left-0 top-full mt-2 w-full bg-white border rounded-lg shadow-lg z-10 max-h-56 overflow-y-auto", children: [
+          choices.map((choice, i) => {
+            const value = String(
+              choice[selectedOption]
+            );
+            const active = selected.some(
+              (item) => String(item[selectedOption]) === value
+            );
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => toggleOption(choice),
+                className: `w-full flex justify-between items-center px-4 py-3 text-sm sm:text-base hover:bg-gray-100 transition ${active ? "bg-gray-100 font-medium" : ""}`,
+                children: [
+                  /* @__PURE__ */ jsx("span", { children: String(choice[viewedOption]) }),
+                  active && /* @__PURE__ */ jsx("span", { children: "✔" })
+                ]
+              },
+              i
+            );
+          }),
+          choices.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 py-3 text-sm text-gray-500", children: locale === "en" ? "No options found" : "لا يوجد خيارات" })
+        ] })
+      ]
+    }
+  );
+}
+function ObjectToFormData(obj, formData = new FormData(), parentKey = "") {
+  if (obj === null || obj === void 0) {
+    if (parentKey) formData.append(parentKey, "");
+    return formData;
+  }
+  if (obj instanceof File) {
+    formData.append(parentKey, obj);
+    return formData;
+  }
+  if (Array.isArray(obj)) {
+    if (obj.length === 0) {
+      formData.append(`${parentKey}`, "");
+    } else {
+      obj.forEach((item, index) => {
+        ObjectToFormData(item, formData, `${parentKey}[${index}]`);
+      });
+    }
+    return formData;
+  }
+  if (typeof obj === "object") {
+    Object.keys(obj).forEach((key) => {
+      const formKey = parentKey ? `${parentKey}[${key}]` : key;
+      ObjectToFormData(obj[key], formData, formKey);
+    });
+    return formData;
+  }
+  formData.append(parentKey, String(obj));
+  return formData;
+}
+const VideoInput = ({ onChange, name, defaultValue }) => {
+  const [preview, setPreview] = useState(
+    defaultValue instanceof File ? URL.createObjectURL(defaultValue) : defaultValue || null
+  );
+  const { locale } = usePage().props;
+  const handleRemove = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPreview(null);
+    onChange(null);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+    /* @__PURE__ */ jsxs("label", { className: "cursor-pointer w-full", children: [
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          name,
+          type: "file",
+          hidden: true,
+          accept: "video/mp4,video/webm,video/mov,video/avi",
+          onChange: (e) => {
+            if (e.target.files?.[0]) {
+              setPreview(URL.createObjectURL(e.target.files[0]));
+              onChange(e.target.files[0]);
+            }
+          }
+        }
+      ),
+      /* @__PURE__ */ jsx("div", { className: "w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-secondary-500 transition", children: preview ? /* @__PURE__ */ jsx(
+        "video",
+        {
+          src: preview,
+          className: "w-full h-48 object-cover rounded-md",
+          controls: true,
+          muted: true
+        }
+      ) : /* @__PURE__ */ jsx("span", { className: "text-gray-500", children: locale == "en" ? "Click to upload video" : "أضغط لتحميل فيديو" }) })
+    ] }),
+    preview && /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        onClick: handleRemove,
+        className: "absolute top-2 end-2 bg-red-500 text-white p-1.5 rounded-full hover:bg-red-700 transition z-10",
+        title: locale == "en" ? "Remove video" : "حذف الفيديو",
+        children: /* @__PURE__ */ jsx(FiTrash2, { size: 14 })
+      }
+    )
+  ] });
+};
+const JsonTextarea = ({ value, onChange }) => {
+  const [isInvalid, setIsInvalid] = useState(false);
+  const handleChange = (e) => {
+    const val = e.target.value;
+    onChange(val);
+    try {
+      if (val) JSON.parse(val);
+      setIsInvalid(false);
+    } catch {
+      setIsInvalid(true);
+    }
+  };
+  return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+    /* @__PURE__ */ jsx(
+      "textarea",
+      {
+        value,
+        onChange: handleChange,
+        className: `border min-h-32 p-2 rounded outline-none font-mono text-sm resize-y w-full  ${isInvalid ? "border-red-500 bg-red-50" : ""}`,
+        dir: "ltr",
+        placeholder: '{\n  "@context": "http://schema.org",\n  "@type": "LocalBusiness"\n}'
+      }
+    ),
+    isInvalid && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs", children: "Invalid Json" })
+  ] });
+};
+const getScrollTargetId = (key) => {
+  return `field-${key.replace(/\./g, "-")}`;
+};
+const buildFieldMap = (fields) => {
+  const map = {};
+  const processFields = (fieldList, prefix = "", repeaterLabel = "") => {
+    fieldList.forEach((field) => {
+      const fullKey = prefix ? `${prefix}.${field.name}` : field.name;
+      map[fullKey] = field.label;
+      if (["spatie", "spatie-richtext", "spatie-file", "spatie-json"].includes(field.type)) {
+        map[`${fullKey}.ar`] = field.label;
+        map[`${fullKey}.en`] = field.label;
+      }
+      if (field.type === "repeater" && field.repeaterFields) {
+        field.repeaterFields.forEach((subField) => {
+          map[`${field.name}.*.${subField.name}`] = subField.label;
+          if (["spatie", "spatie-richtext", "spatie-file", "spatie-json"].includes(subField.type)) {
+            map[`${field.name}.*.${subField.name}.ar`] = subField.label;
+            map[`${field.name}.*.${subField.name}.en`] = subField.label;
+          }
+        });
+      }
+    });
+  };
+  processFields(fields);
+  return map;
+};
+const getFieldLabel = (key, fields, locale) => {
+  const parts = key.split(".");
+  const isAr = locale === "ar";
+  const fieldMap = buildFieldMap(fields);
+  if (parts.length === 1) {
+    return fieldMap[key] || key.replace(/_/g, " ");
+  }
+  if (parts.length === 2 && (parts[1] === "ar" || parts[1] === "en")) {
+    const baseLabel = fieldMap[parts[0]] || parts[0].replace(/_/g, " ");
+    const langSuffix = parts[1] === "ar" ? isAr ? " (عربي)" : " (Arabic)" : isAr ? " (إنجليزي)" : " (English)";
+    return `${baseLabel}${langSuffix}`;
+  }
+  if (parts.length === 2 && !isNaN(Number(parts[1])) === false) {
+    const parentField = fields.find((f) => f.name === parts[0]);
+    if (parentField) {
+      return parentField.label;
+    }
+    return fieldMap[key] || parts[0].replace(/_/g, " ");
+  }
+  if (parts.length >= 3 && !isNaN(Number(parts[1]))) {
+    const repeaterName = parts[0];
+    const index = Number(parts[1]);
+    const subFieldParts = parts.slice(2);
+    const subFieldName = subFieldParts[0];
+    const langPart = subFieldParts[subFieldParts.length - 1];
+    const repeaterField = fields.find((f) => f.name === repeaterName);
+    const repeaterLabel = repeaterField?.label || repeaterName.replace(/_/g, " ");
+    const subField = repeaterField?.repeaterFields?.find((sf) => {
+      const subKey = subFieldParts.join(".");
+      return sf.name === subKey || sf.name === subFieldName || subKey.startsWith(sf.name + ".");
+    });
+    const subLabel = subField?.label || fieldMap[`${repeaterName}.*.${subFieldName}`] || subFieldName.replace(/_/g, " ");
+    const langSuffix = langPart === "ar" ? isAr ? " (عربي)" : " (Arabic)" : langPart === "en" ? isAr ? " (إنجليزي)" : " (English)" : "";
+    const sectionLabel = isAr ? `#${index + 1}` : `#${index + 1}`;
+    return `${repeaterLabel} ${sectionLabel} › ${subLabel}${langSuffix}`;
+  }
+  return fieldMap[key] || key.replace(/_/g, " ");
+};
+const scrollToField = (key) => {
+  const parts = key.split(".");
+  const candidates = [];
+  candidates.push(getScrollTargetId(key));
+  for (let i = parts.length - 1; i >= 1; i--) {
+    candidates.push(getScrollTargetId(parts.slice(0, i).join(".")));
+  }
+  let el = null;
+  for (const id of candidates) {
+    el = document.getElementById(id);
+    if (el) break;
+  }
+  if (!el && parts.length >= 3 && !isNaN(Number(parts[1]))) {
+    const prefix = getScrollTargetId(`${parts[0]}.${parts[1]}`);
+    el = document.querySelector(`[id^="${prefix}"]`);
+  }
+  if (!el && parts.length >= 2) {
+    el = document.getElementById(getScrollTargetId(parts[0]));
+  }
+  if (el) {
+    const navbarHeight = 80;
+    const elementTop = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: elementTop - navbarHeight - 40,
+      behavior: "smooth"
+    });
+    el.style.transition = "outline 0.15s";
+    el.style.outline = "2px solid #f87171";
+    el.style.borderRadius = "8px";
+    setTimeout(() => {
+      if (el) {
+        el.style.outline = "";
+        el.style.borderRadius = "";
+      }
+    }, 2500);
+  }
+};
+const FormErrorSummary = ({ errors, locale, fields }) => {
+  const [open, setOpen] = React.useState(false);
+  const errorKeys = Object.keys(errors);
+  if (errorKeys.length === 0) return null;
+  const isAr = locale === "ar";
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    open && /* @__PURE__ */ jsx(
+      "div",
+      {
+        onClick: () => setOpen(false),
+        className: "fixed inset-0 bg-black/20 z-40"
+      }
+    ),
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: `
+          fixed bottom-0 z-50
+          w-[360px] max-w-[90vw]
+          bg-white
+          shadow-2xl
+          border border-red-200
+          rounded-t-xl
+          transition-transform duration-300
+          ${isAr ? "right-0" : "left-0"}
+          ${open ? "translate-x-0" : isAr ? "translate-x-full" : "-translate-x-full"}
+        `,
+        dir: isAr ? "rtl" : "ltr",
+        children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 px-4 py-3 bg-red-50 border-b border-red-200 rounded-t-xl", children: [
+            /* @__PURE__ */ jsx(FiAlertCircle, { className: "shrink-0 text-red-500", size: 18 }),
+            /* @__PURE__ */ jsx("span", { className: "font-semibold text-sm text-red-700 flex-1", children: isAr ? `${errorKeys.length} خطأ في النموذج` : `${errorKeys.length} error${errorKeys.length > 1 ? "s" : ""} in form` }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => setOpen(false),
+                className: "p-1 rounded hover:bg-red-100 text-red-500",
+                children: /* @__PURE__ */ jsx(FiX, { size: 18 })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "max-h-[50vh] overflow-y-auto", children: errorKeys.map((key) => {
+            const message = Array.isArray(errors[key]) ? errors[key][0] : errors[key];
+            const label = getFieldLabel(key, fields, locale);
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => {
+                  scrollToField(key);
+                  setOpen(false);
+                },
+                className: "w-full text-start px-4 py-3 hover:bg-red-50 transition-colors border-b border-red-100 last:border-0 flex items-start gap-2 group",
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: "text-red-400 mt-0.5 shrink-0", children: "›" }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+                    /* @__PURE__ */ jsx("span", { className: "font-medium text-red-700 group-hover:underline block truncate text-sm", children: label }),
+                    /* @__PURE__ */ jsx("span", { className: "text-red-500 block truncate text-xs mt-0.5", children: message })
+                  ] })
+                ]
+              },
+              key
+            );
+          }) })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxs(
+      "button",
+      {
+        type: "button",
+        onClick: () => setOpen((v) => !v),
+        className: "flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-3 py-2.5 rounded-lg hover:bg-red-100 transition-colors text-sm font-semibold",
+        dir: isAr ? "rtl" : "ltr",
+        children: [
+          /* @__PURE__ */ jsx(FiAlertCircle, { className: "text-red-500", size: 16 }),
+          /* @__PURE__ */ jsx("span", { children: isAr ? `${errorKeys.length} خطأ` : `${errorKeys.length} error${errorKeys.length > 1 ? "s" : ""}` }),
+          isAr ? /* @__PURE__ */ jsx(FiChevronLeft, { size: 16 }) : /* @__PURE__ */ jsx(FiChevronRight, { size: 16 })
+        ]
+      }
+    )
+  ] });
+};
+function DynamicForm({
+  initialData = {},
+  fields,
+  submitUrl,
+  deleteUrl,
+  returnUrl = "",
+  itemName = "Item",
+  isEdit = false
+}) {
+  const { locale } = usePage().props;
+  const deleteContext = useContext(DeleteContext);
+  const Editor = useSharedCkEditor();
+  const dynamicForm = useRef(null);
+  const setupInitialState = () => {
+    let state = {};
+    fields.forEach((field) => {
+      if (field.type === "spatie" || field.type === "spatie-richtext" || field.type === "spatie-file") {
+        state[field.name] = {
+          ar: initialData?.[field.name]?.ar || "",
+          en: initialData?.[field.name]?.en || ""
+        };
+      } else if (field.type === "spatie-json") {
+        state[field.name] = {
+          ar: initialData?.[field.name]?.ar ? typeof initialData[field.name].ar === "object" ? JSON.stringify(initialData[field.name].ar, null, 2) : initialData[field.name].ar : "",
+          en: initialData?.[field.name]?.en ? typeof initialData[field.name].en === "object" ? JSON.stringify(initialData[field.name].en, null, 2) : initialData[field.name].en : ""
+        };
+      } else if (field.type === "json") {
+        state[field.name] = initialData?.[field.name] ? typeof initialData[field.name] === "object" ? JSON.stringify(initialData[field.name], null, 2) : initialData[field.name] : "";
+      } else if (field.type === "repeater") {
+        state[field.name] = (initialData?.[field.name] || []).map((item) => {
+          const converted = { ...item };
+          field.repeaterFields?.forEach((subField) => {
+            if (subField.type === "spatie-json") {
+              converted[subField.name] = {
+                ar: item[subField.name]?.ar ? typeof item[subField.name].ar === "object" ? JSON.stringify(item[subField.name].ar, null, 2) : item[subField.name].ar : "",
+                en: item[subField.name]?.en ? typeof item[subField.name].en === "object" ? JSON.stringify(item[subField.name].en, null, 2) : item[subField.name].en : ""
+              };
+            } else if (subField.type === "json") {
+              converted[subField.name] = item[subField.name] ? typeof item[subField.name] === "object" ? JSON.stringify(item[subField.name], null, 2) : item[subField.name] : "";
+            } else if (subField.type === "select" && subField.defaultValue !== void 0 && subField.selectValueOption && (item[subField.name] === void 0 || item[subField.name] === "" || item[subField.name] === null)) {
+              converted[subField.name] = subField.selectPickOne ? { [subField.selectValueOption]: String(subField.defaultValue) } : [{ [subField.selectValueOption]: String(subField.defaultValue) }];
+            }
+          });
+          return converted;
+        });
+      } else if (field.type === "select") {
+        if (initialData?.[field.name] !== void 0) {
+          state[field.name] = Array.isArray(initialData?.[field.name]) ? initialData?.[field.name] : { [field.selectValueOption]: initialData?.[field.name] };
+        } else {
+          field.selectPickOne ? "" : [];
+        }
+      } else {
+        state[field.name] = initialData?.[field.name] || "";
+      }
+    });
+    return state;
+  };
+  const { data, setData } = useForm(setupInitialState());
+  const [processing, setProcessing] = useState(false);
+  const [errors, setErrors] = useState({});
+  const getError = (fieldName) => {
+    if (errors[fieldName]) {
+      return Array.isArray(errors[fieldName]) ? errors[fieldName][0] : errors[fieldName];
+    }
+    const nestedError = Object.keys(errors).find((key) => key.startsWith(`${fieldName}.`));
+    if (nestedError) {
+      return Array.isArray(errors[nestedError]) ? errors[nestedError][0] : errors[nestedError];
+    }
+    return void 0;
+  };
+  const handleNumberInput = (value) => value.replace(/\D/g, "");
+  const getSpatieError = (fieldName, lang) => {
+    const key = `${fieldName}.${lang}`;
+    if (errors[key]) {
+      return Array.isArray(errors[key]) ? errors[key][0] : errors[key];
+    }
+    return void 0;
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setProcessing(true);
+    setErrors({});
+    try {
+      const formData = ObjectToFormData(data);
+      if (isEdit) {
+        formData.append("_method", "PUT");
+        await axios.post("/" + locale + submitUrl, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+      } else {
+        await axios.post("/" + locale + submitUrl, formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+      }
+      toast.success(
+        locale === "ar" ? isEdit ? "تم تحديث البيانات بنجاح ✓" : "تم إرسال البيانات بنجاح ✓" : isEdit ? "Data updated successfully ✓" : "Data sent successfully ✓"
+      );
+      router.visit(returnUrl);
+    } catch (error) {
+      if (error.response?.status === 422) {
+        setErrors(error.response.data.errors);
+        toast.error(
+          locale === "ar" ? "يوجد أخطاء في النموذج، راجع التفاصيل أدناه" : "Form has errors, check details below"
+        );
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      } else {
+        console.error("Server Error:", error);
+        toast.error(
+          locale === "ar" ? "حدث خطأ في السيرفر، حاول مجدداً" : "Server error, please try again"
+        );
+      }
+    } finally {
+      setProcessing(false);
+    }
+  };
+  const handleSpatieChange = (fieldName, lang, value) => {
+    setData(fieldName, { ...data[fieldName], [lang]: value });
+  };
+  const addRepeaterItem = (repeaterName, repeaterFields) => {
+    const newItem = {};
+    repeaterFields.forEach((f) => {
+      if (f.type === "spatie" || f.type === "spatie-richtext") {
+        newItem[f.name] = { ar: "", en: "" };
+      } else if (f.type === "spatie-json") {
+        newItem[f.name] = { ar: "", en: "" };
+      } else if (f.type === "json") {
+        newItem[f.name] = "";
+      } else if (f.type === "select") {
+        if (f.defaultValue !== void 0 && f.selectValueOption) {
+          newItem[f.name] = f.selectPickOne ? { [f.selectValueOption]: String(f.defaultValue) } : [{ [f.selectValueOption]: String(f.defaultValue) }];
+        } else {
+          newItem[f.name] = f.selectPickOne ? "" : [];
+        }
+      } else {
+        newItem[f.name] = "";
+      }
+    });
+    setData(repeaterName, [...data[repeaterName], newItem]);
+  };
+  const updateRepeaterItem = (repeaterName, index, fieldName, value) => {
+    const newRepeaterArray = [...data[repeaterName]];
+    newRepeaterArray[index][fieldName] = value;
+    setData(repeaterName, newRepeaterArray);
+  };
+  const updateRepeaterSpatieItem = (repeaterName, index, fieldName, lang, value) => {
+    const newRepeaterArray = [...data[repeaterName]];
+    newRepeaterArray[index][fieldName] = { ...newRepeaterArray[index][fieldName], [lang]: value };
+    setData(repeaterName, newRepeaterArray);
+  };
+  const removeRepeaterItem = (repeaterName, index) => {
+    const newRepeaterArray = [...data[repeaterName]];
+    newRepeaterArray.splice(index, 1);
+    setData(repeaterName, newRepeaterArray);
+  };
+  const isSubFieldVisible = (subField, item) => {
+    if (!subField.visibleWhen) return true;
+    const { field, valueKey, in: allowedValues } = subField.visibleWhen;
+    const fieldValue = item[field];
+    let actualValue;
+    if (fieldValue && typeof fieldValue === "object" && valueKey) {
+      actualValue = String(fieldValue[valueKey] ?? "");
+    } else {
+      actualValue = String(fieldValue ?? "");
+    }
+    return allowedValues.includes(actualValue);
+  };
+  const handleDeleteClick = () => {
+    if (deleteContext && deleteContext.setDeleteState && deleteUrl) {
+      deleteContext.setDeleteState({
+        message: locale == "ar" ? `هل أنت متأكد من رغبتك في حذف ${itemName}؟` : `Are you sure you want to delete this ${itemName}?`,
+        url: "/" + locale + deleteUrl,
+        returnedUrl: returnUrl
+      });
+    }
+  };
+  useEffect(() => {
+    setErrors({});
+  }, [locale]);
+  if (!Editor || processing)
+    return /* @__PURE__ */ jsx(LoadingSpinner, {});
+  else
+    return /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+      /* @__PURE__ */ jsx("form", { ref: dynamicForm, onSubmit: handleSubmit, className: "rounded-lg shadow-sm space-y-8 p-4", children: /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-6", children: fields.map((field, index) => {
+        if (field.type === "repeater") {
+          return /* @__PURE__ */ jsxs("div", { id: getScrollTargetId(field.name), className: "md:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50", children: [
+            /* @__PURE__ */ jsx("h3", { className: "font-bold text-lg text-gray-800 mb-4", children: field.label }),
+            data[field.name]?.map((item, itemIndex) => /* @__PURE__ */ jsxs(
+              "div",
+              {
+                id: getScrollTargetId(`${field.name}.${itemIndex}`),
+                className: "relative bg-white p-4 rounded border border-gray-300 mb-4 shadow-sm",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => removeRepeaterItem(field.name, itemIndex),
+                      className: "absolute my-2 top-4 end-4 text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full",
+                      title: locale == "ar" ? "حذف هذا القسم" : "Delete This Section",
+                      children: /* @__PURE__ */ jsx(FiTrash2, {})
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("h4", { className: "font-semibold mb-4 text-gray-600", children: (locale == "ar" ? "القسم رقم #" : "Section number #") + (itemIndex + 1) }),
+                  /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: field.repeaterFields?.filter((subField) => isSubFieldVisible(subField, item)).map((subField, subIndex) => /* @__PURE__ */ jsxs(
+                    "div",
+                    {
+                      id: getScrollTargetId(`${field.name}.${itemIndex}.${subField.name}`),
+                      className: `flex flex-col ${subField.fullWidth || subField.type.includes("richtext") ? "md:col-span-2" : ""}`,
+                      children: [
+                        /* @__PURE__ */ jsx("label", { className: "mb-1 text-sm font-medium text-gray-700", children: subField.label }),
+                        subField.type === "text" && /* @__PURE__ */ jsx(
+                          "input",
+                          {
+                            type: "text",
+                            value: item[subField.name] || "",
+                            onChange: (e) => updateRepeaterItem(field.name, itemIndex, subField.name, e.target.value),
+                            className: "border p-2 rounded outline-none"
+                          }
+                        ),
+                        subField.type === "number" && /* @__PURE__ */ jsx(
+                          "input",
+                          {
+                            type: "text",
+                            inputMode: "numeric",
+                            value: item[subField.name] || "",
+                            onChange: (e) => updateRepeaterItem(field.name, itemIndex, subField.name, handleNumberInput(e.target.value)),
+                            className: "border p-2 rounded outline-none"
+                          }
+                        ),
+                        subField.type === "textarea" && /* @__PURE__ */ jsx(
+                          "textarea",
+                          {
+                            value: item[subField.name] || "",
+                            onChange: (e) => updateRepeaterItem(field.name, itemIndex, subField.name, e.target.value),
+                            className: "border p-2 rounded resize-none outline-none h-24"
+                          }
+                        ),
+                        subField.type === "file" && /* @__PURE__ */ jsx(
+                          ImageInput,
+                          {
+                            defaultValue: item[subField.name],
+                            onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val)
+                          }
+                        ),
+                        subField.type === "video" && /* @__PURE__ */ jsx(
+                          VideoInput,
+                          {
+                            defaultValue: item[subField.name],
+                            onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val)
+                          }
+                        ),
+                        subField.type === "spatie-file" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
+                          /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة عربي)" : "(Arabic Image)" }),
+                            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                              /* @__PURE__ */ jsx(
+                                ImageInput,
+                                {
+                                  defaultValue: item[subField.name]?.ar || "",
+                                  onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", val)
+                                }
+                              ),
+                              getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
+                            ] })
+                          ] }),
+                          /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة إنجليزي)" : "(English Image)" }),
+                            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                              /* @__PURE__ */ jsx(
+                                ImageInput,
+                                {
+                                  defaultValue: item[subField.name]?.en || "",
+                                  onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", val)
+                                }
+                              ),
+                              getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
+                            ] })
+                          ] })
+                        ] }),
+                        subField.type === "select" && subField.selectChoices && subField.selectViewedOption && subField.selectValueOption && /* @__PURE__ */ jsx(
+                          CustomSelect,
+                          {
+                            choices: subField.selectChoices,
+                            viewedOption: subField.selectViewedOption,
+                            selectedOption: subField.selectValueOption,
+                            pickOne: subField.selectPickOne,
+                            preSelected: item[subField.name] ? item[subField.name] : [],
+                            onChange: (val) => {
+                              const formattedValue = subField.selectPickOne ? val.length > 0 ? val[0] : "" : val;
+                              updateRepeaterItem(field.name, itemIndex, subField.name, formattedValue);
+                            }
+                          }
+                        ),
+                        subField.type === "json" && /* @__PURE__ */ jsx(
+                          JsonTextarea,
+                          {
+                            value: item[subField.name] || "",
+                            onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val)
+                          }
+                        ),
+                        subField.type === "spatie-json" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mt-1", children: [
+                          /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "ar" ? "(عربي)" : "(Arabic)" }),
+                            /* @__PURE__ */ jsx(
+                              JsonTextarea,
+                              {
+                                value: item[subField.name]?.ar || "",
+                                onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", val)
+                              }
+                            ),
+                            getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
+                          ] }),
+                          /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "ar" ? "(إنجليزي)" : "(English)" }),
+                            /* @__PURE__ */ jsx(
+                              JsonTextarea,
+                              {
+                                value: item[subField.name]?.en || "",
+                                onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", val)
+                              }
+                            ),
+                            getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
+                          ] })
+                        ] }),
+                        subField.type === "spatie" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
+                          /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                            /* @__PURE__ */ jsx(
+                              "input",
+                              {
+                                type: "text",
+                                placeholder: locale === "ar" ? `${subField.label} (عربي)` : `${subField.label} (Arabic)`,
+                                value: item[subField.name]?.ar || "",
+                                onChange: (e) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", e.target.value),
+                                className: "border p-2 rounded w-full dir-rtl outline-none"
+                              }
+                            ),
+                            getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
+                          ] }),
+                          /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                            /* @__PURE__ */ jsx(
+                              "input",
+                              {
+                                type: "text",
+                                placeholder: locale === "ar" ? `${subField.label} (أنجليزي)` : `${subField.label} (English)`,
+                                value: item[subField.name]?.en || "",
+                                onChange: (e) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", e.target.value),
+                                className: "border p-2 rounded w-full dir-ltr outline-none"
+                              }
+                            ),
+                            getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
+                          ] })
+                        ] }),
+                        subField.type === "richtext" && /* @__PURE__ */ jsx(
+                          RichTextInput,
+                          {
+                            Editor,
+                            name: `${field.name}_${itemIndex}_${subField.name}`,
+                            onChange: (val) => updateRepeaterItem(field.name, itemIndex, subField.name, val),
+                            value: item[subField.name] || ""
+                          }
+                        ),
+                        subField.type === "spatie-richtext" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 mt-1", children: [
+                          /* @__PURE__ */ jsxs("div", { children: [
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "ar" ? "(عربي)" : "(Arabic)" }),
+                            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                              /* @__PURE__ */ jsx(
+                                RichTextInput,
+                                {
+                                  Editor,
+                                  name: `${field.name}_${itemIndex}_${subField.name}_ar`,
+                                  onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "ar", val),
+                                  value: item[subField.name]?.ar || ""
+                                }
+                              ),
+                              getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "ar") })
+                            ] })
+                          ] }),
+                          /* @__PURE__ */ jsxs("div", { children: [
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block", children: locale == "en" ? "(English)" : "(أنكليزي)" }),
+                            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                              /* @__PURE__ */ jsx(
+                                RichTextInput,
+                                {
+                                  Editor,
+                                  name: `${field.name}_${itemIndex}_${subField.name}_en`,
+                                  onChange: (val) => updateRepeaterSpatieItem(field.name, itemIndex, subField.name, "en", val),
+                                  value: item[subField.name]?.en || ""
+                                }
+                              ),
+                              getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(`${field.name}.${itemIndex}.${subField.name}`, "en") })
+                            ] })
+                          ] })
+                        ] }),
+                        subField.type != "spatie" && subField.type != "spatie-richtext" && subField.type != "spatie-file" && subField.type != "spatie-json" && getError(`${field.name}.${itemIndex}.${subField.name}`) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getError(`${field.name}.${itemIndex}.${subField.name}`) })
+                      ]
+                    },
+                    subIndex
+                  )) })
+                ]
+              },
+              itemIndex
+            )),
+            getError(field.name) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1 block", children: getError(field.name) }),
+            (!field.maxItems || data[field.name]?.length < field.maxItems) && /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => addRepeaterItem(field.name, field.repeaterFields || []),
+                className: "flex my-2 items-center gap-2 bg-dark text-light px-4 py-2 rounded hover:bg-primary transition max-mob:mb-4",
+                children: [
+                  /* @__PURE__ */ jsx(FiPlus, {}),
+                  " ",
+                  locale === "ar" ? `إضافة ${field.itemLabel || "قسم"}` : `Add ${field.itemLabel || "Section"}`
+                ]
+              }
+            )
+          ] }, index);
+        }
+        return /* @__PURE__ */ jsxs("div", { id: getScrollTargetId(field.name), className: `flex flex-col ${field.fullWidth || field.type === "spatie-richtext" || field.type === "richtext" ? "md:col-span-2" : ""}`, children: [
+          /* @__PURE__ */ jsx("label", { className: "mb-2 font-semibold text-gray-700", children: field.label }),
+          field.type === "text" && /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "text",
+              value: data[field.name],
+              onChange: (e) => setData(field.name, e.target.value),
+              className: "border p-2 rounded outline-none"
+            }
+          ),
+          field.type === "number" && /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "text",
+              inputMode: "numeric",
+              value: data[field.name],
+              onChange: (e) => setData(field.name, handleNumberInput(e.target.value)),
+              className: "border p-2 rounded outline-none"
+            }
+          ),
+          field.type === "textarea" && /* @__PURE__ */ jsx(
+            "textarea",
+            {
+              value: data[field.name],
+              onChange: (e) => setData(field.name, e.target.value),
+              className: "border p-2 rounded outline-none h-24 resize-none"
+            }
+          ),
+          field.type === "select" && field.selectChoices && field.selectViewedOption && field.selectValueOption && /* @__PURE__ */ jsx(
+            CustomSelect,
+            {
+              choices: field.selectChoices,
+              viewedOption: field.selectViewedOption,
+              selectedOption: field.selectValueOption,
+              pickOne: field.selectPickOne,
+              preSelected: data[field.name] ? data[field.name] : [],
+              onChange: (val) => {
+                const formattedValue = field.selectPickOne ? val.length > 0 ? val[0] : "" : val;
+                setData(field.name, formattedValue);
+              }
+            }
+          ),
+          field.type === "spatie" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+              /* @__PURE__ */ jsx(
+                "input",
+                {
+                  type: "text",
+                  placeholder: locale === "ar" ? `${field.label} (عربي)` : `${field.label} (Arabic)`,
+                  value: data[field.name]?.ar || "",
+                  onChange: (e) => handleSpatieChange(field.name, "ar", e.target.value),
+                  className: "border p-2 rounded w-full dir-rtl outline-none"
+                }
+              ),
+              getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+              /* @__PURE__ */ jsx(
+                "input",
+                {
+                  type: "text",
+                  placeholder: locale === "ar" ? `${field.label} (إنجليزي)` : `${field.label} (English)`,
+                  value: data[field.name]?.en || "",
+                  onChange: (e) => handleSpatieChange(field.name, "en", e.target.value),
+                  className: "border p-2 rounded w-full dir-ltr outline-none"
+                }
+              ),
+              getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
+            ] })
+          ] }),
+          field.type === "file" && /* @__PURE__ */ jsx(
+            ImageInput,
+            {
+              defaultValue: data[field.name],
+              onChange: (val) => setData(field.name, val)
+            }
+          ),
+          field.type === "video" && /* @__PURE__ */ jsx(
+            VideoInput,
+            {
+              defaultValue: data[field.name],
+              onChange: (val) => setData(field.name, val)
+            }
+          ),
+          field.type === "spatie-file" && /* @__PURE__ */ jsxs("div", { className: "flex max-mob:flex-col gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة عربي)" : "(Arabic Image)" }),
+              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                /* @__PURE__ */ jsx(
+                  ImageInput,
+                  {
+                    defaultValue: data[field.name]?.ar || "",
+                    onChange: (val) => handleSpatieChange(field.name, "ar", val)
+                  }
+                ),
+                getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 flex-1", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-xs text-gray-500 mb-1 block font-medium", children: locale === "ar" ? "(صورة إنجليزي)" : "(English Image)" }),
+              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                /* @__PURE__ */ jsx(
+                  ImageInput,
+                  {
+                    defaultValue: data[field.name]?.en || "",
+                    onChange: (val) => handleSpatieChange(field.name, "en", val)
+                  }
+                ),
+                getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
+              ] })
+            ] })
+          ] }),
+          field.type === "richtext" && /* @__PURE__ */ jsx(
+            RichTextInput,
+            {
+              Editor,
+              name: field.name,
+              onChange: (val) => setData(field.name, val),
+              value: data[field.name] || ""
+            }
+          ),
+          field.type === "json" && /* @__PURE__ */ jsx(
+            JsonTextarea,
+            {
+              value: data[field.name] || "",
+              onChange: (val) => setData(field.name, val)
+            }
+          ),
+          field.type === "spatie-json" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? "(عربي)" : "(Arabic)" }),
+              /* @__PURE__ */ jsx(
+                JsonTextarea,
+                {
+                  value: data[field.name]?.ar || "",
+                  onChange: (val) => handleSpatieChange(field.name, "ar", val)
+                }
+              ),
+              getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? "(إنجليزي)" : "(English)" }),
+              /* @__PURE__ */ jsx(
+                JsonTextarea,
+                {
+                  value: data[field.name]?.en || "",
+                  onChange: (val) => handleSpatieChange(field.name, "en", val)
+                }
+              ),
+              getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
+            ] })
+          ] }),
+          field.type === "spatie-richtext" && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? `(عربي)` : `(Arabic)` }),
+              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                /* @__PURE__ */ jsx(
+                  RichTextInput,
+                  {
+                    Editor,
+                    name: `${field.name}_ar`,
+                    onChange: (val) => handleSpatieChange(field.name, "ar", val),
+                    value: data[field.name]?.ar || ""
+                  }
+                ),
+                getSpatieError(field.name, "ar") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "ar") })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-gray-500", children: locale === "ar" ? `(إنجليزي)` : `(English)` }),
+              /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-1", children: [
+                /* @__PURE__ */ jsx(
+                  RichTextInput,
+                  {
+                    Editor,
+                    name: `${field.name}_en`,
+                    onChange: (val) => handleSpatieChange(field.name, "en", val),
+                    value: data[field.name]?.en || ""
+                  }
+                ),
+                getSpatieError(field.name, "en") && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getSpatieError(field.name, "en") })
+              ] })
+            ] })
+          ] }),
+          field.type != "spatie" && field.type != "spatie-richtext" && field.type != "spatie-file" && field.type != "spatie-json" && getError(field.name) && /* @__PURE__ */ jsx("span", { className: "text-red-500 text-xs mt-1", children: getError(field.name) })
+        ] }, index);
+      }) }) }),
+      /* @__PURE__ */ jsx("div", { className: "sticky rounded-lg bottom-0 start-0 end-0  z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 py-3 mt-10", children: /* @__PURE__ */ jsxs("div", { className: `flex ${isEdit ? "justify-between" : "justify-center"} items-end gap-3 max-w-full`, children: [
+        isEdit && deleteUrl ? /* @__PURE__ */ jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: handleDeleteClick,
+            className: "shrink-0 flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2.5 rounded-lg font-bold hover:bg-red-600 hover:text-white transition-colors border border-red-200 duration-200 text-sm",
+            children: [
+              /* @__PURE__ */ jsx(FiTrash2, { size: 15 }),
+              /* @__PURE__ */ jsx("span", { className: "max-mob:hidden", children: locale === "en" ? `Delete ${itemName}` : `حذف ${itemName}` })
+            ]
+          }
+        ) : /* @__PURE__ */ jsx("div", { className: "shrink-0" }),
+        /* @__PURE__ */ jsx(
+          FormErrorSummary,
+          {
+            errors,
+            locale,
+            fields
+          }
+        ),
+        /* @__PURE__ */ jsxs(
+          Button,
+          {
+            disable: processing,
+            clickFunction: () => dynamicForm.current?.requestSubmit(),
+            className: "gap-2",
+            children: [
+              /* @__PURE__ */ jsx(FiSave, { size: 15 }),
+              /* @__PURE__ */ jsx("span", { className: "max-mob:hidden", children: isEdit ? locale === "en" ? "Update" : "تحديث" : locale === "en" ? "Save" : "حفظ" })
+            ]
+          }
+        )
+      ] }) })
+    ] });
+}
+const DashboardBlogsCrud = ({ allData }) => {
+  const { isEdit, content, blog } = allData;
+  const initialData = isEdit && blog ? {
+    ...blog,
+    published: [{ val: blog.published ? "1" : "0" }]
+  } : void 0;
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48  pt-32 px-5", children: /* @__PURE__ */ jsx(
+    DynamicForm,
+    {
+      deleteUrl: isEdit ? content.submitUrl + "/" + blog.id : void 0,
+      initialData,
+      fields: content.inputs,
+      submitUrl: isEdit ? content.submitUrl + "/" + blog.id : content.submitUrl,
+      returnUrl: content.submitUrl,
+      itemName: content.itemName,
+      isEdit
+    }
+  ) }) });
+};
+const __vite_glob_0_3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardBlogsCrud
+}, Symbol.toStringTag, { value: "Module" }));
+const CourseCard = ({ topics, description, image, learningPoints, name, price, id, newCourse, viewCourseButton, anim }) => {
+  const { locale } = usePage().props;
+  const { url } = usePage();
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: `
+      ${url.includes("dashboard") ? "w-full" : "desc:w-[30%]    desc:grow max-desc:w-full max-desc:max-w-[calc((100%-32px)/2)] max-mob:max-w-full"}
+        bg-arch-card
+        rounded-3xl
+        overflow-hidden
+        shadow-md
+        hover:shadow-2xl
+        transition-all
+        duration-300
+        hover:-translate-y-2
+        border border-gray-100
+        group
+        flex flex-col justify-between
+        ${anim?.className ?? ""}
+      `,
+      style: anim?.style,
+      children: [
+        /* @__PURE__ */ jsxs("div", { className: "relative w-full", children: [
+          /* @__PURE__ */ jsx(
+            Image,
+            {
+              src: image,
+              className: "\r\n            h-64\r\n            w-full\r\n            object-cover\r\n            group-hover:scale-105\r\n            transition-all\r\n            duration-500\r\n          "
+            }
+          ),
+          newCourse && /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "\r\n              absolute\r\n              top-4\r\n              end-4\r\n              bg-arch-accent\r\n              text-arch-light\r\n              text-xs\r\n              px-3\r\n              py-1\r\n              rounded-full\r\n              font-semibold\r\n              shadow-lg\r\n            ",
+              children: locale == "en" ? "NEW" : "جديد"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "p-6 w-full grow flex flex-col justify-between", children: [
+          /* @__PURE__ */ jsx(
+            SectionTitle,
+            {
+              className: "\r\n            w-full\r\n            text-xl\r\n            font-bold\r\n            text-arch-dark\r\n            mb-3\r\n          ",
+              children: name
+            }
+          ),
+          viewCourseButton && /* @__PURE__ */ jsx(
+            EditableObject,
+            {
+              className: "w-fit max-mob:w-full",
+              dontAddInputsFor: ["link"],
+              fields: viewCourseButton,
+              path: "viewCourseButton",
+              children: /* @__PURE__ */ jsx(Button, { className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
+                Link,
+                {
+                  href: viewCourseButton.link + id,
+                  children: viewCourseButton.text
+                }
+              ) })
+            }
+          )
+        ] })
+      ]
+    }
+  );
+};
+const DashboardCourses = ({ allData }) => {
+  const { courses, links, content } = allData;
+  const [isSearching, setIsSearching] = useState(false);
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
+    /* @__PURE__ */ jsx(
+      SearchHeader,
+      {
+        searchFields: content.searchFields,
+        placeHolder: content.searchHeaderPlaceholder,
+        onSearchModeChange: setIsSearching
+      }
+    ),
+    !isSearching && /* @__PURE__ */ jsx(
+      Link,
+      {
+        href: content.addButton.link,
+        className: "block w-fit  mt-5 mb-10 mx-auto",
+        children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10", children: courses.map((course, i) => /* @__PURE__ */ jsx(
+      CourseCard,
+      {
+        viewCourseButton: content.viewCourseButton,
+        ...course
+      },
+      course.id
+    )) }),
+    /* @__PURE__ */ jsx(Pagination, { links })
+  ] }) });
+};
+const __vite_glob_0_4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardCourses
+}, Symbol.toStringTag, { value: "Module" }));
+const DashboardCoursesCrud = ({ allData }) => {
+  const { isEdit, content, course } = allData;
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48  pt-32 px-5", children: /* @__PURE__ */ jsx(
+    DynamicForm,
+    {
+      deleteUrl: isEdit ? content.submitUrl + "/" + course.id : void 0,
+      initialData: isEdit ? course : void 0,
+      fields: content.inputs,
+      submitUrl: isEdit ? content.submitUrl + "/" + course.id : content.submitUrl,
+      returnUrl: content.submitUrl,
+      itemName: content.itemName,
+      isEdit
+    }
+  ) }) });
+};
+const __vite_glob_0_5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardCoursesCrud
+}, Symbol.toStringTag, { value: "Module" }));
+const Layer = ({ className }) => {
+  return /* @__PURE__ */ jsx("div", { className: `  absolute  ${className}` });
+};
+const ProjectCard = ({ description, images, name, created_at, isActive, onCLick, id }) => {
+  const project = {
+    name,
+    description,
+    images,
+    created_at
+  };
+  const goToProjectEditPage = (id2) => {
+    router.visit(`/dashboard/projects/${id2}`);
+  };
+  const { url } = usePage();
+  const isDashboard = url.includes("dashboard");
+  return /* @__PURE__ */ jsxs("div", { onClick: () => isDashboard ? goToProjectEditPage(id) : onCLick && onCLick({ ...project }), className: `group relative rounded-lg overflow-hidden  
+      ${isActive ? "scale-100  " : "scale-90"} cursor-pointer duration-300   `, children: [
+    /* @__PURE__ */ jsx(
+      Image,
+      {
+        src: images[0].image,
+        className: "w-full h-[28rem] max-mob:h-[22rem] object-cover group-hover:scale-105 duration-500 "
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      Layer,
+      {
+        className: "bg-gradient-to-t from-black/90 via-black/20 to-transparent top-0 left-0 w-full h-full"
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 start-3 z-10 max-w-[calc(100%-0.75rem)] ", children: [
+      /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "text-yellow-500 text-sm",
+          children: created_at
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        SectionTitle,
+        {
+          className: "text-arch-light text-xl leading-3 font-bold",
+          children: name
+        }
+      )
+    ] })
+  ] });
+};
+const DashboardProjects = ({ allData }) => {
+  const { projects, links, content } = allData;
+  const [isSearching, setIsSearching] = useState(false);
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsxs("div", { className: "max-lg:pt-48 py-10 pt-32 px-5", children: [
+    /* @__PURE__ */ jsx(
+      SearchHeader,
+      {
+        searchFields: content.searchFields,
+        placeHolder: content.searchHeaderPlaceholder,
+        onSearchModeChange: setIsSearching
+      }
+    ),
+    !isSearching && /* @__PURE__ */ jsx(
+      Link,
+      {
+        href: content.addButton.link,
+        className: "block w-fit  mt-5 mb-10 mx-auto",
+        children: /* @__PURE__ */ jsx(Button, { children: content.addButton.text })
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 tab:grid-cols-2 xl:grid-cols-3   gap-6 mb-10", children: projects.map((project, i) => /* @__PURE__ */ createElement(ProjectCard, { ...project, key: i })) }),
+    /* @__PURE__ */ jsx(Pagination, { links })
+  ] }) });
+};
+const __vite_glob_0_6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardProjects
+}, Symbol.toStringTag, { value: "Module" }));
+const DashboardProjectsCrud = ({ allData }) => {
+  const { isEdit, content, project } = allData;
+  return /* @__PURE__ */ jsx(DashboardLayout, { children: /* @__PURE__ */ jsx("div", { className: "max-lg:pt-48  pt-32 px-5", children: /* @__PURE__ */ jsx(
+    DynamicForm,
+    {
+      deleteUrl: isEdit ? content.submitUrl + "/" + project.id : void 0,
+      initialData: isEdit ? project : void 0,
+      fields: content.inputs,
+      submitUrl: isEdit ? content.submitUrl + "/" + project.id : content.submitUrl,
+      returnUrl: content.submitUrl,
+      itemName: content.itemName,
+      isEdit
+    }
+  ) }) });
+};
+const __vite_glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: DashboardProjectsCrud
+}, Symbol.toStringTag, { value: "Module" }));
 const CourseDetailsPage = ({ allData }) => {
   const { data, course, moreCourses } = allData;
   const { courses, links } = moreCourses;
@@ -2640,16 +3393,28 @@ const CourseDetailsPage = ({ allData }) => {
                 children: data.priceTitle
               }
             ),
-            /* @__PURE__ */ jsxs(
-              "div",
-              {
-                className: "text-3xl font-bold text-arch-dark",
-                children: [
-                  course.price,
-                  /* @__PURE__ */ jsx("span", { className: "text-arch-accent", children: "$" })
-                ]
-              }
-            )
+            (course.price || course.new_price) && /* @__PURE__ */ jsx("div", { className: "flex items-end gap-3 mt-1", children: course.price && course.new_price ? (
+              // كلاهما موجود: القديم مشطوب + الجديد بارز
+              /* @__PURE__ */ jsxs(Fragment, { children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-0.5", children: [
+                  /* @__PURE__ */ jsx("span", { className: "text-xs text-arch-gray font-medium leading-none" }),
+                  /* @__PURE__ */ jsxs("span", { className: "text-xl text-arch-gray  font-medium leading-none", children: [
+                    /* @__PURE__ */ jsx("span", { className: "line-through", children: course.price }),
+                    /* @__PURE__ */ jsx("span", { className: "text-arch-gray text-lg  ", children: "$" })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-0.5", children: /* @__PURE__ */ jsxs("div", { className: "text-3xl font-bold text-arch-dark leading-none", children: [
+                  course.new_price,
+                  /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-2xl", children: "$" })
+                ] }) })
+              ] })
+            ) : (
+              // سعر واحد فقط: يظهر كسعر نهائي
+              /* @__PURE__ */ jsxs("div", { className: "text-3xl font-bold text-arch-dark leading-none", children: [
+                course.price || course.new_price,
+                /* @__PURE__ */ jsx("span", { className: "text-arch-accent text-xl", children: "$" })
+              ] })
+            ) })
           ] }),
           /* @__PURE__ */ jsx(
             EditableObject,
@@ -2839,7 +3604,7 @@ const CourseDetailsPage = ({ allData }) => {
     ] })
   ] }) });
 };
-const __vite_glob_0_4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const __vite_glob_0_8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: CourseDetailsPage
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3443,164 +4208,6 @@ function StudentReviews({ reviews, reviewsLabel, reviewsTitle }) {
     )
   ] }) });
 }
-const Hero = ({
-  heroBackground,
-  heroProjectsButton,
-  heroCoursesButton,
-  heroDescription,
-  heroProfileImage,
-  heroTitle
-}) => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.2
-  });
-  const anim = useContext(Animations);
-  const pTitle = anim?.animProps(inView, { delay: 0, duration: 800, variant: "fadeLeft" });
-  const pDesc = anim?.animProps(inView, { delay: 150, duration: 850, variant: "fadeLeft" });
-  const pBtnsWrap = anim?.animProps(inView, { delay: 300, duration: 750, variant: "blur" });
-  const pBtn1 = anim?.animProps(inView, { delay: 350, duration: 700, variant: "fadeLeft" });
-  const pBtn2 = anim?.animProps(inView, { delay: 450, duration: 700, variant: "fadeLeft" });
-  const pImg = anim?.animProps(inView, { delay: 250, duration: 900, variant: "fadeRight" });
-  return /* @__PURE__ */ jsxs(
-    "div",
-    {
-      ref,
-      className: "w-full min-h-screen relative overflow-hidden px-largeSaveSpace max-desc:px-mobSaveSpace flex justify-center items-center  pt-32 max-desc:pt-40 pb-10",
-      children: [
-        heroBackground && /* @__PURE__ */ jsxs(
-          EditableImage,
-          {
-            start: "40%",
-            top: "8rem",
-            className: "absolute! top-0 start-0 w-full h-full",
-            src: heroBackground,
-            path: "heroBackground",
-            children: [
-              /* @__PURE__ */ jsx(
-                Image,
-                {
-                  className: "absolute w-full h-full top-0 left-0 object-cover",
-                  src: heroBackground
-                }
-              ),
-              /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0  bg-gradient-to-br from-arch-dark/35  to-arch-charcoal/50" })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxs(
-          "div",
-          {
-            className: "w-full flex justify-between items-center max-desc:items-start gap-10 max-desc:gap-5 max-desc:flex-col ",
-            children: [
-              /* @__PURE__ */ jsxs(
-                "div",
-                {
-                  className: "desc:max-w-xl  w-full",
-                  children: [
-                    heroTitle && /* @__PURE__ */ jsx(
-                      EditableText,
-                      {
-                        top: "30%",
-                        start: "10%",
-                        text: heroTitle,
-                        path: "heroTitle",
-                        className: pTitle?.className,
-                        style: pTitle?.style,
-                        children: /* @__PURE__ */ jsx(
-                          MainTitle,
-                          {
-                            hero: true,
-                            className: "mb-4",
-                            white: true,
-                            children: heroTitle
-                          }
-                        )
-                      }
-                    ),
-                    heroDescription && /* @__PURE__ */ jsx(
-                      EditableText,
-                      {
-                        start: "10%",
-                        top: "40%",
-                        text: heroDescription,
-                        path: "heroDescription",
-                        className: `text-arch-light/90 text-lg leading-4 ${pDesc?.className ?? ""}`,
-                        style: pDesc?.style,
-                        richtext: true,
-                        children: heroDescription
-                      }
-                    ),
-                    /* @__PURE__ */ jsxs(
-                      "div",
-                      {
-                        className: `flex max-mob:flex-col items-center max-desc:justify-center gap-4 mt-6 ${pBtnsWrap?.className ?? ""}`,
-                        style: pBtnsWrap?.style,
-                        children: [
-                          heroProjectsButton && /* @__PURE__ */ jsx(
-                            EditableObject,
-                            {
-                              dontAddInputsFor: ["id"],
-                              className: `max-mob:w-full ${pBtn1?.className ?? ""}`,
-                              style: pBtn1?.style,
-                              fields: heroProjectsButton,
-                              path: "heroProjectsButton",
-                              children: /* @__PURE__ */ jsx("a", { href: heroProjectsButton.id, className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
-                                Button,
-                                {
-                                  className: "max-mob:w-full",
-                                  children: heroProjectsButton.text
-                                }
-                              ) })
-                            }
-                          ),
-                          heroCoursesButton && /* @__PURE__ */ jsx(
-                            EditableObject,
-                            {
-                              dontAddInputsFor: ["id"],
-                              className: `max-mob:w-full ${pBtn2?.className ?? ""}`,
-                              style: pBtn2?.style,
-                              fields: heroCoursesButton,
-                              path: "heroCoursesButton",
-                              children: /* @__PURE__ */ jsx("a", { href: heroCoursesButton.id, className: "max-mob:w-full", children: /* @__PURE__ */ jsx(
-                                Button,
-                                {
-                                  className: "max-mob:w-full",
-                                  children: heroCoursesButton.text,
-                                  border: true
-                                }
-                              ) })
-                            }
-                          )
-                        ]
-                      }
-                    )
-                  ]
-                }
-              ),
-              heroProfileImage && /* @__PURE__ */ jsx(
-                EditableImage,
-                {
-                  className: `max-w-sm w-full max-desc:self-center rounded-lg overflow-hidden ${pImg?.className ?? ""}`,
-                  style: pImg?.style,
-                  src: heroProfileImage,
-                  path: "heroProfileImage",
-                  children: /* @__PURE__ */ jsx(
-                    Image,
-                    {
-                      className: "w-full",
-                      src: heroProfileImage
-                    }
-                  )
-                }
-              )
-            ]
-          }
-        )
-      ]
-    }
-  );
-};
 const Home = ({ allData }) => {
   const { data, projects, coursesData } = allData;
   const { courses, links } = coursesData;
@@ -3666,7 +4273,7 @@ const Home = ({ allData }) => {
     /* @__PURE__ */ jsx(StudentReviews, { ...reviews })
   ] }) });
 };
-const __vite_glob_0_5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const __vite_glob_0_9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Home
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3674,71 +4281,69 @@ const GlobalServices = ({ discoverButton, services }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
   const anim = useContext(Animations);
   const pBtn = anim?.animProps(inView, { delay: 120 + services.length * 80, duration: 850, variant: "zoom" });
-  return /* @__PURE__ */ jsxs("div", { ref, className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace py-20", children: [
-    /* @__PURE__ */ jsx(EditableArray, { top: "-1.5rem", path: "services", fields: services[0], className: "w-full", children: services.map((service, i) => {
-      const pItem = anim?.animProps(inView, {
-        delay: 100 + i % 8 * 110,
-        duration: 900,
-        variant: i % 2 === 0 ? "fadeLeft" : "fadeRight"
-      });
-      return /* @__PURE__ */ jsxs(
-        EditableObject,
-        {
-          top: "30%",
-          start: i % 2 == 0 ? "10%" : "90%",
-          richText: true,
-          fields: service,
-          deletable: true,
-          hideFirst: true,
-          path: `services.${i}`,
-          className: `w-full flex ${i % 2 == 0 ? "max-desc:flex-col" : "max-desc:flex-col flex-row-reverse"}  justify-between items-center gap-8 mb-10 ${pItem?.className ?? ""}`,
-          style: pItem?.style,
-          children: [
-            /* @__PURE__ */ jsxs("div", { children: [
-              /* @__PURE__ */ jsx(
-                SectionTitle,
-                {
-                  children: service.title,
-                  className: "text-xl font-bold text-arch-dark leading-2 mb-4"
-                }
-              ),
-              /* @__PURE__ */ jsx(
-                "div",
-                {
-                  className: "text-arch-gray text-lg leading-2",
-                  dangerouslySetInnerHTML: { __html: service.description }
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsx(
-              Image,
-              {
-                src: service.image,
-                className: "max-w-xl w-full"
-              }
-            )
-          ]
-        },
-        i
-      );
-    }) }),
-    /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx("div", { ref, className: "w-full px-largeSaveSpace max-desc:px-mobSaveSpace py-20", children: /* @__PURE__ */ jsx(EditableArray, { top: "-1.5rem", path: "services", fields: services[0], className: "w-full", children: services.map((service, i) => {
+    const pItem = anim?.animProps(inView, {
+      delay: 100 + i % 8 * 110,
+      duration: 900,
+      variant: i % 2 === 0 ? "fadeLeft" : "fadeRight"
+    });
+    return /* @__PURE__ */ jsxs(
       EditableObject,
       {
-        className: `w-fit max-mob:w-full mx-auto mt-24 ${pBtn?.className ?? ""}`,
-        style: pBtn?.style,
-        fields: discoverButton,
-        path: "discoverButton",
-        children: /* @__PURE__ */ jsx("a", { href: discoverButton.link, target: "_blank", className: "max-mob:w-full max-mob:block", children: /* @__PURE__ */ jsx(
-          Button,
-          {
-            className: "max-mob:w-full",
-            children: discoverButton.text
-          }
-        ) })
-      }
-    )
-  ] });
+        top: "30%",
+        start: i % 2 == 0 ? "10%" : "90%",
+        richText: true,
+        fields: service,
+        deletable: true,
+        hideFirst: true,
+        path: `services.${i}`,
+        className: `w-full flex ${i % 2 == 0 ? "max-desc:flex-col" : "max-desc:flex-col flex-row-reverse"}  justify-between items-center gap-8 mb-10 ${pItem?.className ?? ""}`,
+        style: pItem?.style,
+        children: [
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx(
+              SectionTitle,
+              {
+                children: service.title,
+                className: "text-xl font-bold text-arch-dark leading-2 mb-4"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "text-arch-gray text-lg leading-2",
+                dangerouslySetInnerHTML: { __html: service.description }
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              EditableObject,
+              {
+                className: `w-fit max-mob:w-full  mt-24 ${pBtn?.className ?? ""}`,
+                style: pBtn?.style,
+                fields: discoverButton,
+                path: "discoverButton",
+                children: /* @__PURE__ */ jsx("a", { href: discoverButton.link, target: "_blank", className: "max-mob:w-full max-mob:block", children: /* @__PURE__ */ jsx(
+                  Button,
+                  {
+                    className: "max-mob:w-full",
+                    children: discoverButton.text
+                  }
+                ) })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx(
+            Image,
+            {
+              src: service.image,
+              className: "max-w-xl w-full"
+            }
+          )
+        ]
+      },
+      i
+    );
+  }) }) });
 };
 const Services = ({ allData }) => {
   const { data, serviceName } = allData;
@@ -3756,7 +4361,7 @@ const Services = ({ allData }) => {
     /* @__PURE__ */ jsx(GlobalServices, { ...global })
   ] }) });
 };
-const __vite_glob_0_6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const __vite_glob_0_10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Services
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3847,7 +4452,7 @@ const Login = () => {
     )
   ] });
 };
-const __vite_glob_0_7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const __vite_glob_0_11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Login
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3856,14 +4461,18 @@ const renderPage = (page) => createInertiaApp({
   render: ReactDOMServer.renderToString,
   resolve: (name) => {
     const pages = /* @__PURE__ */ Object.assign({
-      "/Modules/Dashboard/resources/assets/js/pages/DashboardCourses.tsx": __vite_glob_0_0,
-      "/Modules/Dashboard/resources/assets/js/pages/DashboardCoursesCrud.tsx": __vite_glob_0_1,
-      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjects.tsx": __vite_glob_0_2,
-      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjectsCrud.tsx": __vite_glob_0_3,
-      "/Modules/Pages/resources/assets/js/pages/CourseDetailsPage.tsx": __vite_glob_0_4,
-      "/Modules/Pages/resources/assets/js/pages/Home.tsx": __vite_glob_0_5,
-      "/Modules/Pages/resources/assets/js/pages/Services.tsx": __vite_glob_0_6,
-      "/Modules/Shared/resources/assets/js/pages/Login.tsx": __vite_glob_0_7
+      "/Modules/Blogs/resources/assets/js/pages/BlogDetailsPage.tsx": __vite_glob_0_0,
+      "/Modules/Blogs/resources/assets/js/pages/BlogsPage.tsx": __vite_glob_0_1,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardBlogs.tsx": __vite_glob_0_2,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardBlogsCrud.tsx": __vite_glob_0_3,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardCourses.tsx": __vite_glob_0_4,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardCoursesCrud.tsx": __vite_glob_0_5,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjects.tsx": __vite_glob_0_6,
+      "/Modules/Dashboard/resources/assets/js/pages/DashboardProjectsCrud.tsx": __vite_glob_0_7,
+      "/Modules/Pages/resources/assets/js/pages/CourseDetailsPage.tsx": __vite_glob_0_8,
+      "/Modules/Pages/resources/assets/js/pages/Home.tsx": __vite_glob_0_9,
+      "/Modules/Pages/resources/assets/js/pages/Services.tsx": __vite_glob_0_10,
+      "/Modules/Shared/resources/assets/js/pages/Login.tsx": __vite_glob_0_11
     });
     const pageModule = Object.entries(pages).find(([path]) => path.includes(`/${name}.tsx`))?.[1];
     if (!pageModule) throw new Error(`Page not found: ${name}`);

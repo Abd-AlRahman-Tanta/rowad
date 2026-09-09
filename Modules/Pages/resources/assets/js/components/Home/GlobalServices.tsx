@@ -47,6 +47,19 @@ const GlobalServices = ({ discoverButton, services }: GlobalServicesProps) => {
                     className='text-arch-gray text-lg leading-2'
                     dangerouslySetInnerHTML={{ __html: service.description }}
                   />
+                  <EditableObject
+                    className={`w-fit max-mob:w-full  mt-24 ${pBtn?.className ?? ''}`}
+                    style={pBtn?.style}
+                    fields={discoverButton}
+                    path='discoverButton'
+                  >
+                    <a href={discoverButton.link} target='_blank' className='max-mob:w-full max-mob:block'>
+                      <Button
+                        className='max-mob:w-full'
+                        children={discoverButton.text}
+                      />
+                    </a>
+                  </EditableObject>
                 </div>
                 <Image
                   src={service.image}
@@ -57,19 +70,7 @@ const GlobalServices = ({ discoverButton, services }: GlobalServicesProps) => {
           })
         }
       </EditableArray>
-      <EditableObject
-        className={`w-fit max-mob:w-full mx-auto mt-24 ${pBtn?.className ?? ''}`}
-        style={pBtn?.style}
-        fields={discoverButton}
-        path='discoverButton'
-      >
-        <a href={discoverButton.link} target='_blank' className='max-mob:w-full max-mob:block'>
-          <Button
-            className='max-mob:w-full'
-            children={discoverButton.text}
-          />
-        </a>
-      </EditableObject>
+
     </div>
   )
 }

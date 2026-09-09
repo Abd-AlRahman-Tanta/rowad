@@ -341,15 +341,55 @@ button:disabled {
   transition-duration: var(--a-duration, 700ms);
 }
 
-.a-d-0 { --a-delay: 0ms; }
-.a-d-150 { --a-delay: 150ms; }
-.a-d-250 { --a-delay: 250ms; }
-.a-d-300 { --a-delay: 300ms; }
-.a-d-350 { --a-delay: 350ms; }
-.a-d-450 { --a-delay: 450ms; }
+.a-d-0 {
+  --a-delay: 0ms;
+}
 
-.a-du-700 { --a-duration: 700ms; }
-.a-du-750 { --a-duration: 750ms; }
-.a-du-800 { --a-duration: 800ms; }
-.a-du-850 { --a-duration: 850ms; }
-.a-du-900 { --a-duration: 900ms; }
+.a-d-150 {
+  --a-delay: 150ms;
+}
+
+.a-d-250 {
+  --a-delay: 250ms;
+}
+
+.a-d-300 {
+  --a-delay: 300ms;
+}
+
+.a-d-350 {
+  --a-delay: 350ms;
+}
+
+.a-d-450 {
+  --a-delay: 450ms;
+}
+
+.a-du-700 {
+  --a-duration: 700ms;
+}
+
+.a-du-750 {
+  --a-duration: 750ms;
+}
+
+.a-du-800 {
+  --a-duration: 800ms;
+}
+
+.a-du-850 {
+  --a-duration: 850ms;
+}
+
+.a-du-900 {
+  --a-duration: 900ms;
+}
+
+.text-center,
+.text-center>p,
+.text-center>div,
+.text-center>h2,
+.text-center>h1,
+.text-center>h3 {
+  text-align: center !important;
+}

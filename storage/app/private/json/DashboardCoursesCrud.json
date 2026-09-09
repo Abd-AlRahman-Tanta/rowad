@@ -20,6 +20,7 @@
                 "fullWidth": true
             },
             { "name": "price", "label": "Price", "type": "number" },
+            { "name": "new_price", "label": "New Price", "type": "number" },
             {
                 "name": "newCourse",
                 "label": "New Course?",
@@ -108,6 +109,7 @@
                 "label": "السعر",
                 "type": "number"
             },
+            { "name": "new_price", "label": "السعر الجديد", "type": "number" },
             {
                 "name": "newCourse",
                 "label": "دورة جديدة؟",

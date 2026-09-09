@@ -1,0 +1,28 @@
+{
+    "en": {
+        "searchHeaderPlaceholder": "Search for an article...",
+        "searchFields": [{ "name": "title", "translatable": true }],
+        "addButton": {
+            "text": "Add New Article",
+            "link": "/dashboard/blogs/create"
+        },
+        "viewBlogButton": {
+            "text": "Edit Article",
+            "link": "/dashboard/blogs/"
+        },
+        "itemName": "Article"
+    },
+    "ar": {
+        "searchHeaderPlaceholder": "ابحث عن مقال...",
+        "searchFields": [{ "name": "title", "translatable": true }],
+        "addButton": {
+            "text": "إضافة مقال جديد",
+            "link": "/dashboard/blogs/create"
+        },
+        "viewBlogButton": {
+            "text": "تعديل المقال",
+            "link": "/dashboard/blogs/"
+        },
+        "itemName": "مقال"
+    }
+}

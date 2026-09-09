@@ -1,1 +1,1122 @@
-[]
+[
+    {
+        "name": {
+            "en": "Complete Architecture Design Fundamentals",
+            "ar": "أساسيات التصميم المعماري الشامل"
+        },
+        "description": {
+            "en": "<p>Master the core principles of architectural design from concept to execution. This course covers everything from site analysis and space planning to structural systems and construction documentation. Perfect for beginners and intermediate students looking to build a solid foundation in architecture.</p>",
+            "ar": "<p>أتقن المبادئ الأساسية للتصميم المعماري من المفهوم إلى التنفيذ. تغطي هذه الدورة كل شيء من تحليل الموقع وتخطيط الفضاء إلى الأنظمة الإنشائية وتوثيق البناء. مثالية للمبتدئين والطلاب المتوسطين الراغبين في بناء أساس متين في العمارة.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Architecture+Fundamentals",
+        "heroImage": "https://placehold.co/1200x630.png?text=Architecture+Fundamentals",
+        "price": "299",
+        "new_price": "199",
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Understand core architectural design principles",
+                    "ar": "فهم مبادئ التصميم المعماري الأساسية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Perform site analysis and feasibility studies",
+                    "ar": "إجراء تحليل الموقع ودراسات الجدوى"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create detailed architectural drawings and blueprints",
+                    "ar": "إنشاء رسومات معمارية وتصميمات مفصلة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Apply structural systems knowledge to real projects",
+                    "ar": "تطبيق معرفة الأنظمة الإنشائية على مشاريع حقيقية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Develop construction documentation packages",
+                    "ar": "تطوير حزم توثيق البناء"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Introduction to Architecture",
+                    "ar": "مقدمة في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Site Analysis and Planning",
+                    "ar": "تحليل الموقع والتخطيط"
+                }
+            },
+            {
+                "title": {
+                    "en": "Structural Systems",
+                    "ar": "الأنظمة الإنشائية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Architectural Drawing Techniques",
+                    "ar": "تقنيات الرسم المعماري"
+                }
+            },
+            {
+                "title": {
+                    "en": "Construction Documentation",
+                    "ar": "توثيق البناء"
+                }
+            },
+            { "title": { "en": "Final Project", "ar": "المشروع النهائي" } }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Sustainable Architecture & Green Building",
+            "ar": "العمارة المستدامة والبناء الأخضر"
+        },
+        "description": {
+            "en": "<p>Learn how to design buildings that are environmentally responsible and resource-efficient. This course covers LEED certification, passive design strategies, renewable energy integration, green materials selection, and sustainable urban planning. Ideal for architects and engineers who want to lead the green building revolution.</p>",
+            "ar": "<p>تعلم كيفية تصميم مبانٍ مسؤولة بيئياً وفعّالة في استخدام الموارد. تغطي هذه الدورة شهادة LEED، واستراتيجيات التصميم السلبي، ودمج الطاقة المتجددة، واختيار المواد الخضراء، والتخطيط الحضري المستدام. مثالية للمهندسين المعماريين والمدنيين الراغبين في قيادة ثورة البناء الأخضر.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Sustainable+Architecture",
+        "heroImage": "https://placehold.co/1200x630.png?text=Sustainable+Architecture",
+        "price": "349",
+        "new_price": null,
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Understand LEED certification requirements",
+                    "ar": "فهم متطلبات شهادة LEED"
+                }
+            },
+            {
+                "title": {
+                    "en": "Apply passive design strategies for energy efficiency",
+                    "ar": "تطبيق استراتيجيات التصميم السلبي لكفاءة الطاقة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Integrate renewable energy systems in buildings",
+                    "ar": "دمج أنظمة الطاقة المتجددة في المباني"
+                }
+            },
+            {
+                "title": {
+                    "en": "Select sustainable and eco-friendly materials",
+                    "ar": "اختيار مواد مستدامة وصديقة للبيئة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Design sustainable urban developments",
+                    "ar": "تصميم تطويرات حضرية مستدامة"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Principles of Sustainable Design",
+                    "ar": "مبادئ التصميم المستدام"
+                }
+            },
+            {
+                "title": {
+                    "en": "LEED Certification Process",
+                    "ar": "عملية شهادة LEED"
+                }
+            },
+            {
+                "title": {
+                    "en": "Passive Design Strategies",
+                    "ar": "استراتيجيات التصميم السلبي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Renewable Energy Integration",
+                    "ar": "دمج الطاقة المتجددة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Green Materials and Technologies",
+                    "ar": "المواد والتقنيات الخضراء"
+                }
+            },
+            {
+                "title": {
+                    "en": "Sustainable Urban Planning",
+                    "ar": "التخطيط الحضري المستدام"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "AutoCAD & Revit for Architects",
+            "ar": "AutoCAD و Revit للمهندسين المعماريين"
+        },
+        "description": {
+            "en": "<p>Master the industry-standard software tools used by professional architects worldwide. This hands-on course takes you from the basics of AutoCAD 2D drafting all the way to advanced 3D building modeling with Revit BIM. You will work on real project exercises throughout the course.</p>",
+            "ar": "<p>أتقن أدوات البرمجيات القياسية في الصناعة التي يستخدمها المهندسون المعماريون المحترفون في جميع أنحاء العالم. تأخذك هذه الدورة العملية من أساسيات الرسم الثنائي الأبعاد في AutoCAD إلى النمذجة المتقدمة للمباني ثلاثية الأبعاد باستخدام Revit BIM. ستعمل على تمارين مشاريع حقيقية طوال الدورة.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=AutoCAD+and+Revit",
+        "heroImage": "https://placehold.co/1200x630.png?text=AutoCAD+and+Revit",
+        "price": "249",
+        "new_price": "179",
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Create professional 2D drawings with AutoCAD",
+                    "ar": "إنشاء رسومات ثنائية الأبعاد احترافية باستخدام AutoCAD"
+                }
+            },
+            {
+                "title": {
+                    "en": "Build full 3D BIM models with Revit",
+                    "ar": "بناء نماذج BIM ثلاثية الأبعاد كاملة باستخدام Revit"
+                }
+            },
+            {
+                "title": {
+                    "en": "Generate construction documents from BIM models",
+                    "ar": "توليد وثائق البناء من نماذج BIM"
+                }
+            },
+            {
+                "title": {
+                    "en": "Collaborate on projects using shared models",
+                    "ar": "التعاون في المشاريع باستخدام النماذج المشتركة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Export and present designs professionally",
+                    "ar": "تصدير التصاميم وتقديمها باحترافية"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "AutoCAD Interface and Basic Tools",
+                    "ar": "واجهة AutoCAD والأدوات الأساسية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Advanced 2D Drafting in AutoCAD",
+                    "ar": "الرسم الثنائي الأبعاد المتقدم في AutoCAD"
+                }
+            },
+            {
+                "title": {
+                    "en": "Introduction to Revit BIM",
+                    "ar": "مقدمة في Revit BIM"
+                }
+            },
+            {
+                "title": {
+                    "en": "3D Modeling with Revit",
+                    "ar": "النمذجة ثلاثية الأبعاد باستخدام Revit"
+                }
+            },
+            {
+                "title": {
+                    "en": "Families and Components in Revit",
+                    "ar": "العائلات والمكونات في Revit"
+                }
+            },
+            {
+                "title": {
+                    "en": "Project Documentation and Sheets",
+                    "ar": "توثيق المشروع والأوراق"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Interior Design Masterclass",
+            "ar": "الدورة الاحترافية في التصميم الداخلي"
+        },
+        "description": {
+            "en": "<p>Transform interior spaces with professional design principles. This masterclass covers space planning, color theory, lighting design, furniture selection, material finishes, and client presentation skills. Whether you are an architect expanding your skills or an aspiring interior designer, this course gives you everything you need.</p>",
+            "ar": "<p>حوّل المساحات الداخلية بمبادئ التصميم الاحترافية. تغطي هذه الدورة تخطيط الفضاء، ونظرية الألوان، وتصميم الإضاءة، واختيار الأثاث، ومواد التشطيب، ومهارات تقديم العروض للعملاء. سواء كنت مهندساً معمارياً يوسع مهاراته أو مصمماً داخلياً طموحاً، هذه الدورة تمنحك كل ما تحتاجه.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Interior+Design",
+        "heroImage": "https://placehold.co/1200x630.png?text=Interior+Design",
+        "price": "279",
+        "new_price": null,
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Plan and optimize interior spaces effectively",
+                    "ar": "تخطيط المساحات الداخلية وتحسينها بفعالية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Apply color theory in interior design projects",
+                    "ar": "تطبيق نظرية الألوان في مشاريع التصميم الداخلي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Design functional and aesthetic lighting schemes",
+                    "ar": "تصميم مخططات إضاءة وظيفية وجمالية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Select furniture, materials, and finishes professionally",
+                    "ar": "اختيار الأثاث والمواد والتشطيبات باحترافية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Present design concepts to clients confidently",
+                    "ar": "تقديم مفاهيم التصميم للعملاء بثقة"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Principles of Interior Design",
+                    "ar": "مبادئ التصميم الداخلي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Space Planning and Layout",
+                    "ar": "تخطيط الفضاء والتخطيط العام"
+                }
+            },
+            {
+                "title": {
+                    "en": "Color Theory and Application",
+                    "ar": "نظرية الألوان وتطبيقها"
+                }
+            },
+            { "title": { "en": "Lighting Design", "ar": "تصميم الإضاءة" } },
+            {
+                "title": {
+                    "en": "Materials, Textures and Finishes",
+                    "ar": "المواد والملمس والتشطيبات"
+                }
+            },
+            {
+                "title": {
+                    "en": "Client Presentation and Mood Boards",
+                    "ar": "تقديم العروض للعملاء ولوحات المزاج"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Urban Planning & Smart City Design",
+            "ar": "التخطيط العمراني وتصميم المدن الذكية"
+        },
+        "description": {
+            "en": "<p>Explore the future of cities through smart urban planning and technology integration. This advanced course covers urban design theory, zoning regulations, transportation planning, smart city technologies, public space design, and community engagement strategies. Designed for architects and urban planners ready to shape the cities of tomorrow.</p>",
+            "ar": "<p>استكشف مستقبل المدن من خلال التخطيط الحضري الذكي ودمج التكنولوجيا. تغطي هذه الدورة المتقدمة نظرية التصميم الحضري، ولوائح تقسيم المناطق، وتخطيط النقل، وتقنيات المدن الذكية، وتصميم المساحات العامة، واستراتيجيات مشاركة المجتمع. مصممة للمهندسين المعماريين والمخططين العمرانيين المستعدين لتشكيل مدن المستقبل.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Urban+Planning",
+        "heroImage": "https://placehold.co/1200x630.png?text=Urban+Planning",
+        "price": "399",
+        "new_price": "299",
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Apply urban design theory to real city projects",
+                    "ar": "تطبيق نظرية التصميم الحضري على مشاريع المدن الحقيقية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Understand zoning regulations and land use planning",
+                    "ar": "فهم لوائح تقسيم المناطق وتخطيط استخدام الأراضي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Design smart city infrastructure and systems",
+                    "ar": "تصميم البنية التحتية وأنظمة المدن الذكية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create inclusive and accessible public spaces",
+                    "ar": "إنشاء مساحات عامة شاملة وميسّرة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Engage communities in the planning process",
+                    "ar": "إشراك المجتمعات في عملية التخطيط"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Urban Design Theory and History",
+                    "ar": "نظرية التصميم الحضري وتاريخه"
+                }
+            },
+            {
+                "title": {
+                    "en": "Zoning and Land Use Regulations",
+                    "ar": "لوائح تقسيم المناطق واستخدام الأراضي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Transportation and Mobility Planning",
+                    "ar": "تخطيط النقل والتنقل"
+                }
+            },
+            {
+                "title": {
+                    "en": "Smart City Technologies",
+                    "ar": "تقنيات المدن الذكية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Public Space and Landscape Design",
+                    "ar": "تصميم المساحات العامة والمناظر الطبيعية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Community Engagement and Participatory Planning",
+                    "ar": "مشاركة المجتمع والتخطيط التشاركي"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "University Continuation Support Program",
+            "ar": "برنامج دعم استكمال الدراسة الجامعية"
+        },
+        "description": {
+            "en": "<p>Specialized guidance for students seeking to continue or complete their architecture university studies. This program covers university application strategies, portfolio preparation, entrance exam preparation, academic planning, and career path guidance. Get personalized mentorship from an experienced architect and educator to achieve your academic goals.</p>",
+            "ar": "<p>إرشاد متخصص للطلاب الراغبين في استكمال أو إتمام دراستهم الجامعية في العمارة. يغطي هذا البرنامج استراتيجيات التقديم للجامعات، وإعداد ملف الأعمال، والتحضير لامتحانات القبول، والتخطيط الأكاديمي، والتوجيه المهني. احصل على إرشاد شخصي من مهندس معماري ومعلم ذي خبرة لتحقيق أهدافك الأكاديمية.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=University+Support",
+        "heroImage": "https://placehold.co/1200x630.png?text=University+Support",
+        "price": "199",
+        "new_price": null,
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Build a competitive university application portfolio",
+                    "ar": "بناء ملف تقديم جامعي تنافسي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Prepare effectively for architecture entrance exams",
+                    "ar": "الاستعداد الفعّال لامتحانات القبول في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Plan your academic journey strategically",
+                    "ar": "التخطيط الاستراتيجي لرحلتك الأكاديمية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Understand career paths in architecture",
+                    "ar": "فهم المسارات المهنية في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Receive personalized mentorship and feedback",
+                    "ar": "الحصول على إرشاد وتغذية راجعة شخصية"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "University Selection and Application",
+                    "ar": "اختيار الجامعة والتقديم"
+                }
+            },
+            {
+                "title": {
+                    "en": "Portfolio Preparation",
+                    "ar": "إعداد ملف الأعمال"
+                }
+            },
+            {
+                "title": {
+                    "en": "Entrance Exam Preparation",
+                    "ar": "التحضير لامتحانات القبول"
+                }
+            },
+            {
+                "title": {
+                    "en": "Academic Planning and Study Skills",
+                    "ar": "التخطيط الأكاديمي ومهارات الدراسة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Architecture Career Paths",
+                    "ar": "المسارات المهنية في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "One-on-One Mentorship Sessions",
+                    "ar": "جلسات الإرشاد الفردي"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Complete Architecture Design Fundamentals",
+            "ar": "أساسيات التصميم المعماري الشامل"
+        },
+        "description": {
+            "en": "<p>Master the core principles of architectural design from concept to execution. This course covers everything from site analysis and space planning to structural systems and construction documentation. Perfect for beginners and intermediate students looking to build a solid foundation in architecture.</p>",
+            "ar": "<p>أتقن المبادئ الأساسية للتصميم المعماري من المفهوم إلى التنفيذ. تغطي هذه الدورة كل شيء من تحليل الموقع وتخطيط الفضاء إلى الأنظمة الإنشائية وتوثيق البناء. مثالية للمبتدئين والطلاب المتوسطين الراغبين في بناء أساس متين في العمارة.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Architecture+Fundamentals",
+        "heroImage": "https://placehold.co/1200x630.png?text=Architecture+Fundamentals",
+        "price": "299",
+        "new_price": "199",
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Understand core architectural design principles",
+                    "ar": "فهم مبادئ التصميم المعماري الأساسية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Perform site analysis and feasibility studies",
+                    "ar": "إجراء تحليل الموقع ودراسات الجدوى"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create detailed architectural drawings and blueprints",
+                    "ar": "إنشاء رسومات معمارية وتصميمات مفصلة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Apply structural systems knowledge to real projects",
+                    "ar": "تطبيق معرفة الأنظمة الإنشائية على مشاريع حقيقية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Develop construction documentation packages",
+                    "ar": "تطوير حزم توثيق البناء"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Introduction to Architecture",
+                    "ar": "مقدمة في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Site Analysis and Planning",
+                    "ar": "تحليل الموقع والتخطيط"
+                }
+            },
+            {
+                "title": {
+                    "en": "Structural Systems",
+                    "ar": "الأنظمة الإنشائية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Architectural Drawing Techniques",
+                    "ar": "تقنيات الرسم المعماري"
+                }
+            },
+            {
+                "title": {
+                    "en": "Construction Documentation",
+                    "ar": "توثيق البناء"
+                }
+            },
+            { "title": { "en": "Final Project", "ar": "المشروع النهائي" } }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Sustainable Architecture & Green Building",
+            "ar": "العمارة المستدامة والبناء الأخضر"
+        },
+        "description": {
+            "en": "<p>Learn how to design buildings that are environmentally responsible and resource-efficient. This course covers LEED certification, passive design strategies, renewable energy integration, green materials selection, and sustainable urban planning. Ideal for architects and engineers who want to lead the green building revolution.</p>",
+            "ar": "<p>تعلم كيفية تصميم مبانٍ مسؤولة بيئياً وفعّالة في استخدام الموارد. تغطي هذه الدورة شهادة LEED، واستراتيجيات التصميم السلبي، ودمج الطاقة المتجددة، واختيار المواد الخضراء، والتخطيط الحضري المستدام. مثالية للمهندسين المعماريين والمدنيين الراغبين في قيادة ثورة البناء الأخضر.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Sustainable+Architecture",
+        "heroImage": "https://placehold.co/1200x630.png?text=Sustainable+Architecture",
+        "price": "349",
+        "new_price": null,
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Understand LEED certification requirements",
+                    "ar": "فهم متطلبات شهادة LEED"
+                }
+            },
+            {
+                "title": {
+                    "en": "Apply passive design strategies for energy efficiency",
+                    "ar": "تطبيق استراتيجيات التصميم السلبي لكفاءة الطاقة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Integrate renewable energy systems in buildings",
+                    "ar": "دمج أنظمة الطاقة المتجددة في المباني"
+                }
+            },
+            {
+                "title": {
+                    "en": "Select sustainable and eco-friendly materials",
+                    "ar": "اختيار مواد مستدامة وصديقة للبيئة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Design sustainable urban developments",
+                    "ar": "تصميم تطويرات حضرية مستدامة"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Principles of Sustainable Design",
+                    "ar": "مبادئ التصميم المستدام"
+                }
+            },
+            {
+                "title": {
+                    "en": "LEED Certification Process",
+                    "ar": "عملية شهادة LEED"
+                }
+            },
+            {
+                "title": {
+                    "en": "Passive Design Strategies",
+                    "ar": "استراتيجيات التصميم السلبي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Renewable Energy Integration",
+                    "ar": "دمج الطاقة المتجددة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Green Materials and Technologies",
+                    "ar": "المواد والتقنيات الخضراء"
+                }
+            },
+            {
+                "title": {
+                    "en": "Sustainable Urban Planning",
+                    "ar": "التخطيط الحضري المستدام"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "AutoCAD & Revit for Architects",
+            "ar": "AutoCAD و Revit للمهندسين المعماريين"
+        },
+        "description": {
+            "en": "<p>Master the industry-standard software tools used by professional architects worldwide. This hands-on course takes you from the basics of AutoCAD 2D drafting all the way to advanced 3D building modeling with Revit BIM. You will work on real project exercises throughout the course.</p>",
+            "ar": "<p>أتقن أدوات البرمجيات القياسية في الصناعة التي يستخدمها المهندسون المعماريون المحترفون في جميع أنحاء العالم. تأخذك هذه الدورة العملية من أساسيات الرسم الثنائي الأبعاد في AutoCAD إلى النمذجة المتقدمة للمباني ثلاثية الأبعاد باستخدام Revit BIM. ستعمل على تمارين مشاريع حقيقية طوال الدورة.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=AutoCAD+and+Revit",
+        "heroImage": "https://placehold.co/1200x630.png?text=AutoCAD+and+Revit",
+        "price": "249",
+        "new_price": "179",
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Create professional 2D drawings with AutoCAD",
+                    "ar": "إنشاء رسومات ثنائية الأبعاد احترافية باستخدام AutoCAD"
+                }
+            },
+            {
+                "title": {
+                    "en": "Build full 3D BIM models with Revit",
+                    "ar": "بناء نماذج BIM ثلاثية الأبعاد كاملة باستخدام Revit"
+                }
+            },
+            {
+                "title": {
+                    "en": "Generate construction documents from BIM models",
+                    "ar": "توليد وثائق البناء من نماذج BIM"
+                }
+            },
+            {
+                "title": {
+                    "en": "Collaborate on projects using shared models",
+                    "ar": "التعاون في المشاريع باستخدام النماذج المشتركة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Export and present designs professionally",
+                    "ar": "تصدير التصاميم وتقديمها باحترافية"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "AutoCAD Interface and Basic Tools",
+                    "ar": "واجهة AutoCAD والأدوات الأساسية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Advanced 2D Drafting in AutoCAD",
+                    "ar": "الرسم الثنائي الأبعاد المتقدم في AutoCAD"
+                }
+            },
+            {
+                "title": {
+                    "en": "Introduction to Revit BIM",
+                    "ar": "مقدمة في Revit BIM"
+                }
+            },
+            {
+                "title": {
+                    "en": "3D Modeling with Revit",
+                    "ar": "النمذجة ثلاثية الأبعاد باستخدام Revit"
+                }
+            },
+            {
+                "title": {
+                    "en": "Families and Components in Revit",
+                    "ar": "العائلات والمكونات في Revit"
+                }
+            },
+            {
+                "title": {
+                    "en": "Project Documentation and Sheets",
+                    "ar": "توثيق المشروع والأوراق"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Interior Design Masterclass",
+            "ar": "الدورة الاحترافية في التصميم الداخلي"
+        },
+        "description": {
+            "en": "<p>Transform interior spaces with professional design principles. This masterclass covers space planning, color theory, lighting design, furniture selection, material finishes, and client presentation skills. Whether you are an architect expanding your skills or an aspiring interior designer, this course gives you everything you need.</p>",
+            "ar": "<p>حوّل المساحات الداخلية بمبادئ التصميم الاحترافية. تغطي هذه الدورة تخطيط الفضاء، ونظرية الألوان، وتصميم الإضاءة، واختيار الأثاث، ومواد التشطيب، ومهارات تقديم العروض للعملاء. سواء كنت مهندساً معمارياً يوسع مهاراته أو مصمماً داخلياً طموحاً، هذه الدورة تمنحك كل ما تحتاجه.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Interior+Design",
+        "heroImage": "https://placehold.co/1200x630.png?text=Interior+Design",
+        "price": "279",
+        "new_price": null,
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Plan and optimize interior spaces effectively",
+                    "ar": "تخطيط المساحات الداخلية وتحسينها بفعالية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Apply color theory in interior design projects",
+                    "ar": "تطبيق نظرية الألوان في مشاريع التصميم الداخلي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Design functional and aesthetic lighting schemes",
+                    "ar": "تصميم مخططات إضاءة وظيفية وجمالية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Select furniture, materials, and finishes professionally",
+                    "ar": "اختيار الأثاث والمواد والتشطيبات باحترافية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Present design concepts to clients confidently",
+                    "ar": "تقديم مفاهيم التصميم للعملاء بثقة"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Principles of Interior Design",
+                    "ar": "مبادئ التصميم الداخلي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Space Planning and Layout",
+                    "ar": "تخطيط الفضاء والتخطيط العام"
+                }
+            },
+            {
+                "title": {
+                    "en": "Color Theory and Application",
+                    "ar": "نظرية الألوان وتطبيقها"
+                }
+            },
+            { "title": { "en": "Lighting Design", "ar": "تصميم الإضاءة" } },
+            {
+                "title": {
+                    "en": "Materials, Textures and Finishes",
+                    "ar": "المواد والملمس والتشطيبات"
+                }
+            },
+            {
+                "title": {
+                    "en": "Client Presentation and Mood Boards",
+                    "ar": "تقديم العروض للعملاء ولوحات المزاج"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Urban Planning & Smart City Design",
+            "ar": "التخطيط العمراني وتصميم المدن الذكية"
+        },
+        "description": {
+            "en": "<p>Explore the future of cities through smart urban planning and technology integration. This advanced course covers urban design theory, zoning regulations, transportation planning, smart city technologies, public space design, and community engagement strategies. Designed for architects and urban planners ready to shape the cities of tomorrow.</p>",
+            "ar": "<p>استكشف مستقبل المدن من خلال التخطيط الحضري الذكي ودمج التكنولوجيا. تغطي هذه الدورة المتقدمة نظرية التصميم الحضري، ولوائح تقسيم المناطق، وتخطيط النقل، وتقنيات المدن الذكية، وتصميم المساحات العامة، واستراتيجيات مشاركة المجتمع. مصممة للمهندسين المعماريين والمخططين العمرانيين المستعدين لتشكيل مدن المستقبل.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=Urban+Planning",
+        "heroImage": "https://placehold.co/1200x630.png?text=Urban+Planning",
+        "price": "399",
+        "new_price": "299",
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Apply urban design theory to real city projects",
+                    "ar": "تطبيق نظرية التصميم الحضري على مشاريع المدن الحقيقية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Understand zoning regulations and land use planning",
+                    "ar": "فهم لوائح تقسيم المناطق وتخطيط استخدام الأراضي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Design smart city infrastructure and systems",
+                    "ar": "تصميم البنية التحتية وأنظمة المدن الذكية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Create inclusive and accessible public spaces",
+                    "ar": "إنشاء مساحات عامة شاملة وميسّرة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Engage communities in the planning process",
+                    "ar": "إشراك المجتمعات في عملية التخطيط"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "Urban Design Theory and History",
+                    "ar": "نظرية التصميم الحضري وتاريخه"
+                }
+            },
+            {
+                "title": {
+                    "en": "Zoning and Land Use Regulations",
+                    "ar": "لوائح تقسيم المناطق واستخدام الأراضي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Transportation and Mobility Planning",
+                    "ar": "تخطيط النقل والتنقل"
+                }
+            },
+            {
+                "title": {
+                    "en": "Smart City Technologies",
+                    "ar": "تقنيات المدن الذكية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Public Space and Landscape Design",
+                    "ar": "تصميم المساحات العامة والمناظر الطبيعية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Community Engagement and Participatory Planning",
+                    "ar": "مشاركة المجتمع والتخطيط التشاركي"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "University Continuation Support Program",
+            "ar": "برنامج دعم استكمال الدراسة الجامعية"
+        },
+        "description": {
+            "en": "<p>Specialized guidance for students seeking to continue or complete their architecture university studies. This program covers university application strategies, portfolio preparation, entrance exam preparation, academic planning, and career path guidance. Get personalized mentorship from an experienced architect and educator to achieve your academic goals.</p>",
+            "ar": "<p>إرشاد متخصص للطلاب الراغبين في استكمال أو إتمام دراستهم الجامعية في العمارة. يغطي هذا البرنامج استراتيجيات التقديم للجامعات، وإعداد ملف الأعمال، والتحضير لامتحانات القبول، والتخطيط الأكاديمي، والتوجيه المهني. احصل على إرشاد شخصي من مهندس معماري ومعلم ذي خبرة لتحقيق أهدافك الأكاديمية.</p>"
+        },
+        "image": "https://placehold.co/800x500.png?text=University+Support",
+        "heroImage": "https://placehold.co/1200x630.png?text=University+Support",
+        "price": "199",
+        "new_price": null,
+        "learningPoints": [
+            {
+                "title": {
+                    "en": "Build a competitive university application portfolio",
+                    "ar": "بناء ملف تقديم جامعي تنافسي"
+                }
+            },
+            {
+                "title": {
+                    "en": "Prepare effectively for architecture entrance exams",
+                    "ar": "الاستعداد الفعّال لامتحانات القبول في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Plan your academic journey strategically",
+                    "ar": "التخطيط الاستراتيجي لرحلتك الأكاديمية"
+                }
+            },
+            {
+                "title": {
+                    "en": "Understand career paths in architecture",
+                    "ar": "فهم المسارات المهنية في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Receive personalized mentorship and feedback",
+                    "ar": "الحصول على إرشاد وتغذية راجعة شخصية"
+                }
+            }
+        ],
+        "topics": [
+            {
+                "title": {
+                    "en": "University Selection and Application",
+                    "ar": "اختيار الجامعة والتقديم"
+                }
+            },
+            {
+                "title": {
+                    "en": "Portfolio Preparation",
+                    "ar": "إعداد ملف الأعمال"
+                }
+            },
+            {
+                "title": {
+                    "en": "Entrance Exam Preparation",
+                    "ar": "التحضير لامتحانات القبول"
+                }
+            },
+            {
+                "title": {
+                    "en": "Academic Planning and Study Skills",
+                    "ar": "التخطيط الأكاديمي ومهارات الدراسة"
+                }
+            },
+            {
+                "title": {
+                    "en": "Architecture Career Paths",
+                    "ar": "المسارات المهنية في العمارة"
+                }
+            },
+            {
+                "title": {
+                    "en": "One-on-One Mentorship Sessions",
+                    "ar": "جلسات الإرشاد الفردي"
+                }
+            }
+        ],
+        "images": [
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+1"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+2"
+            },
+            {
+                "image": "https://placehold.co/800x500.png?text=Course+Preview+3"
+            }
+        ]
+    }
+]

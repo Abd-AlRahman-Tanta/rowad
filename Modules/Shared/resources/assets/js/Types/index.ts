@@ -7,6 +7,7 @@ export type NavBarLangProps = {
 export type MainLinkProps = {
   id: string;
   text: string;
+  link?: string;
   component?: string;
 }
 
@@ -22,6 +23,7 @@ export type NavBarLogoProps = {
 }
 
 export type NavBarProps = {
+  headTitle: string;
   navBarLang: NavBarLangProps;
   navBarLogo: NavBarLogoProps;
   mainLinks: MainLinkProps[];

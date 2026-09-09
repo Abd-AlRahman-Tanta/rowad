@@ -19,6 +19,7 @@ class CourseResource extends JsonResource
       "image" => $this->image,
       "heroImage" => $this->heroImage,
       "price" => $this->price,
+      "new_price" => $this->new_price,
       "newCourse" => $this->newCourse,
       "learningPoints" => LearningPointResource::collection($this->learningPoints)->resolve(),
       "topics" => TopicResource::collection($this->topics)->resolve(),
@@ -43,6 +44,7 @@ class CourseResource extends JsonResource
         "image" => $course->image,
         "heroImage" => $course->heroImage,
         "price" => $course->price,
+        "new_price" => $course->new_price,
         "newCourse" => $course->newCourse,
         "learningPoints" => LearningPointResource::collection(
           $course->learningPoints

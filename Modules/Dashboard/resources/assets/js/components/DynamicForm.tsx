@@ -1,16 +1,19 @@
-import { router, useForm, usePage } from "@inertiajs/react";
-import { useSharedCkEditor } from "@shared/utils/editor/useSharedCkEditor";
-import axios from "axios";
-import { FormEvent, useContext, useState } from "react";
-import { DeleteContext } from "./DashboardLayout";
-import LoadingSpinner from "@shared/components/LoadingSpinner";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
-import ImageInput from "@shared/components/ImageInput";
-import VideoInput from "@shared/components/VideoInput";
-import CustomSelect from "@shared/components/CustomSelect";
-import RichTextInput from "@shared/utils/editor/RichTextInput";
-import ObjectToFormData from "@dashboard/utils/ObjectToFormData";
-
+import React, { useContext, FormEvent, useState, useRef, useEffect } from 'react';
+import { router, useForm, usePage } from '@inertiajs/react';
+import { FiPlus, FiTrash2, FiSave } from 'react-icons/fi';
+import { DeleteContext } from './DashboardLayout';
+import ImageInput from '@shared/components/ImageInput';
+import CustomSelect from '@shared/components/CustomSelect';
+import axios from 'axios';
+import ObjectToFormData from '@dashboard/utils/ObjectToFormData';
+import LoadingSpinner from '@shared/components/LoadingSpinner';
+import VideoInput from '@shared/components/VideoInput';
+import { toast } from 'sonner';
+import { useSharedCkEditor } from '@shared/utils/editor/useSharedCkEditor';
+import RichTextInput from '@shared/utils/editor/RichTextInput';
+import JsonTextarea from '@shared/utils/editor/JsonTextarea';
+import FormErrorSummary, { getScrollTargetId } from '@shared/utils/editor/FormErrorSummary';
+import Button from '@shared/components/Button';
 
 export type FieldType = 'text' | 'number' | 'textarea' | 'file' | 'spatie' | 'repeater' | 'richtext' | 'spatie-richtext' | 'select' | 'spatie-file' | 'video' | 'json' | 'spatie-json';
 
@@ -26,6 +29,12 @@ export interface FormField {
   selectViewedOption?: string;
   selectValueOption?: string;
   selectPickOne?: boolean;
+  defaultValue?: any;
+  visibleWhen?: {
+    field: string
+    valueKey?: string
+    in: string[]
+  }
 }
 
 export interface DynamicFormProps {
@@ -37,33 +46,7 @@ export interface DynamicFormProps {
   itemName?: string;
   isEdit?: boolean;
 }
-const JsonTextarea = ({ value, onChange }: { value: string; onChange: (val: string) => void }) => {
-  const [isInvalid, setIsInvalid] = useState(false);
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = e.target.value;
-    onChange(val);
-    try {
-      if (val) JSON.parse(val);
-      setIsInvalid(false);
-    } catch {
-      setIsInvalid(true);
-    }
-  };
-  return (
-    <div className="flex flex-col gap-1">
-      <textarea
-        value={value}
-        onChange={handleChange}
-        className={`border p-2 rounded outline-none font-mono text-sm resize-y w-full  ${isInvalid ? 'border-red-500 bg-red-50' : ''}`}
-        dir="ltr"
-        placeholder={'{\n  "@context": "http://schema.org",\n  "@type": "LocalBusiness"\n}'}
-      />
-      {isInvalid && (
-        <span className="text-red-500 text-xs">Invalid Json</span>
-      )}
-    </div>
-  );
-};
+
 export default function DynamicForm({
   initialData = {},
   fields,
@@ -76,6 +59,7 @@ export default function DynamicForm({
   const { locale } = usePage().props as any;
   const deleteContext = useContext(DeleteContext);
   const Editor = useSharedCkEditor();
+  const dynamicForm = useRef<HTMLFormElement>(null);
   const setupInitialState = (): Record<string, any> => {
     let state: Record<string, any> = {};
     fields.forEach((field) => {
@@ -128,6 +112,16 @@ export default function DynamicForm({
                   ? JSON.stringify(item[subField.name], null, 2)
                   : item[subField.name])
                 : '';
+            }
+            else if (
+              subField.type === 'select' &&
+              subField.defaultValue !== undefined &&
+              subField.selectValueOption &&
+              (item[subField.name] === undefined || item[subField.name] === '' || item[subField.name] === null)
+            ) {
+              converted[subField.name] = subField.selectPickOne
+                ? { [subField.selectValueOption]: String(subField.defaultValue) }
+                : [{ [subField.selectValueOption]: String(subField.defaultValue) }]
             }
           });
           return converted;
@@ -188,12 +182,28 @@ export default function DynamicForm({
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
+      toast.success(
+        locale === 'ar'
+          ? isEdit ? 'تم تحديث البيانات بنجاح ✓' : 'تم إرسال البيانات بنجاح ✓'
+          : isEdit ? 'Data updated successfully ✓' : 'Data sent successfully ✓'
+      )
       router.visit(returnUrl);
     } catch (error: any) {
       if (error.response?.status === 422) {
         setErrors(error.response.data.errors);
+        toast.error(
+          locale === 'ar'
+            ? 'يوجد أخطاء في النموذج، راجع التفاصيل أدناه'
+            : 'Form has errors, check details below'
+        )
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
       } else {
         console.error('Server Error:', error);
+        toast.error(
+          locale === 'ar'
+            ? 'حدث خطأ في السيرفر، حاول مجدداً'
+            : 'Server error, please try again'
+        )
       }
     } finally {
       setProcessing(false);
@@ -216,7 +226,13 @@ export default function DynamicForm({
         newItem[f.name] = '';
       }
       else if (f.type === 'select') {
-        newItem[f.name] = f.selectPickOne ? '' : [];
+        if (f.defaultValue !== undefined && f.selectValueOption) {
+          newItem[f.name] = f.selectPickOne
+            ? { [f.selectValueOption]: String(f.defaultValue) }
+            : [{ [f.selectValueOption]: String(f.defaultValue) }]
+        } else {
+          newItem[f.name] = f.selectPickOne ? '' : []
+        }
       } else {
         newItem[f.name] = '';
       }
@@ -241,7 +257,24 @@ export default function DynamicForm({
     newRepeaterArray.splice(index, 1);
     setData(repeaterName, newRepeaterArray);
   };
+  const isSubFieldVisible = (
+    subField: FormField,
+    item: Record<string, any>
+  ): boolean => {
+    if (!subField.visibleWhen) return true
 
+    const { field, valueKey, in: allowedValues } = subField.visibleWhen
+    const fieldValue = item[field]
+
+    let actualValue: string
+    if (fieldValue && typeof fieldValue === 'object' && valueKey) {
+      actualValue = String(fieldValue[valueKey] ?? '')
+    } else {
+      actualValue = String(fieldValue ?? '')
+    }
+
+    return allowedValues.includes(actualValue)
+  }
   const handleDeleteClick = () => {
     if (deleteContext && deleteContext.setDeleteState && deleteUrl) {
       deleteContext.setDeleteState({
@@ -251,25 +284,30 @@ export default function DynamicForm({
       });
     }
   };
+  useEffect(() => {
+    setErrors({})
+  }, [locale])
   if (!Editor || processing)
     return (<LoadingSpinner />)
   else
     return (
-      <>
-        <form onSubmit={handleSubmit} className="rounded-lg shadow-sm space-y-8 p-4">
+      <div className='relative'>
+        <form ref={dynamicForm} onSubmit={handleSubmit} className="rounded-lg shadow-sm space-y-8 p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {fields.map((field, index) => {
 
               if (field.type === 'repeater') {
                 return (
-                  <div key={index} className="md:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <div id={getScrollTargetId(field.name)} key={index} className="md:col-span-2 border border-gray-200 rounded-lg p-4 bg-gray-50">
                     <h3 className="font-bold text-lg text-gray-800 mb-4">{field.label}</h3>
                     {data[field.name]?.map((item: Record<string, any>, itemIndex: number) => (
-                      <div key={itemIndex} className="relative bg-white p-4 rounded border border-gray-300 mb-4 shadow-sm">
+                      <div
+                        id={getScrollTargetId(`${field.name}.${itemIndex}`)}
+                        key={itemIndex} className="relative bg-white p-4 rounded border border-gray-300 mb-4 shadow-sm">
                         <button
                           type="button"
                           onClick={() => removeRepeaterItem(field.name, itemIndex)}
-                          className="absolute top-4 end-4 text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full"
+                          className="absolute my-2 top-4 end-4 text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full"
                           title={locale == "ar" ? "حذف هذا القسم" : "Delete This Section"}
                         >
                           <FiTrash2 />
@@ -280,8 +318,10 @@ export default function DynamicForm({
                         </h4>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {field.repeaterFields?.map((subField, subIndex) => (
-                            <div key={subIndex} className={`flex flex-col ${subField.fullWidth || subField.type.includes('richtext') ? 'md:col-span-2' : ''}`}>
+                          {field.repeaterFields?.filter(subField => isSubFieldVisible(subField, item)).map((subField, subIndex) => (
+                            <div
+                              id={getScrollTargetId(`${field.name}.${itemIndex}.${subField.name}`)}
+                              key={subIndex} className={`flex flex-col ${subField.fullWidth || subField.type.includes('richtext') ? 'md:col-span-2' : ''}`}>
                               <label className="mb-1 text-sm font-medium text-gray-700">{subField.label}</label>
 
                               {subField.type === 'text' && (
@@ -498,7 +538,7 @@ export default function DynamicForm({
                       <button
                         type="button"
                         onClick={() => addRepeaterItem(field.name, field.repeaterFields || [])}
-                        className="flex items-center gap-2 bg-dark text-white px-4 py-2 rounded hover:bg-arch-accent/90 bg-arch-accent cursor-pointer transition max-mob:mb-4 mt-5"
+                        className="flex my-2 items-center gap-2 bg-dark text-light px-4 py-2 rounded hover:bg-primary transition max-mob:mb-4"
                       >
                         <FiPlus /> {locale === "ar" ? `إضافة ${field.itemLabel || 'قسم'}` : `Add ${field.itemLabel || 'Section'}`}
                       </button>
@@ -508,7 +548,7 @@ export default function DynamicForm({
               }
 
               return (
-                <div key={index} className={`flex flex-col ${field.fullWidth || field.type === 'spatie-richtext' || field.type === 'richtext' ? 'md:col-span-2' : ''}`}>
+                <div id={getScrollTargetId(field.name)} key={index} className={`flex flex-col ${field.fullWidth || field.type === 'spatie-richtext' || field.type === 'richtext' ? 'md:col-span-2' : ''}`}>
                   <label className="mb-2 font-semibold text-gray-700">{field.label}</label>
 
                   {field.type === 'text' && (
@@ -716,30 +756,47 @@ export default function DynamicForm({
               );
             })}
           </div>
+        </form>
+        <div className="sticky rounded-lg bottom-0 start-0 end-0  z-40 bg-white border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 py-3 mt-10">
+          <div className={`flex ${isEdit ? "justify-between" : "justify-center"} items-end gap-3 max-w-full`}>
 
-          {/* action buttons */}
-          <div className={`flex  ${isEdit ? "justify-between" : "justify-center"} items-center mt-8 border-t pt-4`}>
+            {/* زر الحذف */}
             {isEdit && deleteUrl ? (
               <button
-                type='button'
+                type="button"
                 onClick={handleDeleteClick}
-                className="bg-red-50 text-red-600 px-6 py-3 rounded-lg font-bold hover:bg-red-600 hover:text-white transition-colors border border-red-200 duration-200"
+                className="shrink-0 flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2.5 rounded-lg font-bold hover:bg-red-600 hover:text-white transition-colors border border-red-200 duration-200 text-sm"
               >
-                {locale == "en" ? `Delete ${itemName}` : `حذف ${itemName}`}
+                <FiTrash2 size={15} />
+                <span className="max-mob:hidden">
+                  {locale === 'en' ? `Delete ${itemName}` : `حذف ${itemName}`}
+                </span>
               </button>
             ) : (
-              <div></div>
+              <div className="shrink-0" />
             )}
 
-            <button
-              disabled={processing}
-              className="bg-arch-dark hover:bg-arch-charcoal duration-300 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50"
-              type="submit"
+            <FormErrorSummary
+              errors={errors}
+              locale={locale as string}
+              fields={fields}
+            />
+
+            <Button
+              disable={processing}
+              clickFunction={() => dynamicForm.current?.requestSubmit()}
+              className='gap-2'
             >
-              {isEdit ? (locale === "en" ? `Update Data` : `تحديث البيانات`) : (locale === "en" ? `Send Data` : `إرسال البيانات`)}
-            </button>
+              <FiSave size={15} />
+              <span className="max-mob:hidden">
+                {isEdit
+                  ? (locale === 'en' ? 'Update' : 'تحديث')
+                  : (locale === 'en' ? 'Save' : 'حفظ')}
+              </span>
+            </Button>
+
           </div>
-        </form>
-      </>
+        </div>
+      </div>
     );
 }

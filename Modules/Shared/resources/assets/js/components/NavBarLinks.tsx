@@ -39,11 +39,11 @@ const NavBarLinks = ({ mainLinks, navBarWhatsApp, className, closeList, navBarLo
       }
       {
         mainLinks.map((navBarLink, i) => (
-          <a
-            onClick={(e) => component != "Home" && scrollToSection(navBarLink.id, e)}
-            key={i} href={navBarLink.id}
-            className=
-            {`
+          navBarLink.link ?
+            <Link
+              key={i} href={navBarLink.link}
+              className=
+              {`
               underline-offset-8
               hover:underline
               text-arch-dark
@@ -53,8 +53,25 @@ const NavBarLinks = ({ mainLinks, navBarWhatsApp, className, closeList, navBarLo
               max-desc:w-fit
               max-desc:my-4
               `} >
-            <EditableText start="80%" text={navBarLink.text} path={`mainLinks.${i}.text`} children={navBarLink.text} />
-          </a>
+              <EditableText start="80%" text={navBarLink.text} path={`mainLinks.${i}.text`} children={navBarLink.text} />
+            </Link>
+            :
+            <a
+              onClick={(e) => component != "Home" && scrollToSection(navBarLink.id, e)}
+              key={i} href={navBarLink.id}
+              className=
+              {`
+              underline-offset-8
+              hover:underline
+              text-arch-dark
+              duration-300
+              max-desc:block 
+              max-desc:mx-auto 
+              max-desc:w-fit
+              max-desc:my-4
+              `} >
+              <EditableText start="80%" text={navBarLink.text} path={`mainLinks.${i}.text`} children={navBarLink.text} />
+            </a>
         ))
       }
 

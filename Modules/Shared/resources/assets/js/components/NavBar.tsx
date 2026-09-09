@@ -4,12 +4,14 @@ import Bars from "./Bars"
 import Image from "./Image"
 import NavBarLinks from "./NavBarLinks"
 import NavBarLogoAndLanguageChanger from "./NavBarWhatsAppAndLanguageChanger"
-import { Link } from "@inertiajs/react"
+import { Link, usePage } from "@inertiajs/react"
 import EditableObject from "@shared/utils/EditableObject"
+import EditableText from "@shared/utils/EditableText"
 
-const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp }: NavBarProps) => {
+const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp, headTitle }: NavBarProps) => {
   // Mobile menu open/close state
   const [list, setList] = useState(false);
+  const { auth } = usePage().props;
   return (
     <>
       {/* Overlay (mobile) */}
@@ -32,16 +34,38 @@ const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp }: NavBarPro
             px-5
             `}>
 
-          <EditableObject
-            start="60%"
-            top="40%"
-            path="navBarLogo"
-            fields={navBarLogo}
-          >
-            <Link href={navBarLogo.link}>
-              <Image className={` w-[4.5rem] block  object-contain `} src={navBarLogo.icon} />
-            </Link>
-          </EditableObject>
+          {
+            auth ?
+              <div className="flex items-center gap-2">
+                <EditableObject
+                  start="60%"
+                  top="40%"
+                  path="navBarLogo"
+                  fields={navBarLogo}
+                >
+                  <Link href={navBarLogo.link}>
+                    <Image className={` w-[4.5rem] block  object-contain `} src={navBarLogo.icon} />
+                  </Link>
+                </EditableObject>
+                <EditableText
+                  path="headTitle"
+                  text={headTitle}
+                >
+                  <span className="text-sm font-bold  block"> {headTitle}</span>
+                </EditableText>
+              </div>
+              :
+              <EditableObject
+                start="60%"
+                top="40%"
+                path="navBarLogo"
+                fields={navBarLogo}
+              >
+                <Link href={navBarLogo.link}>
+                  <Image className={` w-[4.5rem] block  object-contain `} src={navBarLogo.icon} />
+                </Link>
+              </EditableObject>
+          }
 
           <NavBarLinks
             className=

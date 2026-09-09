@@ -1,0 +1,30 @@
+{
+    "ar": {
+        "page_name": "Blogs",
+        "heroBackground": "https://placehold.co/1920x700.png?text=Architecture+%26+Interior+Design",
+        "heroTitle": "المدونة",
+        "heroDescription": "<p>اكتشف أحدث المقالات والأفكار في عالم العمارة والتصميم الداخلي.</p>",
+        "blogsLabel": "أحدث المقالات",
+        "blogsTitle": "المدونة المعمارية",
+        "viewBlogButton": {
+            "text": "اقرأ المزيد",
+            "link": "/ar/blogs/"
+        },
+        "showMoreLabel": "مقالات أخرى",
+        "showMoreTitle": "قد يعجبك أيضاً"
+    },
+    "en": {
+        "page_name": "Blogs",
+        "heroBackground": "https://placehold.co/1920x700.png?text=Architecture+%26+Interior+Design",
+        "heroTitle": "Blog",
+        "heroDescription": "<p>Discover the latest articles and ideas in the world of architecture and interior design.</p>",
+        "blogsLabel": "Latest Articles",
+        "blogsTitle": "Architecture Blog",
+        "viewBlogButton": {
+            "text": "Read More",
+            "link": "/en/blogs/"
+        },
+        "showMoreLabel": "More Articles",
+        "showMoreTitle": "You Might Also Like"
+    }
+}

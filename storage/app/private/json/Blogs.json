@@ -1,0 +1,340 @@
+[
+    {
+        "id": 1,
+        "image": "https://placehold.co/800x450.png?text=Laravel+11",
+        "heroImage": "https://placehold.co/1200x630.png?text=Laravel+11",
+        "title": {
+            "en": "Getting Started with Laravel 11",
+            "ar": "الشروع في العمل مع لارافيل 11"
+        },
+        "summary": {
+            "en": "A comprehensive guide to building your first Laravel 11 application with all the new features.",
+            "ar": "دليل شامل لبناء أول تطبيق Laravel 11 مع جميع الميزات الجديدة."
+        },
+        "content": {
+            "en": "<h1>Introduction to Laravel 11</h1><p>Laravel 11 comes with exciting new features including simplified application structure, new health routing, and improved performance...</p>",
+            "ar": "<h1>مقدمة إلى Laravel 11</h1><p>يأتي Laravel 11 بميزات جديدة مثيرة بما في ذلك هيكل تطبيق مبسط، وتوجيه صحي جديد، وأداء محسّن...</p>"
+        },
+        "category": "PHP",
+        "readTime": "5 min read",
+        "published": true,
+        "created_at": "2026-09-01T10:00:00.000000Z",
+        "updated_at": "2026-09-01T10:00:00.000000Z"
+    },
+    {
+        "id": 2,
+        "image": "https://placehold.co/800x450.png?text=Vue.js+3",
+        "heroImage": "https://placehold.co/1200x630.png?text=Vue.js+3",
+        "title": {
+            "en": "Mastering Vue.js 3 Composition API",
+            "ar": "إتقان واجهة برمجة تطبيقات التركيب في فيو جي إس 3"
+        },
+        "summary": {
+            "en": "Learn how to build scalable Vue.js applications using the Composition API and best practices.",
+            "ar": "تعلم كيفية بناء تطبيقات فيو جي إس قابلة للتوسع باستخدام واجهة برمجة تطبيقات التركيب وأفضل الممارسات."
+        },
+        "content": {
+            "en": "<h1>Vue.js 3 Composition API Deep Dive</h1><p>The Composition API provides a more flexible way to organize component logic in Vue.js 3...</p>",
+            "ar": "<h1>غوص عميق في واجهة برمجة تطبيقات التركيب في فيو جي إس 3</h1><p>توفر واجهة برمجة تطبيقات التركيب طريقة أكثر مرونة لتنظيم منطق المكونات في فيو جي إس 3...</p>"
+        },
+        "category": "JavaScript",
+        "readTime": "7 min read",
+        "published": true,
+        "created_at": "2026-09-02T14:30:00.000000Z",
+        "updated_at": "2026-09-02T14:30:00.000000Z"
+    },
+    {
+        "id": 3,
+        "image": "https://placehold.co/800x450.png?text=Database+Optimization",
+        "heroImage": "https://placehold.co/1200x630.png?text=Database+Optimization",
+        "title": {
+            "en": "Database Optimization Techniques",
+            "ar": "تقنيات تحسين قواعد البيانات"
+        },
+        "summary": {
+            "en": "Essential tips and tricks to optimize your database queries and improve application performance.",
+            "ar": "نصائح وحيل أساسية لتحسين استعلامات قاعدة البيانات وتحسين أداء التطبيق."
+        },
+        "content": {
+            "en": "<h1>Database Optimization Guide</h1><p>Efficient database queries are crucial for application performance. Here are some proven techniques...</p>",
+            "ar": "<h1>دليل تحسين قواعد البيانات</h1><p>استعلامات قاعدة البيانات الفعالة ضرورية لأداء التطبيق. إليك بعض التقنيات المثبتة...</p>"
+        },
+        "category": "Database",
+        "readTime": "6 min read",
+        "published": false,
+        "created_at": "2026-09-03T09:15:00.000000Z",
+        "updated_at": "2026-09-03T09:15:00.000000Z"
+    },
+    {
+        "id": 4,
+        "image": "https://placehold.co/800x450.png?text=RESTful+API",
+        "heroImage": "https://placehold.co/1200x630.png?text=RESTful+API",
+        "title": {
+            "en": "Building RESTful APIs with Laravel",
+            "ar": "بناء واجهات برمجة تطبيقات RESTful باستخدام لارافيل"
+        },
+        "summary": {
+            "en": "Step-by-step tutorial on creating robust RESTful APIs with Laravel including authentication and validation.",
+            "ar": "دليل خطوة بخطوة لإنشاء واجهات برمجة تطبيقات RESTful قوية باستخدام لارافيل بما في ذلك المصادقة والتحقق."
+        },
+        "content": {
+            "en": "<h1>RESTful API Development with Laravel</h1><p>Learn how to build secure and scalable RESTful APIs using Laravel's powerful features...</p>",
+            "ar": "<h1>تطوير واجهات برمجة تطبيقات RESTful باستخدام لارافيل</h1><p>تعلم كيفية بناء واجهات برمجة تطبيقات RESTful آمنة وقابلة للتوسع باستخدام ميزات لارافيل القوية...</p>"
+        },
+        "category": "PHP",
+        "readTime": "8 min read",
+        "published": true,
+        "created_at": "2026-09-04T16:45:00.000000Z",
+        "updated_at": "2026-09-04T16:45:00.000000Z"
+    },
+    {
+        "id": 5,
+        "image": "https://placehold.co/800x450.png?text=CSS+Grid+vs+Flexbox",
+        "heroImage": "https://placehold.co/1200x630.png?text=CSS+Grid+vs+Flexbox",
+        "title": {
+            "en": "CSS Grid vs Flexbox: When to Use Which",
+            "ar": "CSS Grid مقابل Flexbox: متى تستخدم كل منهما"
+        },
+        "summary": {
+            "en": "Understanding the differences between CSS Grid and Flexbox and knowing when to use each layout system.",
+            "ar": "فهم الاختلافات بين CSS Grid و Flexbox ومعرفة متى تستخدم كل نظام تخطيط."
+        },
+        "content": {
+            "en": "<h1>CSS Grid vs Flexbox Comparison</h1><p>Both CSS Grid and Flexbox are powerful layout tools, but they serve different purposes...</p>",
+            "ar": "<h1>مقارنة بين CSS Grid و Flexbox</h1><p>كل من CSS Grid و Flexbox هما أدوات تخطيط قوية، لكنهما يخدمان أغراضًا مختلفة...</p>"
+        },
+        "category": "CSS",
+        "readTime": "4 min read",
+        "published": true,
+        "created_at": "2026-09-05T11:20:00.000000Z",
+        "updated_at": "2026-09-05T11:20:00.000000Z"
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Laravel+11",
+        "heroImage": "https://placehold.co/1200x630.png?text=Laravel+11",
+        "title": {
+            "en": "Getting Started with Laravel 11",
+            "ar": "الشروع في العمل مع لارافيل 11"
+        },
+        "summary": {
+            "en": "A comprehensive guide to building your first Laravel 11 application with all the new features.",
+            "ar": "دليل شامل لبناء أول تطبيق Laravel 11 مع جميع الميزات الجديدة."
+        },
+        "content": {
+            "en": "<h1>Introduction to Laravel 11</h1><p>Laravel 11 comes with exciting new features including simplified application structure, new health routing, and improved performance. In this guide we will walk through everything you need to know to get started.</p>",
+            "ar": "<h1>مقدمة إلى Laravel 11</h1><p>يأتي Laravel 11 بميزات جديدة مثيرة بما في ذلك هيكل تطبيق مبسط، وتوجيه صحي جديد، وأداء محسّن. في هذا الدليل سنستعرض كل ما تحتاج معرفته للبدء.</p>"
+        },
+        "category": "PHP",
+        "readTime": "5 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Vue.js+3",
+        "heroImage": "https://placehold.co/1200x630.png?text=Vue.js+3",
+        "title": {
+            "en": "Mastering Vue.js 3 Composition API",
+            "ar": "إتقان واجهة برمجة التركيب في Vue.js 3"
+        },
+        "summary": {
+            "en": "Learn how to build scalable Vue.js applications using the Composition API and best practices.",
+            "ar": "تعلم كيفية بناء تطبيقات Vue.js قابلة للتوسع باستخدام واجهة برمجة التركيب وأفضل الممارسات."
+        },
+        "content": {
+            "en": "<h1>Vue.js 3 Composition API</h1><p>The Composition API provides a more flexible way to organize component logic in Vue.js 3. Unlike the Options API, it allows you to group related logic together making large components much easier to maintain.</p>",
+            "ar": "<h1>واجهة برمجة التركيب في Vue.js 3</h1><p>توفر واجهة برمجة التركيب طريقة أكثر مرونة لتنظيم منطق المكونات. بخلاف Options API، تتيح لك تجميع المنطق المترابط معاً مما يجعل المكونات الكبيرة أسهل في الصيانة.</p>"
+        },
+        "category": "JavaScript",
+        "readTime": "7 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Database+Optimization",
+        "heroImage": "https://placehold.co/1200x630.png?text=Database+Optimization",
+        "title": {
+            "en": "Database Optimization Techniques",
+            "ar": "تقنيات تحسين قواعد البيانات"
+        },
+        "summary": {
+            "en": "Essential tips and tricks to optimize your database queries and improve application performance.",
+            "ar": "نصائح وحيل أساسية لتحسين استعلامات قاعدة البيانات وتحسين أداء التطبيق."
+        },
+        "content": {
+            "en": "<h1>Database Optimization Guide</h1><p>Efficient database queries are crucial for application performance. Topics covered include indexing strategies, eager loading to avoid N+1 problems, query caching, and proper use of database transactions.</p>",
+            "ar": "<h1>دليل تحسين قواعد البيانات</h1><p>استعلامات قاعدة البيانات الفعالة ضرورية لأداء التطبيق. تشمل المواضيع استراتيجيات الفهرسة، والتحميل المسبق لتجنب مشكلة N+1، وتخزين الاستعلامات مؤقتاً، والاستخدام الصحيح للمعاملات.</p>"
+        },
+        "category": "Database",
+        "readTime": "6 min read",
+        "published": false
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=RESTful+API",
+        "heroImage": "https://placehold.co/1200x630.png?text=RESTful+API",
+        "title": {
+            "en": "Building RESTful APIs with Laravel",
+            "ar": "بناء واجهات RESTful باستخدام Laravel"
+        },
+        "summary": {
+            "en": "Step-by-step tutorial on creating robust RESTful APIs with Laravel including authentication and validation.",
+            "ar": "دليل خطوة بخطوة لإنشاء واجهات RESTful قوية باستخدام Laravel مع المصادقة والتحقق."
+        },
+        "content": {
+            "en": "<h1>RESTful API Development with Laravel</h1><p>Learn how to build secure and scalable RESTful APIs using Laravel's powerful features including Sanctum for authentication, Form Requests for validation, and API Resources for consistent responses.</p>",
+            "ar": "<h1>تطوير واجهات RESTful باستخدام Laravel</h1><p>تعلم كيفية بناء واجهات آمنة وقابلة للتوسع باستخدام ميزات Laravel القوية بما فيها Sanctum للمصادقة، وForm Requests للتحقق، وAPI Resources للردود المتسقة.</p>"
+        },
+        "category": "PHP",
+        "readTime": "8 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=CSS+Grid+vs+Flexbox",
+        "heroImage": "https://placehold.co/1200x630.png?text=CSS+Grid+vs+Flexbox",
+        "title": {
+            "en": "CSS Grid vs Flexbox: When to Use Which",
+            "ar": "CSS Grid مقابل Flexbox: متى تستخدم كل منهما"
+        },
+        "summary": {
+            "en": "Understanding the differences between CSS Grid and Flexbox and knowing when to use each layout system.",
+            "ar": "فهم الاختلافات بين CSS Grid و Flexbox ومعرفة متى تستخدم كل نظام تخطيط."
+        },
+        "content": {
+            "en": "<h1>CSS Grid vs Flexbox</h1><p>Both CSS Grid and Flexbox are powerful layout tools but they serve different purposes. Flexbox is one-dimensional and best for rows or columns, while Grid is two-dimensional and ideal for full page layouts.</p>",
+            "ar": "<h1>CSS Grid مقابل Flexbox</h1><p>كلاهما أدوات تخطيط قوية لكنهما يخدمان أغراضاً مختلفة. Flexbox أحادي البُعد ومناسب للصفوف أو الأعمدة، بينما Grid ثنائي الأبعاد ومثالي لتخطيطات الصفحة الكاملة.</p>"
+        },
+        "category": "CSS",
+        "readTime": "4 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=TypeScript+Tips",
+        "heroImage": "https://placehold.co/1200x630.png?text=TypeScript+Tips",
+        "title": {
+            "en": "TypeScript Tips Every Developer Should Know",
+            "ar": "نصائح TypeScript يجب أن يعرفها كل مطور"
+        },
+        "summary": {
+            "en": "Practical TypeScript tips and patterns that will improve your code quality and developer experience.",
+            "ar": "نصائح وأنماط TypeScript العملية التي ستحسن جودة كودك وتجربة التطوير."
+        },
+        "content": {
+            "en": "<h1>TypeScript Tips</h1><p>TypeScript has become the standard for large-scale JavaScript projects. In this article we cover utility types, discriminated unions, type guards, and how to properly type your React components for maximum safety.</p>",
+            "ar": "<h1>نصائح TypeScript</h1><p>أصبح TypeScript المعيار لمشاريع JavaScript الكبيرة. في هذا المقال نغطي أنواع الأدوات المساعدة، والاتحادات المميزة، وحراس النوع، وكيفية كتابة مكونات React بشكل صحيح لأقصى درجات الأمان.</p>"
+        },
+        "category": "TypeScript",
+        "readTime": "6 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Clean+Code",
+        "heroImage": "https://placehold.co/1200x630.png?text=Clean+Code",
+        "title": {
+            "en": "Writing Clean Code: Best Practices",
+            "ar": "كتابة كود نظيف: أفضل الممارسات"
+        },
+        "summary": {
+            "en": "Learn the principles of writing clean, readable, and maintainable code that your team will thank you for.",
+            "ar": "تعلم مبادئ كتابة كود نظيف وقابل للقراءة والصيانة سيشكرك عليه فريقك."
+        },
+        "content": {
+            "en": "<h1>Clean Code Principles</h1><p>Clean code is not just about making things work, it is about making things understandable. We cover naming conventions, single responsibility principle, avoiding deep nesting, writing meaningful comments, and the importance of refactoring.</p>",
+            "ar": "<h1>مبادئ الكود النظيف</h1><p>الكود النظيف لا يتعلق فقط بجعل الأشياء تعمل، بل بجعلها مفهومة. نغطي اتفاقيات التسمية، ومبدأ المسؤولية الواحدة، وتجنب التداخل العميق، وكتابة تعليقات ذات معنى، وأهمية إعادة الهيكلة.</p>"
+        },
+        "category": "Best Practices",
+        "readTime": "5 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Docker+Basics",
+        "heroImage": "https://placehold.co/1200x630.png?text=Docker+Basics",
+        "title": {
+            "en": "Docker Basics for Web Developers",
+            "ar": "أساسيات Docker لمطوري الويب"
+        },
+        "summary": {
+            "en": "A beginner-friendly introduction to Docker, containers, and how to dockerize your web applications.",
+            "ar": "مقدمة مبسطة لـ Docker والحاويات وكيفية تحويل تطبيقات الويب الخاصة بك إلى حاويات."
+        },
+        "content": {
+            "en": "<h1>Docker for Web Developers</h1><p>Docker allows you to package your application and all its dependencies into a container that runs consistently across any environment. We cover images, containers, volumes, docker-compose, and how to set up a full Laravel development environment with Docker.</p>",
+            "ar": "<h1>Docker لمطوري الويب</h1><p>يتيح لك Docker تغليف تطبيقك وجميع تبعياته في حاوية تعمل باتساق في أي بيئة. نغطي الصور، والحاويات، والأحجام، وdocker-compose، وكيفية إعداد بيئة تطوير Laravel كاملة باستخدام Docker.</p>"
+        },
+        "category": "DevOps",
+        "readTime": "9 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=React+Performance",
+        "heroImage": "https://placehold.co/1200x630.png?text=React+Performance",
+        "title": {
+            "en": "React Performance Optimization Techniques",
+            "ar": "تقنيات تحسين أداء React"
+        },
+        "summary": {
+            "en": "Practical techniques to make your React applications faster and more efficient.",
+            "ar": "تقنيات عملية لجعل تطبيقات React الخاصة بك أسرع وأكثر كفاءة."
+        },
+        "content": {
+            "en": "<h1>React Performance</h1><p>Performance is critical for user experience. We explore useMemo, useCallback, React.memo, lazy loading with Suspense, virtualization for long lists, and how to use the React DevTools Profiler to identify bottlenecks in your application.</p>",
+            "ar": "<h1>أداء React</h1><p>الأداء أمر حاسم لتجربة المستخدم. نستكشف useMemo، وuseCallback، وReact.memo، والتحميل الكسول مع Suspense، والمحاكاة الافتراضية للقوائم الطويلة، وكيفية استخدام React DevTools Profiler لتحديد نقاط الاختناق في تطبيقك.</p>"
+        },
+        "category": "React",
+        "readTime": "7 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Git+Workflow",
+        "heroImage": "https://placehold.co/1200x630.png?text=Git+Workflow",
+        "title": {
+            "en": "Git Workflow for Teams",
+            "ar": "سير عمل Git للفرق"
+        },
+        "summary": {
+            "en": "How to manage your codebase effectively using Git branching strategies and team collaboration best practices.",
+            "ar": "كيفية إدارة قاعدة الكود الخاصة بك بفعالية باستخدام استراتيجيات تفريع Git وأفضل ممارسات التعاون الجماعي."
+        },
+        "content": {
+            "en": "<h1>Git Workflow for Teams</h1><p>A well defined Git workflow is essential for team collaboration. We cover Git Flow, trunk-based development, branch naming conventions, pull request best practices, resolving merge conflicts, and using tags for releases.</p>",
+            "ar": "<h1>سير عمل Git للفرق</h1><p>سير عمل Git المحدد جيداً ضروري للتعاون الجماعي. نغطي Git Flow، والتطوير القائم على الجذع، واتفاقيات تسمية الفروع، وأفضل ممارسات طلبات السحب، وحل تعارضات الدمج، واستخدام العلامات للإصدارات.</p>"
+        },
+        "category": "Tools",
+        "readTime": "5 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Tailwind+CSS",
+        "heroImage": "https://placehold.co/1200x630.png?text=Tailwind+CSS",
+        "title": {
+            "en": "Why Tailwind CSS Changed Frontend Development",
+            "ar": "لماذا غيّر Tailwind CSS تطوير الواجهات الأمامية"
+        },
+        "summary": {
+            "en": "An honest look at Tailwind CSS, its advantages, limitations, and why it has become so popular.",
+            "ar": "نظرة صادقة على Tailwind CSS ومزاياه وقيوده وسبب شعبيته الكبيرة."
+        },
+        "content": {
+            "en": "<h1>Tailwind CSS</h1><p>Tailwind CSS takes a utility-first approach that many developers initially resist but quickly fall in love with. We discuss why it speeds up development, how it eliminates unused CSS in production, its JIT engine, and how to build design systems with it.</p>",
+            "ar": "<h1>Tailwind CSS</h1><p>يتخذ Tailwind CSS نهجاً قائماً على الأدوات المساعدة يقاومه كثير من المطورين في البداية لكنهم سرعان ما يعشقونه. نناقش لماذا يسرّع التطوير، وكيف يزيل CSS غير المستخدم في الإنتاج، ومحرك JIT الخاص به، وكيفية بناء أنظمة تصميم معه.</p>"
+        },
+        "category": "CSS",
+        "readTime": "4 min read",
+        "published": true
+    },
+    {
+        "image": "https://placehold.co/800x450.png?text=Inertia.js",
+        "heroImage": "https://placehold.co/1200x630.png?text=Inertia.js",
+        "title": {
+            "en": "Building SPAs with Inertia.js and Laravel",
+            "ar": "بناء تطبيقات SPA باستخدام Inertia.js و Laravel"
+        },
+        "summary": {
+            "en": "How Inertia.js bridges the gap between Laravel and React to create modern single-page applications without an API.",
+            "ar": "كيف يجسر Inertia.js الفجوة بين Laravel و React لإنشاء تطبيقات أحادية الصفحة حديثة بدون API."
+        },
+        "content": {
+            "en": "<h1>Inertia.js with Laravel and React</h1><p>Inertia.js lets you build single-page apps without building an API. It works as a glue layer between your server-side framework and your frontend framework. We cover routing, shared data, form handling, and authentication with Inertia.</p>",
+            "ar": "<h1>Inertia.js مع Laravel و React</h1><p>يتيح لك Inertia.js بناء تطبيقات أحادية الصفحة دون بناء API. يعمل كطبقة لاصقة بين إطار العمل من جانب الخادم وإطار العمل من جانب العميل. نغطي التوجيه، والبيانات المشتركة، ومعالجة النماذج، والمصادقة مع Inertia.</p>"
+        },
+        "category": "PHP",
+        "readTime": "8 min read",
+        "published": true
+    }
+]

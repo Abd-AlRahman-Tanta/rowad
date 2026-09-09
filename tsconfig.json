@@ -5,6 +5,7 @@
             "@pages/*" : ["./Modules/Pages/resources/assets/js/*"],
             "@projects/*" : ["./Modules/Projects/resources/assets/js/*"],
             "@dashboard/*" : ["./Modules/Dashboard/resources/assets/js/*"],
+            "@blogs/*" : ["./Modules/Blogs/resources/assets/js/*"],
         },
         "target": "ESNext",
         "lib": [

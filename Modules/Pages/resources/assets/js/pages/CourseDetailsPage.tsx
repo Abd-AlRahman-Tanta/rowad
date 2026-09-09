@@ -55,11 +55,37 @@ const CourseDetailsPage = ({ allData }: { allData: any }) => {
                   >
                     {data.priceTitle}
                   </EditableText>
-                  <div
-                    className="text-3xl font-bold text-arch-dark"
-                  >
-                    {course.price}<span className="text-arch-accent">$</span>
-                  </div>
+
+                  {(course.price || course.new_price) && (
+                    <div className="flex items-end gap-3 mt-1">
+                      {course.price && course.new_price ? (
+                        // كلاهما موجود: القديم مشطوب + الجديد بارز
+                        <>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-xs text-arch-gray font-medium leading-none">
+                              {/* يمكنك إضافة label "السعر الأصلي" هنا إذا أردت */}
+                            </span>
+                            <span className="text-xl text-arch-gray  font-medium leading-none">
+                              <span className="line-through">{course.price}</span>
+                              <span className="text-arch-gray text-lg  ">$</span>
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <div className="text-3xl font-bold text-arch-dark leading-none">
+                              {course.new_price}
+                              <span className="text-arch-accent text-2xl">$</span>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        // سعر واحد فقط: يظهر كسعر نهائي
+                        <div className="text-3xl font-bold text-arch-dark leading-none">
+                          {course.price || course.new_price}
+                          <span className="text-arch-accent text-xl">$</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <EditableObject
                   className="w-fit max-mob:w-full"

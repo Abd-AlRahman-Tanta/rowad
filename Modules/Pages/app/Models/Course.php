@@ -15,7 +15,7 @@ class Course extends Model
   use HasTranslations;
   protected $table = "courses";
   protected $translatable = ['name', 'description'];
-  protected $fillable = ['name', 'description', 'image', 'heroImage', 'price', 'newCourse'];
+  protected $fillable = ['name', 'description', 'image', 'heroImage', 'price', 'new_price', 'newCourse'];
   protected $casts = [
     'name' => 'array',
     'description' => 'array',

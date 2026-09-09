@@ -17,7 +17,8 @@ return new class extends Migration
       $table->json("description");
       $table->string("image");
       $table->string("heroImage");
-      $table->string("price");
+      $table->string("price")->nullable();
+      $table->string("new_price")->nullable();
       $table->boolean("newCourse")->default(true);
       $table->timestamps();
     });

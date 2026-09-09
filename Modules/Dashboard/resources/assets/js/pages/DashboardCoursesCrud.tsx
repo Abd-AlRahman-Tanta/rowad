@@ -7,7 +7,7 @@ const DashboardCoursesCrud = ({ allData }: { allData: any }) => {
   const { isEdit, content, course }: { isEdit?: boolean, content: any, course: CourseProps } = allData
   return (
     <DashboardLayout>
-      <div className='max-lg:pt-48 py-10 pt-32 px-5'>
+      <div className='max-lg:pt-48  pt-32 px-5'>
         <DynamicForm
           deleteUrl={isEdit ? (content.submitUrl + "/" + course.id) : undefined}
           initialData={isEdit ? course : undefined}

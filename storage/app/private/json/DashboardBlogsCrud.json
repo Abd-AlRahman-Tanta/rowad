@@ -1,0 +1,132 @@
+{
+    "en": {
+        "itemName": "Article",
+        "submitUrl": "/dashboard/blogs",
+        "addButton": {
+            "text": "Add Article",
+            "link": "/dashboard/blogs/create"
+        },
+        "inputs": [
+            {
+                "name": "title",
+                "label": "Article Title",
+                "type": "spatie",
+                "fullWidth": true
+            },
+            {
+                "name": "published",
+                "label": "Published?",
+                "type": "select",
+                "selectChoices": [
+                    { "val": "1", "label": "Yes" },
+                    { "val": "0", "label": "No" }
+                ],
+                "selectViewedOption": "label",
+                "selectValueOption": "val",
+                "selectPickOne": true
+            },
+            {
+                "name": "summary",
+                "label": "Article Summary",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "content",
+                "label": "Article Content",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "image",
+                "label": "Card Image",
+                "type": "file"
+            },
+            {
+                "name": "heroImage",
+                "label": "Hero Image",
+                "type": "file"
+            },
+            {
+                "name": "category",
+                "label": "Category",
+                "type": "text"
+            },
+            {
+                "name": "readTime",
+                "label": "Read Time",
+                "type": "text"
+            }
+        ],
+        "searchFields": [{ "name": "title", "translatable": true }],
+        "viewBlogButton": {
+            "text": "Edit Article",
+            "link": "/dashboard/blogs/"
+        }
+    },
+    "ar": {
+        "itemName": "مقال",
+        "submitUrl": "/dashboard/blogs",
+        "addButton": {
+            "text": "إضافة مقال",
+            "link": "/dashboard/blogs/create"
+        },
+        "inputs": [
+            {
+                "name": "title",
+                "label": "عنوان المقال",
+                "type": "spatie",
+                "fullWidth": true
+            },
+            {
+                "name": "published",
+                "label": "منشور؟",
+                "type": "select",
+                "selectChoices": [
+                    { "val": "1", "label": "نعم" },
+                    { "val": "0", "label": "لا" }
+                ],
+                "selectViewedOption": "label",
+                "selectValueOption": "val",
+                "selectPickOne": true
+            },
+            {
+                "name": "summary",
+                "label": "ملخص المقال",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "content",
+                "label": "محتوى المقال",
+                "type": "spatie-richtext",
+                "fullWidth": true
+            },
+            {
+                "name": "image",
+                "label": "صورة البطاقة",
+                "type": "file"
+            },
+            {
+                "name": "heroImage",
+                "label": "صورة الهيرو",
+                "type": "file"
+            },
+            {
+                "name": "category",
+                "label": "التصنيف",
+                "type": "text"
+            },
+            {
+                "name": "readTime",
+                "label": "وقت القراءة",
+                "type": "text"
+            }
+        ],
+        "searchFields": [{ "name": "title", "translatable": true }],
+        "viewBlogButton": {
+            "text": "تعديل المقال",
+            "link": "/dashboard/blogs/"
+        }
+    }
+}

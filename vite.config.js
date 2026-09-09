@@ -33,6 +33,10 @@ export default defineConfig({
                 __dirname,
                 "./Modules/Dashboard/resources/assets/js"
             ),
+            "@blogs": path.resolve(
+                __dirname,
+                "./Modules/Blogs/resources/assets/js"
+            ),
         },
     },
 });

@@ -83,6 +83,7 @@ class CoursesController extends Controller
       'image'       => UploadImageController::uploadImage($validated["image"]),
       'heroImage'   => UploadImageController::uploadImage($validated["heroImage"]),
       'price'       => $validated["price"],
+      'new_price' => $validated["new_price"] ?? null,
       'newCourse'   => $validated["newCourse"]["val"] == 'true' ? 1 : 0,
     ]);
     $this->syncRelations($course, $validated);
@@ -101,6 +102,7 @@ class CoursesController extends Controller
       'image'       => $this->handleSingleImage($request, 'image', $course->image, 'images'),
       'heroImage'   => $this->handleSingleImage($request, 'heroImage', $course->heroImage, 'images'),
       'price'       => $validated["price"],
+      'new_price' => $validated["new_price"] ?? null,
       'newCourse'   => $validated["newCourse"]["val"] == 'true' ? 1 : 0,
     ]);
     $course->learningPoints()->delete();

@@ -56,17 +56,18 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
     }
 
     const startOverride =
-      variant === "fadeDown" ? "opacity-0 translate-y-10"
-        : variant === "fadeLeft" ? "opacity-0 translate-x-10"
-          : variant === "fadeRight" ? "opacity-0 -translate-x-10"
-            : variant === "zoom" ? "opacity-0 scale-[0.98]"
-              : variant === "blur" ? "opacity-0 blur-sm"
+      variant === "fadeDown" ? "opacity-0 translate-y-[-40px]"
+        : variant === "fadeLeft" ? "opacity-0 translate-x-[60px]"
+          : variant === "fadeRight" ? "opacity-0 translate-x-[-60px]"
+            : variant === "zoom" ? "opacity-0 scale-[0.94]"
+              : variant === "blur" ? "opacity-0 blur-md scale-[0.98]"
                 : ""
 
     const endOverride =
-      variant === "fadeDown" || variant === "fadeLeft" || variant === "fadeRight" ? "opacity-100 translate-x-0 translate-y-0"
+      variant === "fadeDown" || variant === "fadeLeft" || variant === "fadeRight"
+        ? "opacity-100 translate-x-0 translate-y-0"
         : variant === "zoom" ? "opacity-100 scale-100"
-          : variant === "blur" ? "opacity-100 blur-0"
+          : variant === "blur" ? "opacity-100 blur-0 scale-100"
             : ""
 
     return `${inView ? endOverride : startOverride} ${base}`
@@ -77,8 +78,9 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
     return {
       className: `a-props ${getAnimClass(inView, opts)}`,
       style: {
-        transitionDelay: `${delay}ms`,
+        transitionDelay: inView ? `${delay}ms` : "0ms",
         transitionDuration: `${duration}ms`,
+        willChange: "transform, opacity",
       }
     }
   }
@@ -88,7 +90,9 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
     navBarLang: globalData.navBarLang,
     mainLinks: globalData.mainLinks,
     navBarLogo: globalData.navBarLogo,
-    navBarWhatsApp: globalData.navBarWhatsApp
+    navBarWhatsApp: globalData.navBarWhatsApp,
+    headTitle: globalData.headTitle
+
   }
   const footer: FooterProps = {
     contactInformations: globalData.contactInformations,
@@ -107,7 +111,7 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
             className={`max-w-[1920px] bg-gray-100  w-full font-family-main cursor-default select-none mx-auto overflow-x-clip`}>
             {message && <SuccessNotification message={message} setMessage={setMessage} />}
             <Head>
-              <link rel="icon" type="image" href="/storage/images/logo.png" />
+              <link rel="icon" type="image" href={navProps.navBarLogo.icon} />
               <title>{globalData.headTitle}</title>
             </Head>
             <EditorModal />

@@ -20,7 +20,8 @@ class CourseRequest extends FormRequest
       'name.en'               => 'required|string|max:255',
       'description.ar'        => 'required|string',
       'description.en'        => 'required|string',
-      'price'                 => 'required|string',
+      'price'     => 'nullable|string',
+      'new_price' => 'nullable|string',
       'newCourse.val'             => 'string',
 
       // Main images - required files for create
@@ -57,8 +58,6 @@ class CourseRequest extends FormRequest
         'description.ar.required'               => 'وصف الكورس بالعربي مطلوب',
         'description.en.required'               => 'وصف الكورس بالإنجليزي مطلوب',
 
-        // Price
-        'price.required'                        => 'السعر مطلوب',
 
         // Main images
         'image.required'                        => 'الصورة الرئيسية مطلوبة',
@@ -89,8 +88,6 @@ class CourseRequest extends FormRequest
         'description.ar.required'               => 'Course description in Arabic is required',
         'description.en.required'               => 'Course description in English is required',
 
-        // Price
-        'price.required'                        => 'Price is required',
 
         // Main images
         'image.required'                        => 'Main image is required',

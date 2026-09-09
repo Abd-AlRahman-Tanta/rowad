@@ -1,1 +1,242 @@
-[]
+[
+    {
+        "name": {
+            "en": "Al Noor Residential Complex",
+            "ar": "مجمع النور السكني"
+        },
+        "description": {
+            "en": "A modern low-energy residential complex integrating renewable energy solutions and sustainable materials. The project features 48 units across 6 floors with shared green spaces, rooftop solar panels, and a rainwater harvesting system.",
+            "ar": "مجمع سكني حديث منخفض استهلاك الطاقة يدمج حلول الطاقة المتجددة والمواد المستدامة. يضم المشروع 48 وحدة على 6 طوابق مع مساحات خضراء مشتركة وألواح شمسية على السطح ونظام لتجميع مياه الأمطار."
+        },
+        "images": [
+            { "image": "https://placehold.co/800x600.png?text=Al+Noor+Front" },
+            {
+                "image": "https://placehold.co/800x600.png?text=Al+Noor+Interior"
+            },
+            { "image": "https://placehold.co/800x600.png?text=Al+Noor+Garden" }
+        ]
+    },
+    {
+        "name": {
+            "en": "Horizon Business Tower",
+            "ar": "برج هورايزون للأعمال"
+        },
+        "description": {
+            "en": "A 22-floor commercial tower designed with a double-skin facade system to minimize heat gain and reduce energy consumption by 40%. The tower houses corporate offices, a conference center, and a sky lounge on the top two floors.",
+            "ar": "برج تجاري من 22 طابقاً مصمم بنظام الواجهة المزدوجة لتقليل اكتساب الحرارة وخفض استهلاك الطاقة بنسبة 40٪. يضم البرج مكاتب الشركات ومركزاً للمؤتمرات وصالة سماء في الطابقين العلويين."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Horizon+Exterior"
+            },
+            { "image": "https://placehold.co/800x600.png?text=Horizon+Lobby" },
+            {
+                "image": "https://placehold.co/800x600.png?text=Horizon+Sky+Lounge"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Green Valley Community Center",
+            "ar": "مركز مجتمع الوادي الأخضر"
+        },
+        "description": {
+            "en": "A LEED Platinum certified community center that serves as a hub for cultural and social activities. The design incorporates natural ventilation, daylighting strategies, and a living green wall that acts as a natural air filtration system.",
+            "ar": "مركز مجتمعي حاصل على شهادة LEED البلاتينية يعمل كمحور للأنشطة الثقافية والاجتماعية. يتضمن التصميم التهوية الطبيعية واستراتيجيات الإضاءة النهارية وجداراً أخضر حياً يعمل كنظام طبيعي لتنقية الهواء."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Green+Valley+Front"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Green+Valley+Hall"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Green+Valley+Garden"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Desert Rose Villa",
+            "ar": "فيلا الوردة الصحراوية"
+        },
+        "description": {
+            "en": "A luxury private villa designed to harmonize with the desert landscape while maintaining a comfortable interior climate. The design uses thick thermal mass walls, shaded courtyards, and underground cooling to achieve natural temperature regulation without heavy reliance on air conditioning.",
+            "ar": "فيلا خاصة فاخرة مصممة لتنسجم مع المشهد الصحراوي مع الحفاظ على مناخ داخلي مريح. يستخدم التصميم جدراناً ذات كتلة حرارية سميكة وأفنية مظللة وتبريداً جوفياً لتحقيق تنظيم طبيعي لدرجة الحرارة دون الاعتماد الكبير على أجهزة التكييف."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Desert+Rose+Exterior"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Desert+Rose+Courtyard"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Desert+Rose+Interior"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Smart School of Tomorrow",
+            "ar": "مدرسة الغد الذكية"
+        },
+        "description": {
+            "en": "An innovative educational facility designed around the concept of flexible learning spaces. The school features movable partitions, outdoor classrooms, a rooftop garden used for science lessons, integrated smart building systems, and spaces designed to promote creativity and collaboration among students.",
+            "ar": "منشأة تعليمية مبتكرة مصممة حول مفهوم مساحات التعلم المرنة. تتميز المدرسة بحواجز متحركة وفصول دراسية خارجية وحديقة سطحية تُستخدم لدروس العلوم وأنظمة بناء ذكية متكاملة ومساحات مصممة لتعزيز الإبداع والتعاون بين الطلاب."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Smart+School+Front"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Smart+School+Classroom"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Smart+School+Rooftop"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Waterfront Mixed-Use Development",
+            "ar": "مشروع الواجهة البحرية متعدد الاستخدامات"
+        },
+        "description": {
+            "en": "A large-scale mixed-use waterfront development combining residential towers, retail spaces, a hotel, and a public marina. The project was designed to revitalize an underutilized coastal area and create a vibrant new district for the city, with pedestrian-friendly promenades and integrated public art installations.",
+            "ar": "تطوير واسع النطاق متعدد الاستخدامات على الواجهة البحرية يجمع أبراجاً سكنية ومساحات تجارية وفندقاً ومرسى عاماً. صُمم المشروع لإحياء منطقة ساحلية غير مستغلة وإنشاء حي جديد نابض بالحياة للمدينة مع ممشيات صديقة للمشاة ومنشآت فنية عامة متكاملة."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Waterfront+Aerial"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Waterfront+Promenade"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Waterfront+Marina"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Al Noor Residential Complex",
+            "ar": "مجمع النور السكني"
+        },
+        "description": {
+            "en": "A modern low-energy residential complex integrating renewable energy solutions and sustainable materials. The project features 48 units across 6 floors with shared green spaces, rooftop solar panels, and a rainwater harvesting system.",
+            "ar": "مجمع سكني حديث منخفض استهلاك الطاقة يدمج حلول الطاقة المتجددة والمواد المستدامة. يضم المشروع 48 وحدة على 6 طوابق مع مساحات خضراء مشتركة وألواح شمسية على السطح ونظام لتجميع مياه الأمطار."
+        },
+        "images": [
+            { "image": "https://placehold.co/800x600.png?text=Al+Noor+Front" },
+            {
+                "image": "https://placehold.co/800x600.png?text=Al+Noor+Interior"
+            },
+            { "image": "https://placehold.co/800x600.png?text=Al+Noor+Garden" }
+        ]
+    },
+    {
+        "name": {
+            "en": "Horizon Business Tower",
+            "ar": "برج هورايزون للأعمال"
+        },
+        "description": {
+            "en": "A 22-floor commercial tower designed with a double-skin facade system to minimize heat gain and reduce energy consumption by 40%. The tower houses corporate offices, a conference center, and a sky lounge on the top two floors.",
+            "ar": "برج تجاري من 22 طابقاً مصمم بنظام الواجهة المزدوجة لتقليل اكتساب الحرارة وخفض استهلاك الطاقة بنسبة 40٪. يضم البرج مكاتب الشركات ومركزاً للمؤتمرات وصالة سماء في الطابقين العلويين."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Horizon+Exterior"
+            },
+            { "image": "https://placehold.co/800x600.png?text=Horizon+Lobby" },
+            {
+                "image": "https://placehold.co/800x600.png?text=Horizon+Sky+Lounge"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Green Valley Community Center",
+            "ar": "مركز مجتمع الوادي الأخضر"
+        },
+        "description": {
+            "en": "A LEED Platinum certified community center that serves as a hub for cultural and social activities. The design incorporates natural ventilation, daylighting strategies, and a living green wall that acts as a natural air filtration system.",
+            "ar": "مركز مجتمعي حاصل على شهادة LEED البلاتينية يعمل كمحور للأنشطة الثقافية والاجتماعية. يتضمن التصميم التهوية الطبيعية واستراتيجيات الإضاءة النهارية وجداراً أخضر حياً يعمل كنظام طبيعي لتنقية الهواء."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Green+Valley+Front"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Green+Valley+Hall"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Green+Valley+Garden"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Desert Rose Villa",
+            "ar": "فيلا الوردة الصحراوية"
+        },
+        "description": {
+            "en": "A luxury private villa designed to harmonize with the desert landscape while maintaining a comfortable interior climate. The design uses thick thermal mass walls, shaded courtyards, and underground cooling to achieve natural temperature regulation without heavy reliance on air conditioning.",
+            "ar": "فيلا خاصة فاخرة مصممة لتنسجم مع المشهد الصحراوي مع الحفاظ على مناخ داخلي مريح. يستخدم التصميم جدراناً ذات كتلة حرارية سميكة وأفنية مظللة وتبريداً جوفياً لتحقيق تنظيم طبيعي لدرجة الحرارة دون الاعتماد الكبير على أجهزة التكييف."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Desert+Rose+Exterior"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Desert+Rose+Courtyard"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Desert+Rose+Interior"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Smart School of Tomorrow",
+            "ar": "مدرسة الغد الذكية"
+        },
+        "description": {
+            "en": "An innovative educational facility designed around the concept of flexible learning spaces. The school features movable partitions, outdoor classrooms, a rooftop garden used for science lessons, integrated smart building systems, and spaces designed to promote creativity and collaboration among students.",
+            "ar": "منشأة تعليمية مبتكرة مصممة حول مفهوم مساحات التعلم المرنة. تتميز المدرسة بحواجز متحركة وفصول دراسية خارجية وحديقة سطحية تُستخدم لدروس العلوم وأنظمة بناء ذكية متكاملة ومساحات مصممة لتعزيز الإبداع والتعاون بين الطلاب."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Smart+School+Front"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Smart+School+Classroom"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Smart+School+Rooftop"
+            }
+        ]
+    },
+    {
+        "name": {
+            "en": "Waterfront Mixed-Use Development",
+            "ar": "مشروع الواجهة البحرية متعدد الاستخدامات"
+        },
+        "description": {
+            "en": "A large-scale mixed-use waterfront development combining residential towers, retail spaces, a hotel, and a public marina. The project was designed to revitalize an underutilized coastal area and create a vibrant new district for the city, with pedestrian-friendly promenades and integrated public art installations.",
+            "ar": "تطوير واسع النطاق متعدد الاستخدامات على الواجهة البحرية يجمع أبراجاً سكنية ومساحات تجارية وفندقاً ومرسى عاماً. صُمم المشروع لإحياء منطقة ساحلية غير مستغلة وإنشاء حي جديد نابض بالحياة للمدينة مع ممشيات صديقة للمشاة ومنشآت فنية عامة متكاملة."
+        },
+        "images": [
+            {
+                "image": "https://placehold.co/800x600.png?text=Waterfront+Aerial"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Waterfront+Promenade"
+            },
+            {
+                "image": "https://placehold.co/800x600.png?text=Waterfront+Marina"
+            }
+        ]
+    }
+]

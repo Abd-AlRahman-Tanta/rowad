@@ -13,7 +13,8 @@
                 "id": "#projects"
             },
             { "text": "الإنجازات", "id": "#achivements" },
-            { "text": "آراء العملاء", "id": "#reviews" }
+            { "text": "آراء العملاء", "id": "#reviews" },
+            { "text": "المدونات", "link": "/blogs" }
         ],
         "navBarLang": { "text": "EN", "icon": "/storage/images/lang.svg" },
         "navBarWhatsApp": {
@@ -109,6 +110,11 @@
                 "text": "الكورسات",
                 "link": "/dashboard/courses",
                 "active": "courses"
+            },
+            {
+                "text": "المدونات",
+                "link": "/dashboard/blogs",
+                "active": "blogs"
             }
         ]
     },
@@ -127,7 +133,8 @@
                 "id": "#projects"
             },
             { "text": "Achivements", "id": "#achivements" },
-            { "text": "Reviews", "id": "#reviews" }
+            { "text": "Reviews", "id": "#reviews" },
+            { "text": "Blogs", "link": "/blogs" }
         ],
         "navBarLang": { "text": "AR", "icon": "/storage/images/lang.svg" },
         "navBarWhatsApp": {
@@ -214,6 +221,11 @@
                 "text": "Courses",
                 "link": "/dashboard/courses",
                 "active": "courses"
+            },
+            {
+                "text": "Blogs",
+                "link": "/dashboard/blogs",
+                "active": "blogs"
             }
         ]
     }
