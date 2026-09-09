@@ -705,7 +705,9 @@ const NavBarWhatsAppAndLanguageChanger = ({
 };
 const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp, headTitle }) => {
   const [list, setList] = useState(false);
+  const { url } = usePage();
   const { auth } = usePage().props;
+  const isDashboard = () => url.includes("/dashboard");
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(
       "div",
@@ -726,7 +728,7 @@ const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp, headTitle }
             px-5
             `,
         children: [
-          auth ? /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+          auth && !isDashboard() ? /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
             /* @__PURE__ */ jsx(
               EditableObject,
               {

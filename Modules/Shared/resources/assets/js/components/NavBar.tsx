@@ -11,7 +11,10 @@ import EditableText from "@shared/utils/EditableText"
 const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp, headTitle }: NavBarProps) => {
   // Mobile menu open/close state
   const [list, setList] = useState(false);
+  const { url } = usePage()
   const { auth } = usePage().props;
+  const isDashboard = () => url.includes("/dashboard")
+
   return (
     <>
       {/* Overlay (mobile) */}
@@ -35,7 +38,7 @@ const NavBar = ({ mainLinks, navBarLang, navBarLogo, navBarWhatsApp, headTitle }
             `}>
 
           {
-            auth ?
+            auth && !isDashboard() ?
               <div className="flex items-center gap-2">
                 <EditableObject
                   start="60%"
