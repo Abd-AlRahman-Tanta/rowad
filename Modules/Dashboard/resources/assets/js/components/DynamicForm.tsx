@@ -284,6 +284,7 @@ export default function DynamicForm({
       });
     }
   };
+  console.log(data)
   useEffect(() => {
     setErrors({})
   }, [locale])

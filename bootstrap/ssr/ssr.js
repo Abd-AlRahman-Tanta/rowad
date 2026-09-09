@@ -2642,6 +2642,7 @@ function DynamicForm({
       });
     }
   };
+  console.log(data);
   useEffect(() => {
     setErrors({});
   }, [locale]);

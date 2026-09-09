@@ -17,8 +17,8 @@ class BlogRequest extends FormRequest
     $isEdit = $this->isMethod('PUT');
 
     return [
-      'image'         => $isEdit ? 'nullable' : 'required',
-      'heroImage'     => 'nullable',
+      'image'         => 'required',
+      'heroImage'     => 'required',
       'title.ar'      => 'required|string',
       'title.en'      => 'required|string',
       'summary.ar'    => 'required|string',
@@ -38,6 +38,7 @@ class BlogRequest extends FormRequest
     if ($locale === 'ar') {
       return [
         'image.required'        => 'الصورة الرئيسية مطلوبة',
+        'heroImage.required'    => 'صورة البطل مطلوبة',
         'title.ar.required'     => 'عنوان المقال بالعربي مطلوب',
         'title.en.required'     => 'عنوان المقال بالإنجليزي مطلوب',
         'summary.ar.required'   => 'ملخص المقال بالعربي مطلوب',
@@ -49,6 +50,7 @@ class BlogRequest extends FormRequest
 
     return [
       'image.required'        => 'Main image is required',
+      'heroImage.required'    => 'Hero image is required',
       'title.ar.required'     => 'Arabic title is required',
       'title.en.required'     => 'English title is required',
       'summary.ar.required'   => 'Arabic summary is required',
