@@ -2,14 +2,14 @@ import { router, usePage } from "@inertiajs/react"
 import { useContext, useState } from "react"
 import { DeleteContext } from "./DashboardLayout"
 import axios from "axios"
-
+import { toast } from "sonner"
 
 const DeletePopUp = () => {
   const ctx = useContext(DeleteContext)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { locale } = usePage().props
-  if (!ctx || !ctx) return null
+  if (!ctx) return null
 
   const close = () => {
     ctx.setDeleteState(null)
@@ -22,12 +22,18 @@ const DeletePopUp = () => {
     try {
       await axios.delete(`${ctx.deleteState?.url}` || "")
       close()
+      toast.success(locale == "en" ? "Deleted successfully." : "تم الحذف بنجاح.")
       router.visit(`${ctx.deleteState?.returnedUrl}` || "")
     } catch (error: any) {
       if (error.response?.status === 422) {
+        toast.error(error.response.data.message)
         setErrorMessage(error.response.data.message)
       } else {
-        setErrorMessage(locale == "en" ? "Something went wrong. Please try again." : "حدث خطأ ما. حاول مرة أخرى.")
+        const fallbackMsg = locale == "en"
+          ? "Something went wrong. Please try again."
+          : "حدث خطأ ما. حاول مرة أخرى."
+        toast.error(fallbackMsg)
+        setErrorMessage(fallbackMsg)
       }
     } finally {
       setLoading(false)

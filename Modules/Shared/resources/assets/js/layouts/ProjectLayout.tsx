@@ -6,6 +6,7 @@ import { FooterProps, NavBarProps } from "@shared/Types"
 import EditorModal from "@shared/utils/EditorModal"
 import PageContentProvider from "@shared/utils/PageContentProvider"
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react"
+import { Toaster } from "sonner"
 export const Notify = createContext<{ message: string | null, setMessage: Dispatch<SetStateAction<string | null>> } | null>(null)
 
 export type AnimVariant =
@@ -103,6 +104,7 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
     siteMap: globalData.siteMap,
     siteMapTitle: globalData.siteMapTitle,
   }
+  const { component } = usePage()
   return (
     <Notify.Provider value={{ message, setMessage }}>
       <Animations.Provider value={{ getAnimClass, animProps }}>
@@ -114,6 +116,11 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
               <link rel="icon" type="image" href={navProps.navBarLogo.icon} />
               <title>{globalData.headTitle}</title>
             </Head>
+            <Toaster
+              position="top-center"
+              richColors
+              duration={4000}
+            />
             <EditorModal />
             {
               auth && !isDashboard() &&
@@ -160,9 +167,9 @@ const ProjectLayout = ({ children }: { children: ReactNode }) => {
                 Logout!
               </Link>
             }
-            <NavBar {...navProps} />
+            {component != "Login" && <NavBar {...navProps} />}
             {children}
-            <Footer {...footer} />
+            {component != "Login" && <Footer {...footer} />}
           </div>
         </PageContentProvider>
       </Animations.Provider>

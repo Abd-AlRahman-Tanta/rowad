@@ -7,10 +7,10 @@ import { RxCross2 } from "react-icons/rx";
 import { ImWhatsapp } from "react-icons/im";
 import { MdOutlineLanguage } from "react-icons/md";
 import axios from "axios";
+import { Toaster, toast } from "sonner";
 import { useInView } from "react-intersection-observer";
 import { IoIosArrowDown } from "react-icons/io";
 import { FiSearch, FiTrash2, FiAlertCircle, FiX, FiChevronLeft, FiChevronRight, FiPlus, FiSave, FiEyeOff, FiEye } from "react-icons/fi";
-import { toast } from "sonner";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, EffectCoverflow, Thumbs } from "swiper/modules";
 import { FaArrowRight } from "react-icons/fa6";
@@ -1305,6 +1305,7 @@ const ProjectLayout = ({ children }) => {
     siteMap: globalData.siteMap,
     siteMapTitle: globalData.siteMapTitle
   };
+  const { component } = usePage();
   return /* @__PURE__ */ jsx(Notify.Provider, { value: { message, setMessage }, children: /* @__PURE__ */ jsx(Animations.Provider, { value: { getAnimClass, animProps }, children: /* @__PURE__ */ jsx(PageContentProvider, { pageName: "Global", children: /* @__PURE__ */ jsxs(
     "div",
     {
@@ -1317,6 +1318,14 @@ const ProjectLayout = ({ children }) => {
           /* @__PURE__ */ jsx("link", { rel: "icon", type: "image", href: navProps.navBarLogo.icon }),
           /* @__PURE__ */ jsx("title", { children: globalData.headTitle })
         ] }),
+        /* @__PURE__ */ jsx(
+          Toaster,
+          {
+            position: "top-center",
+            richColors: true,
+            duration: 4e3
+          }
+        ),
         /* @__PURE__ */ jsx(EditorModal, {}),
         auth && !isDashboard() && /* @__PURE__ */ jsxs(
           Link,
@@ -1337,9 +1346,9 @@ const ProjectLayout = ({ children }) => {
             children: "Logout!"
           }
         ),
-        /* @__PURE__ */ jsx(NavBar, { ...navProps }),
+        component != "Login" && /* @__PURE__ */ jsx(NavBar, { ...navProps }),
         children,
-        /* @__PURE__ */ jsx(Footer, { ...footer })
+        component != "Login" && /* @__PURE__ */ jsx(Footer, { ...footer })
       ]
     }
   ) }) }) });
@@ -1795,7 +1804,7 @@ const DeletePopUp = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const { locale } = usePage().props;
-  if (!ctx || !ctx) return null;
+  if (!ctx) return null;
   const close = () => {
     ctx.setDeleteState(null);
     setErrorMessage(null);
@@ -1806,12 +1815,16 @@ const DeletePopUp = () => {
     try {
       await axios.delete(`${ctx.deleteState?.url}` || "");
       close();
+      toast.success(locale == "en" ? "Deleted successfully." : "تم الحذف بنجاح.");
       router.visit(`${ctx.deleteState?.returnedUrl}` || "");
     } catch (error) {
       if (error.response?.status === 422) {
+        toast.error(error.response.data.message);
         setErrorMessage(error.response.data.message);
       } else {
-        setErrorMessage(locale == "en" ? "Something went wrong. Please try again." : "حدث خطأ ما. حاول مرة أخرى.");
+        const fallbackMsg = locale == "en" ? "Something went wrong. Please try again." : "حدث خطأ ما. حاول مرة أخرى.";
+        toast.error(fallbackMsg);
+        setErrorMessage(fallbackMsg);
       }
     } finally {
       setLoading(false);
